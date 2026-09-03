@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Environment files and local configuration
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+*.local
+
+# Build output and test artifacts
+dist/
+build/
+coverage/
+**/dist/
+**/build/
+**/coverage/
+
+# Hosting and runtime artifacts
+.vercel/
+.render/
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+cve-report*.json
+
+# User-uploaded files can contain personal data and are not durable on Render.
+server/uploads/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+Desktop.ini
+.vscode/
+.idea/
+*.swp
+*.swo

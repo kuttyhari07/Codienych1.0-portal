@@ -1,0 +1,93 @@
+const express = require('express');
+const path = require('path');
+const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const connectDB = require('./config/db');
+const config = require('./config/env');
+
+const registrationRoutes = require('./routes/registrationRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+
+const app = express();
+
+// Security Middlewares
+app.use(
+  helmet({
+    crossOriginResourcePolicy: false,
+  })
+);
+
+const allowedOrigins = new Set([config.CLIENT_URL]);
+if (config.NODE_ENV !== 'production') {
+  ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:5174', 'http://127.0.0.1:5174']
+    .forEach((origin) => allowedOrigins.add(origin));
+}
+
+app.use(cors({
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.has(origin)) return callback(null, true);
+    return callback(new Error('Origin not allowed by CORS'));
+  },
+  credentials: true,
+}));
+
+// Rate Limiter for API endpoints
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 300,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: 'Too many requests from this IP, please try again later.' },
+});
+
+app.use('/api', apiLimiter);
+
+// Body Parsers
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Serve Uploaded Files statically
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Routes
+app.use('/api/registrations', registrationRoutes);
+app.use('/api/admin', adminRoutes);
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    event: config.EVENT_NAME,
+    type: config.EVENT_TYPE,
+    timestamp: new Date(),
+  });
+});
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+  console.error('[Unhandled Error]', err.stack);
+  res.status(err.status || 500).json({
+    success: false,
+    message: err.message || 'Internal Server Error',
+  });
+});
+
+const PORT = config.PORT;
+
+const startServer = async () => {
+  if (config.NODE_ENV === 'production' && (!config.CLIENT_URL || !config.MONGODB_URI || !config.JWT_SECRET)) {
+    throw new Error('CLIENT_URL, MONGODB_URI, and JWT_SECRET are required in production.');
+  }
+  await connectDB();
+
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`==================================================`);
+    console.log(`🚀 CODIENYCH 1.0 Control Center Server Active`);
+    console.log(`📡 Port: ${PORT}`);
+    console.log(`🌍 Environment: ${config.NODE_ENV}`);
+    console.log(`==================================================`);
+  });
+};
+
+startServer();
