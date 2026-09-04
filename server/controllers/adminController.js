@@ -114,8 +114,8 @@ const getDashboardStats = async (req, res) => {
     const totalCollection = verifiedPaymentsList.reduce((acc, p) => acc + (p.expectedAmount || 0), 0);
 
     const recentRegistrations = await Registration.find()
-      .sort({ createdAt: -1 })
-      .limit(5);
+      .sort({ registrationId: 1 })
+      .limit(10);
 
     return res.status(200).json({
       success: true,
@@ -147,7 +147,7 @@ const getRegistrations = async (req, res) => {
       query.status = status;
     }
 
-    let registrations = await Registration.find(query).sort({ createdAt: -1 });
+    let registrations = await Registration.find(query).sort({ registrationId: 1 });
 
     // Enrich with leader & payment info
     const enrichedList = await Promise.all(
@@ -367,7 +367,7 @@ const rejectParticipant = async (req, res) => {
  */
 const exportReport = async (req, res) => {
   try {
-    const registrations = await Registration.find().sort({ createdAt: -1 });
+    const registrations = await Registration.find().sort({ registrationId: 1 });
 
     const rows = [];
     let sNo = 1;
