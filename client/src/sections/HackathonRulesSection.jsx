@@ -6,9 +6,9 @@ const rulesCategories = [
     id: 'eligibility',
     title: 'Eligibility Rules',
     content: [
-      'Open to undergraduate students from recognized colleges/universities.',
-      'Valid student ID card is mandatory for every team participant.',
-      'Placeholders for institutional guidelines to be finalized.',
+      'Open strictly to Undergraduate (UG) students from other recognized engineering colleges/universities.',
+      'This hackathon is strictly for Other College Students (Not for ESEC Students).',
+      'Valid official college physical ID card is mandatory for every team participant.',
     ],
   },
   {

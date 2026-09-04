@@ -17,7 +17,7 @@ const faqs = [
   },
   {
     q: 'Who can participate?',
-    a: 'Only Undergraduate (UG) students from recognized colleges and universities are eligible to participate.',
+    a: 'Only Undergraduate (UG) students from other recognized colleges and universities are eligible. This hackathon is strictly for Other College Students (Not for ESEC Students).',
   },
   {
     q: 'What is the registration fee?',
