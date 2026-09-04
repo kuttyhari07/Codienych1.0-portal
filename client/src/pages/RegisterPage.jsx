@@ -406,7 +406,7 @@ const RegisterPage = () => {
                   ))}
                 </div>
                 <p className="font-mono text-xs text-gray-400 mt-2.5">
-                  Total Fee: <span className="text-[#00ff66] font-bold">₹{calculatedFee}</span> (₹567 × {teamSize} participants)
+                  Total Fee: <span className="text-[#00ff66] font-bold">₹{calculatedFee}</span> (₹{EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER} × {teamSize} participants)
                 </p>
               </div>
             </div>
@@ -771,7 +771,7 @@ const RegisterPage = () => {
                   ₹{calculatedFee}
                 </div>
                 <p className="font-mono text-[11px] text-gray-400 mb-4">
-                  ({teamSize} Participants × ₹567)
+                  ({teamSize} Participants × ₹{EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER})
                 </p>
 
                 {/* UPI ID Pill & Copy Button */}

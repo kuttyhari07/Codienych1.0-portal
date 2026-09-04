@@ -10,7 +10,7 @@ export const EVENT_CONFIG = {
   HACKATHON_START_DATE: '2026-10-08T09:00:00',
   HACKATHON_DATES_DISPLAY: 'October 8 – 9, 2026',
   
-  REGISTRATION_FEE_PER_MEMBER: 567,
+  REGISTRATION_FEE_PER_MEMBER: 525,
   
   UPI_ID: import.meta.env.VITE_UPI_ID || '',
   UPI_MERCHANT_NAME: import.meta.env.VITE_UPI_MERCHANT_NAME || 'CODIENYCH 1.0 Hackathon',
@@ -19,5 +19,9 @@ export const EVENT_CONFIG = {
   DEPARTMENT: 'DEPARTMENT OF INFORMATION TECHNOLOGY',
   VENUE: 'ESEC CONVENTION CENTER',
   ORGANIZER_EMAIL: 'organizer@codienych.com',
-  PHONE_NUMBER: '+91 9876543210',
+  PHONE_NUMBER: '+91 7904640937',
+  STAFF_COORDINATORS: [
+    { name: 'S.Prabakaran', phone: '7904640937' },
+    { name: 'Faculty Coordinator', phone: '+919361636487' },
+  ],
 };

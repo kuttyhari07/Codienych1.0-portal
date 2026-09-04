@@ -56,13 +56,24 @@ const ContactSection = () => {
             </h3>
 
             <div className="space-y-4">
-              <div className="bg-[#0f2416] p-4 rounded-xl border border-[#10b981]/40">
+              <div className="bg-[#0f2416] p-4 rounded-xl border border-[#10b981]/40 space-y-3">
                 <span className="font-mono text-xs text-[#00ff66] block uppercase font-bold">
-                  FACULTY COORDINATOR
+                  STAFF / FACULTY COORDINATORS
                 </span>
-                <p className="font-sans text-gray-300 text-sm mt-1">
-                  [FACULTY COORDINATOR NAME PLACEHOLDER]
-                </p>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="font-sans text-gray-200 text-sm font-medium">S. Prabakaran</span>
+                    <a href="tel:7904640937" className="font-mono text-xs text-[#00ff66] hover:underline">
+                      +91 79046 40937
+                    </a>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-sans text-gray-200 text-sm font-medium">Staff Coordinator</span>
+                    <a href="tel:9361636487" className="font-mono text-xs text-[#00ff66] hover:underline">
+                      +91 93616 36487
+                    </a>
+                  </div>
+                </div>
               </div>
 
               <div className="bg-[#0f2416] p-4 rounded-xl border border-[#10b981]/40">
@@ -70,7 +81,7 @@ const ContactSection = () => {
                   STUDENT COORDINATORS
                 </span>
                 <p className="font-sans text-gray-300 text-sm mt-1">
-                  [STUDENT COORDINATOR DETAILS PLACEHOLDER]
+                  Available on Event Command Channel
                 </p>
               </div>
 
