@@ -14,38 +14,72 @@ import PrizesSection from '../sections/PrizesSection';
 import FaqSection from '../sections/FaqSection';
 import ContactSection from '../sections/ContactSection';
 import Footer from '../sections/Footer';
+import { SmoothScrollProvider } from '../components/SmoothScrollProvider';
+import { ScrollReveal } from '../components/ScrollReveal';
 
 const HomePage = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <div className="relative min-h-screen bg-[#050b07] text-gray-100 overflow-x-hidden selection:bg-[#00ff66] selection:text-black">
-      {isLoading && <LoadingScreen onFinish={() => setIsLoading(false)} />}
+    <SmoothScrollProvider>
+      <div className="relative min-h-screen bg-[#050b07] text-gray-100 overflow-x-hidden selection:bg-[#00ff66] selection:text-black">
+        {isLoading && <LoadingScreen onFinish={() => setIsLoading(false)} />}
 
-      {/* Sticky Cinematic Scroll Background */}
-      <CinematicBackground />
+        {/* Sticky Cinematic Scroll Background */}
+        <CinematicBackground />
 
-      {/* Navigation */}
-      <Navbar />
+        {/* Navigation */}
+        <Navbar />
 
-      {/* Main Content Sections */}
-      <main className="relative z-10">
-        <HeroSection />
-        <AboutSection />
-        <DatesSection />
-        <CountdownSection />
-        <PrizesSection />
-        <ProblemStatementSection />
-        <TeamRulesSection />
-        <HackathonRulesSection />
-        <TimelineSection />
-        <FaqSection />
-        <ContactSection />
-      </main>
+        {/* Main Content Sections with Sondaven Scroll Reveal Physics */}
+        <main className="relative z-10">
+          <HeroSection />
 
-      {/* Footer */}
-      <Footer />
-    </div>
+          <ScrollReveal variant="fade-up">
+            <AboutSection />
+          </ScrollReveal>
+
+          <ScrollReveal variant="fade-up">
+            <DatesSection />
+          </ScrollReveal>
+
+          <ScrollReveal variant="scale-up">
+            <CountdownSection />
+          </ScrollReveal>
+
+          <ScrollReveal variant="fade-up">
+            <PrizesSection />
+          </ScrollReveal>
+
+          <ScrollReveal variant="scale-up">
+            <ProblemStatementSection />
+          </ScrollReveal>
+
+          <ScrollReveal variant="fade-up">
+            <TeamRulesSection />
+          </ScrollReveal>
+
+          <ScrollReveal variant="fade-up">
+            <HackathonRulesSection />
+          </ScrollReveal>
+
+          <ScrollReveal variant="fade-up">
+            <TimelineSection />
+          </ScrollReveal>
+
+          <ScrollReveal variant="fade-up">
+            <FaqSection />
+          </ScrollReveal>
+
+          <ScrollReveal variant="fade-up">
+            <ContactSection />
+          </ScrollReveal>
+        </main>
+
+        {/* Footer */}
+        <Footer />
+      </div>
+    </SmoothScrollProvider>
   );
 };
 
