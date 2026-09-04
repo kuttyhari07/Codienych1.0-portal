@@ -119,7 +119,7 @@ const ContactSection = () => {
                   OVERALL COORDINATORS
                 </span>
                 <p className="font-sans text-gray-200 text-sm font-medium">
-                  Association Members And IE Members
+                  IE Members And Association Members (Information Technology)
                 </p>
               </div>
 

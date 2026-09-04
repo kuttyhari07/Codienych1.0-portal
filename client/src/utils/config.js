@@ -29,6 +29,6 @@ export const EVENT_CONFIG = {
     { name: 'RK Nandha Kumar', phone: '+91 93428 09449' },
     { name: 'R Sastha Babu', phone: '+91 90807 13459' },
   ],
-  OVERALL_COORDINATORS: 'Association Members And IE Members',
+  OVERALL_COORDINATORS: 'IE Members And Association Members (Information Technology)',
   WHATSAPP_GROUP_URL: 'https://chat.whatsapp.com/J8wJdNPam0j7cJIOGnPXHy',
 };
