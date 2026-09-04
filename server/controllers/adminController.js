@@ -113,9 +113,12 @@ const getDashboardStats = async (req, res) => {
     const verifiedPaymentsList = await Payment.find({ status: 'VERIFIED' }).select('expectedAmount');
     const totalCollection = verifiedPaymentsList.reduce((acc, p) => acc + (p.expectedAmount || 0), 0);
 
-    const recentRegistrations = await Registration.find()
+    let recentRegistrations = await Registration.find()
       .sort({ registrationId: 1 })
       .limit(10);
+
+    // Natural alphanumeric ascending sort safeguard
+    recentRegistrations.sort((a, b) => (a.registrationId || '').localeCompare(b.registrationId || '', undefined, { numeric: true, sensitivity: 'base' }));
 
     return res.status(200).json({
       success: true,
@@ -148,6 +151,7 @@ const getRegistrations = async (req, res) => {
     }
 
     let registrations = await Registration.find(query).sort({ registrationId: 1 });
+    registrations.sort((a, b) => (a.registrationId || '').localeCompare(b.registrationId || '', undefined, { numeric: true, sensitivity: 'base' }));
 
     // Enrich with leader & payment info
     const enrichedList = await Promise.all(
@@ -368,6 +372,7 @@ const rejectParticipant = async (req, res) => {
 const exportReport = async (req, res) => {
   try {
     const registrations = await Registration.find().sort({ registrationId: 1 });
+    registrations.sort((a, b) => (a.registrationId || '').localeCompare(b.registrationId || '', undefined, { numeric: true, sensitivity: 'base' }));
 
     const rows = [];
     let sNo = 1;
