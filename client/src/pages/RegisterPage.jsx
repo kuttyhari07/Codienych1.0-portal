@@ -477,11 +477,10 @@ const RegisterPage = () => {
                     onChange={(e) => setLeader({ ...leader, year: e.target.value })}
                     className="w-full bg-[#050b07] border border-[#1b3524] focus:border-[#00ff66] rounded-lg px-4 py-2.5 text-sm text-white outline-none"
                   >
-                    <option value="1st Year">1st Year</option>
-                    <option value="2nd Year">2nd Year</option>
-                    <option value="3rd Year">3rd Year</option>
-                    <option value="4th Year">4th Year</option>
-                    <option value="Postgraduate">Postgraduate</option>
+                    <option value="1st Year">1st Year (UG)</option>
+                    <option value="2nd Year">2nd Year (UG)</option>
+                    <option value="3rd Year">3rd Year (UG)</option>
+                    <option value="4th Year">4th Year (UG)</option>
                   </select>
                 </div>
                 <div className="md:col-span-2">

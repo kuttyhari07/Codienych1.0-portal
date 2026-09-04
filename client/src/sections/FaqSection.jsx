@@ -17,11 +17,11 @@ const faqs = [
   },
   {
     q: 'Who can participate?',
-    a: 'Undergraduate and postgraduate students from recognized colleges and universities.',
+    a: 'Only Undergraduate (UG) students from recognized colleges and universities are eligible to participate.',
   },
   {
     q: 'What is the registration fee?',
-    a: `₹${EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER} per participant (₹2268 for 4 members, ₹2835 for 5 members, ₹3402 for 6 members).`,
+    a: `₹${EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER} per participant (₹2,100 for 4 members, ₹2,625 for 5 members, ₹3,150 for 6 members).`,
   },
   {
     q: 'How can I register?',
