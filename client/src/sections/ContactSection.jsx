@@ -62,13 +62,13 @@ const ContactSection = () => {
                 </span>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="font-sans text-gray-200 text-sm font-medium">S. Prabakaran</span>
+                    <span className="font-sans text-gray-200 text-sm font-medium">Mr. S. Prabakaran</span>
                     <a href="tel:7904640937" className="font-mono text-xs text-[#00ff66] hover:underline">
                       +91 79046 40937
                     </a>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="font-sans text-gray-200 text-sm font-medium">Staff Coordinator</span>
+                    <span className="font-sans text-gray-200 text-sm font-medium">Mr. M. Sujith Kumar</span>
                     <a href="tel:9361636487" className="font-mono text-xs text-[#00ff66] hover:underline">
                       +91 93616 36487
                     </a>
