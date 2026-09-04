@@ -24,9 +24,9 @@ export const SmoothScrollProvider = ({ children }) => {
 
     requestAnimationFrame(raf);
 
-    // Sync Lenis scroll events with IntersectionObserver / scrollspy
-    lenis.on('scroll', () => {
-      window.dispatchEvent(new Event('scroll'));
+    // No recursive synthetic scroll dispatch
+    lenis.on('scroll', (e) => {
+      // Lenis smooth scroll handler
     });
 
     return () => {
