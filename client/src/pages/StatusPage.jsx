@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { Search, Shield, Terminal, AlertCircle, CheckCircle, Clock, XCircle, ArrowLeft } from 'lucide-react';
+import { Search, Shield, Terminal, AlertCircle, CheckCircle, Clock, XCircle, ArrowLeft, MessageCircle, ExternalLink } from 'lucide-react';
 import api from '../services/api';
+import { EVENT_CONFIG } from '../utils/config';
 
 const StatusPage = () => {
   const [searchParams] = useSearchParams();
@@ -177,6 +178,38 @@ const StatusPage = () => {
                 </p>
               </div>
             </div>
+
+            {/* Approved Students: WhatsApp Group Join Card */}
+            {statusData.registrationStatus === 'REGISTRATION CONFIRMED' && (
+              <div className="mt-6 bg-[#0f2416] border-2 border-[#25D366] rounded-2xl p-6 shadow-[0_0_25px_rgba(37,211,102,0.3)] animate-pulse">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="flex items-center space-x-3 text-center sm:text-left">
+                    <div className="w-12 h-12 rounded-xl bg-[#25D366]/20 border border-[#25D366] flex items-center justify-center flex-shrink-0 text-[#25D366]">
+                      <MessageCircle className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="font-orbitron font-bold text-base text-white">
+                        OFFICIAL PARTICIPANT COMMUNITY
+                      </h3>
+                      <p className="font-mono text-xs text-gray-300 mt-0.5">
+                        Congratulations! Join the WhatsApp group for hackathon updates, schedule, and team announcements.
+                      </p>
+                    </div>
+                  </div>
+
+                  <a
+                    href={EVENT_CONFIG.WHATSAPP_GROUP_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full sm:w-auto px-6 py-3.5 bg-[#25D366] hover:bg-[#1ebd59] text-black font-orbitron font-black text-xs sm:text-sm rounded-xl transition-all shadow-[0_0_20px_rgba(37,211,102,0.5)] flex items-center justify-center space-x-2 flex-shrink-0 uppercase tracking-wider"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span>JOIN TO WHATSAPP GROUP</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

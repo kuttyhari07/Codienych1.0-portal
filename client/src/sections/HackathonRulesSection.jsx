@@ -3,6 +3,16 @@ import { ChevronDown, ChevronUp, Shield, FileText, Check } from 'lucide-react';
 
 const rulesCategories = [
   {
+    id: 'guidelines',
+    title: 'Registration & Verification Guidelines',
+    content: [
+      'After completing registration, all teams must track their approval/rejection status via the Status Tracker using their Registration ID.',
+      'Admin will review payment proof and individual student ID cards before approving the registration.',
+      'Approved / Confirmed teams must immediately join the Official Hackathon WhatsApp Group using the link provided in the Status Tracker.',
+      'Important event updates, schedule alerts, and mentor announcements will be shared in the WhatsApp community.',
+    ],
+  },
+  {
     id: 'eligibility',
     title: 'Eligibility Rules',
     content: [

@@ -28,6 +28,10 @@ const faqs = [
     a: 'Click "REGISTER NOW" on the portal navigation and complete the 8-step team registration form.',
   },
   {
+    q: 'How do I know if my team registration is approved?',
+    a: 'Use the "CHECK STATUS" page and enter your Registration ID. Once your payment and ID cards are verified by Admin, your status turns to "REGISTRATION CONFIRMED" and a direct "JOIN TO WHATSAPP GROUP" button will appear for approved teams.',
+  },
+  {
     q: 'Who should register the team?',
     a: 'Only the designated Team Leader registers the team. Team members do not register separately.',
   },

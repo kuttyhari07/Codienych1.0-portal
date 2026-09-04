@@ -25,4 +25,5 @@ export const EVENT_CONFIG = {
     { name: 'Mr. S. Prabakaran, AP/IT', phone: '7904640937' },
     { name: 'Mr. M. Sujith Kumar, AP/IT', phone: '+919361636487' },
   ],
+  WHATSAPP_GROUP_URL: 'https://chat.whatsapp.com/J8wJdNPam0j7cJIOGnPXHy',
 };
