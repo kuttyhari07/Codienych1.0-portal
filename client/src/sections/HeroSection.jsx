@@ -16,13 +16,18 @@ const HeroSection = () => {
       </div>
 
       {/* Presenter / Institution Header */}
-      <div className="mb-3 sm:mb-4">
-        <p className="font-mono text-xs sm:text-sm md:text-base text-gray-300 uppercase tracking-widest">
+      <div className="mb-4 sm:mb-6 max-w-xl mx-auto px-2 space-y-1.5 sm:space-y-2">
+        <p className="font-mono text-[11px] sm:text-sm md:text-base text-gray-300 uppercase tracking-widest leading-relaxed">
           {EVENT_CONFIG.COLLEGE_NAME}
         </p>
-        <p className="font-orbitron font-semibold text-xs sm:text-sm text-[#00ff66] tracking-[0.2em] sm:tracking-[0.25em] uppercase mt-1">
-          {EVENT_CONFIG.DEPARTMENT} <span className="text-gray-400 font-normal">PRESENTS</span>
-        </p>
+        <div className="flex flex-col items-center justify-center font-orbitron font-semibold text-xs sm:text-sm text-[#00ff66] tracking-wider sm:tracking-[0.2em] uppercase leading-relaxed">
+          <span className="text-[#00ff66] drop-shadow-[0_0_8px_rgba(0,255,102,0.4)]">
+            DEPARTMENT OF INFORMATION TECHNOLOGY
+          </span>
+          <span className="text-gray-400 font-normal text-[10px] sm:text-xs tracking-[0.25em] mt-0.5 sm:mt-1">
+            PRESENTS
+          </span>
+        </div>
       </div>
 
       {/* Main Title */}
