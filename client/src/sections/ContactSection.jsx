@@ -122,22 +122,6 @@ const ContactSection = () => {
                   IE Members And Association Members (Information Technology)
                 </p>
               </div>
-
-              <div className="pt-2">
-                <span className="font-mono text-xs text-gray-400 block uppercase mb-3">
-                  SOCIAL CHANNELS
-                </span>
-                <div className="flex items-center space-x-3">
-                  {['INSTAGRAM', 'LINKEDIN', 'TWITTER', 'DISCORD'].map((net) => (
-                    <span
-                      key={net}
-                      className="px-3 py-1.5 rounded bg-[#0f1e14] border border-[#1b3524] font-mono text-[10px] text-gray-300"
-                    >
-                      [{net}]
-                    </span>
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
         </div>
