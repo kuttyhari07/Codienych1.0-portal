@@ -63,6 +63,9 @@ const ContactSection = () => {
                 </span>
                 <div className="flex items-center justify-between">
                   <span className="font-sans text-gray-200 text-sm font-medium">Mr. M. Dhanapal, AP/IT</span>
+                  <a href="tel:9994036446" className="font-mono text-xs text-[#00ff66] hover:underline">
+                    +91 99940 36446
+                  </a>
                 </div>
               </div>
 
