@@ -25,5 +25,10 @@ export const EVENT_CONFIG = {
     { name: 'Mr. S. Prabakaran, AP/IT', phone: '7904640937' },
     { name: 'Mr. M. Sujith Kumar, AP/IT', phone: '+919361636487' },
   ],
+  STUDENT_COORDINATORS: [
+    { name: 'RK Nandha Kumar', phone: '+91 93428 09449' },
+    { name: 'R Sastha Babu', phone: '+91 90807 13459' },
+  ],
+  OVERALL_COORDINATORS: 'Association Members And IE Members',
   WHATSAPP_GROUP_URL: 'https://chat.whatsapp.com/J8wJdNPam0j7cJIOGnPXHy',
 };

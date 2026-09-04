@@ -92,12 +92,34 @@ const ContactSection = () => {
                 </div>
               </div>
 
-              <div className="bg-[#0f2416] p-4 rounded-xl border border-[#10b981]/40">
+              {/* Student Coordinators */}
+              <div className="bg-[#0f2416] p-4 rounded-xl border border-[#10b981]/40 space-y-3">
                 <span className="font-mono text-xs text-[#00ff66] block uppercase font-bold">
                   STUDENT COORDINATORS
                 </span>
-                <p className="font-sans text-gray-300 text-sm mt-1">
-                  Available on Event Command Channel
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="font-sans text-gray-200 text-sm font-medium">RK Nandha Kumar</span>
+                    <a href="tel:9342809449" className="font-mono text-xs text-[#00ff66] hover:underline">
+                      +91 93428 09449
+                    </a>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-sans text-gray-200 text-sm font-medium">R Sastha Babu</span>
+                    <a href="tel:9080713459" className="font-mono text-xs text-[#00ff66] hover:underline">
+                      +91 90807 13459
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Overall Coordinators */}
+              <div className="bg-[#0f2416] p-4 rounded-xl border border-[#10b981]/40 space-y-1">
+                <span className="font-mono text-xs text-[#00ff66] block uppercase font-bold">
+                  OVERALL COORDINATORS
+                </span>
+                <p className="font-sans text-gray-200 text-sm font-medium">
+                  Association Members And IE Members
                 </p>
               </div>
 
