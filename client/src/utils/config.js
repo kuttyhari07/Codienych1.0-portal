@@ -20,8 +20,9 @@ export const EVENT_CONFIG = {
   VENUE: 'ESEC CONVENTION CENTER',
   ORGANIZER_EMAIL: 'organizer@codienych.com',
   PHONE_NUMBER: '+91 7904640937',
+  ASSOCIATION_COORDINATOR: { name: 'Mr. M. Dhanapal, AP/IT' },
   STAFF_COORDINATORS: [
-    { name: 'Mr. S. Prabakaran', phone: '7904640937' },
-    { name: 'Mr. M. Sujith Kumar', phone: '+919361636487' },
+    { name: 'Mr. S. Prabakaran, AP/IT', phone: '7904640937' },
+    { name: 'Mr. M. Sujith Kumar, AP/IT', phone: '+919361636487' },
   ],
 };

@@ -56,19 +56,30 @@ const ContactSection = () => {
             </h3>
 
             <div className="space-y-4">
+              {/* Association Coordinator */}
+              <div className="bg-[#0f2416] p-4 rounded-xl border border-[#10b981]/40 space-y-2">
+                <span className="font-mono text-xs text-[#00ff66] block uppercase font-bold">
+                  ASSOCIATION COORDINATOR
+                </span>
+                <div className="flex items-center justify-between">
+                  <span className="font-sans text-gray-200 text-sm font-medium">Mr. M. Dhanapal, AP/IT</span>
+                </div>
+              </div>
+
+              {/* Staff / Faculty Coordinators */}
               <div className="bg-[#0f2416] p-4 rounded-xl border border-[#10b981]/40 space-y-3">
                 <span className="font-mono text-xs text-[#00ff66] block uppercase font-bold">
                   STAFF / FACULTY COORDINATORS
                 </span>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="font-sans text-gray-200 text-sm font-medium">Mr. S. Prabakaran</span>
+                    <span className="font-sans text-gray-200 text-sm font-medium">Mr. S. Prabakaran, AP/IT</span>
                     <a href="tel:7904640937" className="font-mono text-xs text-[#00ff66] hover:underline">
                       +91 79046 40937
                     </a>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="font-sans text-gray-200 text-sm font-medium">Mr. M. Sujith Kumar</span>
+                    <span className="font-sans text-gray-200 text-sm font-medium">Mr. M. Sujith Kumar, AP/IT</span>
                     <a href="tel:9361636487" className="font-mono text-xs text-[#00ff66] hover:underline">
                       +91 93616 36487
                     </a>
