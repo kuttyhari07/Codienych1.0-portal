@@ -10,9 +10,19 @@ const HeroSection = () => {
       className="relative min-h-screen flex flex-col items-center justify-center pt-24 pb-16 px-4 text-center z-10"
     >
       {/* Central Hero Glow Badge */}
-      <div className="inline-flex items-center space-x-2 bg-[#0f2416] border border-[#10b981]/60 px-3.5 py-1.5 sm:px-4 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-mono text-[#00ff66] mb-5 sm:mb-6 shadow-[0_0_20px_rgba(0,255,102,0.3)] animate-pulse max-w-[95%]">
+      <div className="inline-flex items-center space-x-2 bg-[#0f2416] border border-[#10b981]/60 px-3.5 py-1.5 sm:px-4 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-mono text-[#00ff66] mb-4 sm:mb-5 shadow-[0_0_20px_rgba(0,255,102,0.3)] animate-pulse max-w-[95%]">
         <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#00ff66] flex-shrink-0" />
         <span className="tracking-wider sm:tracking-widest uppercase truncate">{EVENT_CONFIG.MISSION_MOTTO}</span>
+      </div>
+
+      {/* Presenter / Institution Header */}
+      <div className="mb-3 sm:mb-4">
+        <p className="font-mono text-xs sm:text-sm md:text-base text-gray-300 uppercase tracking-widest">
+          {EVENT_CONFIG.COLLEGE_NAME}
+        </p>
+        <p className="font-orbitron font-semibold text-xs sm:text-sm text-[#00ff66] tracking-[0.2em] sm:tracking-[0.25em] uppercase mt-1">
+          {EVENT_CONFIG.DEPARTMENT} <span className="text-gray-400 font-normal">PRESENTS</span>
+        </p>
       </div>
 
       {/* Main Title */}

@@ -17,7 +17,13 @@ const Footer = () => {
               CODIENYCH<span className="text-[#00ff66]"> 1.0</span>
             </span>
           </div>
-          <p className="font-mono text-xs text-[#10b981] tracking-widest uppercase">
+          <p className="font-mono text-xs text-[#00ff66] tracking-wider uppercase font-semibold">
+            {EVENT_CONFIG.COLLEGE_NAME}
+          </p>
+          <p className="font-mono text-xs text-gray-400 tracking-wider uppercase">
+            {EVENT_CONFIG.DEPARTMENT} <span className="text-[#00ff66]">PRESENTS</span>
+          </p>
+          <p className="font-mono text-[11px] text-[#10b981] tracking-widest uppercase">
             24-HOUR SOFTWARE HACKATHON
           </p>
           <p className="font-sans text-sm text-gray-400 max-w-sm leading-relaxed">

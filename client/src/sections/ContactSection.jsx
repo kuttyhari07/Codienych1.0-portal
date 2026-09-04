@@ -27,7 +27,7 @@ const ContactSection = () => {
               <div>
                 <span className="font-mono text-xs text-gray-400 block uppercase">VENUE & INSTITUTION</span>
                 <p className="font-sans font-medium text-gray-200">{EVENT_CONFIG.COLLEGE_NAME}</p>
-                <p className="font-mono text-xs text-gray-400">[DEPARTMENT PLACEHOLDER]</p>
+                <p className="font-mono text-xs text-gray-400">{EVENT_CONFIG.DEPARTMENT}</p>
                 <p className="font-mono text-xs text-gray-400">{EVENT_CONFIG.VENUE}</p>
               </div>
             </div>
