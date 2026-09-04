@@ -19,6 +19,7 @@ export const EVENT_CONFIG = {
   DEPARTMENT: 'DEPARTMENT OF INFORMATION TECHNOLOGY',
   VENUE: 'ESEC CONVENTION CENTER',
   ORGANIZER_EMAIL: 'organizer@codienych.com',
+  PHONE_NUMBER: '+91 6380911912',
   ASSOCIATION_COORDINATOR: { name: 'Mr. M. Dhanapal, AP/IT', phone: '+91 99940 36446' },
   STAFF_COORDINATORS: [
     { name: 'Mr. S. Prabakaran, AP/IT', phone: '7904640937' },

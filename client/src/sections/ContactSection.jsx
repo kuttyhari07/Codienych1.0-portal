@@ -44,7 +44,9 @@ const ContactSection = () => {
               <Phone className="w-6 h-6 text-[#00ff66] flex-shrink-0 mt-1" />
               <div>
                 <span className="font-mono text-xs text-gray-400 block uppercase">HOTLINE PHONE</span>
-                <p className="font-mono text-sm text-gray-200">{EVENT_CONFIG.PHONE_NUMBER}</p>
+                <a href={`tel:${EVENT_CONFIG.PHONE_NUMBER.replace(/\s+/g, '')}`} className="font-mono text-sm text-gray-200 hover:text-[#00ff66] transition-colors">
+                  {EVENT_CONFIG.PHONE_NUMBER}
+                </a>
               </div>
             </div>
           </div>
