@@ -16,7 +16,7 @@ const rulesCategories = [
     title: 'Team Formation & Size Rules',
     content: [
       'Teams must consist of exactly 4, 5, or 6 members.',
-      'Cross-college or cross-department teams are allowed unless specified otherwise.',
+      'Cross-college or cross-department teams are not allowed.',
       'One participant cannot belong to multiple teams.',
     ],
   },
