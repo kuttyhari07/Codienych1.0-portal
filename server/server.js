@@ -11,6 +11,9 @@ const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 
+// Trust proxy for Render / reverse proxies so express-rate-limit gets correct client IP
+app.set('trust proxy', 1);
+
 // Security Middlewares
 app.use(
   helmet({
