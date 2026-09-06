@@ -97,6 +97,37 @@ const AdminTeamDetailPage = () => {
     }
   };
 
+  // 1-Click Approve Entire Team & Send Confirmation Email
+  const handleApproveEntireTeam = async () => {
+    if (!window.confirm(`Approve Team ${data.registration.teamName} and send official Confirmation Email to Team Leader?`)) return;
+    try {
+      const res = await api.patch(`/admin/registrations/${id}/approve-team`);
+      if (res.data.success) {
+        setActionMessage(res.data.message || 'Team approved and confirmation email sent!');
+        fetchTeamDetail();
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || 'Error approving team.');
+    }
+  };
+
+  const handleRejectEntireTeam = async () => {
+    const reason = prompt('Enter mandatory reason for rejecting this team registration:');
+    if (!reason || !reason.trim()) {
+      alert('Rejection reason is mandatory.');
+      return;
+    }
+    try {
+      const res = await api.patch(`/admin/registrations/${id}/reject-team`, { rejectionReason: reason.trim() });
+      if (res.data.success) {
+        setActionMessage(res.data.message || 'Team rejected and notice sent.');
+        fetchTeamDetail();
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || 'Error rejecting team.');
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#050b07] text-white flex items-center justify-center font-mono">
@@ -125,34 +156,55 @@ const AdminTeamDetailPage = () => {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
         {actionMessage && (
-          <div className="p-4 bg-emerald-950/80 border border-emerald-500/50 rounded-xl text-emerald-300 font-mono text-xs">
+          <div className="p-4 bg-emerald-950/80 border border-emerald-500/50 rounded-xl text-emerald-300 font-mono text-xs shadow-[0_0_15px_rgba(0,255,102,0.2)]">
             ✓ {actionMessage}
           </div>
         )}
 
-        {/* TEAM SUMMARY HEADER CARD */}
-        <div className="bg-[#0a140e] border-2 border-[#10b981] rounded-2xl p-6 shadow-lg flex flex-col md:flex-row justify-between gap-6">
+        {/* TEAM SUMMARY HEADER CARD WITH 1-CLICK ACTIONS */}
+        <div className="bg-[#0a140e] border-2 border-[#10b981] rounded-2xl p-6 shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div>
             <span className="font-mono text-xs text-gray-400 block">REGISTRATION ID</span>
             <div className="font-orbitron font-black text-3xl text-[#00ff66] neon-glow-green">
               {registration.registrationId}
             </div>
             <div className="font-mono text-sm text-gray-300 mt-1">
-              Registered On: {new Date(registration.createdAt).toLocaleString()}
+              Team: <strong className="text-white">{registration.teamName}</strong> ({registration.teamSize} Members) | Registered On: {new Date(registration.createdAt).toLocaleString()}
             </div>
           </div>
 
-          <div className="flex flex-col justify-center items-start md:items-end">
-            <span className="font-mono text-xs text-gray-400 block">OVERALL REGISTRATION STATUS</span>
-            <span className={`font-orbitron font-extrabold text-lg px-4 py-1 rounded-lg border mt-1 ${
-              registration.status === 'REGISTRATION CONFIRMED'
-                ? 'bg-green-500/20 text-green-400 border-green-500/40'
-                : registration.status === 'REJECTED'
-                ? 'bg-red-500/20 text-red-400 border-red-500/40'
-                : 'bg-amber-500/20 text-amber-400 border-amber-500/40'
-            }`}>
-              {registration.status}
-            </span>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div>
+              <span className="font-mono text-[10px] text-gray-400 block text-left sm:text-right">CURRENT STATUS</span>
+              <span className={`font-orbitron font-extrabold text-sm px-3 py-1 rounded-lg border block text-center mt-0.5 ${
+                registration.status === 'REGISTRATION CONFIRMED'
+                  ? 'bg-green-500/20 text-green-400 border-green-500/40'
+                  : registration.status === 'REJECTED'
+                  ? 'bg-red-500/20 text-red-400 border-red-500/40'
+                  : 'bg-amber-500/20 text-amber-400 border-amber-500/40'
+              }`}>
+                {registration.status}
+              </span>
+            </div>
+
+            {/* QUICK ACTIONS */}
+            <div className="flex gap-2">
+              <button
+                onClick={handleApproveEntireTeam}
+                className="px-4 py-2.5 bg-[#00ff66] hover:bg-[#10b981] text-black hover:text-white font-orbitron font-bold text-xs rounded-xl transition-all shadow-[0_0_20px_rgba(0,255,102,0.4)] flex items-center space-x-1.5"
+              >
+                <CheckCircle className="w-4 h-4" />
+                <span>APPROVE TEAM & SEND EMAIL</span>
+              </button>
+
+              <button
+                onClick={handleRejectEntireTeam}
+                className="px-4 py-2.5 bg-red-950/90 hover:bg-red-900 border border-red-500/60 text-red-300 font-mono text-xs rounded-xl transition-all flex items-center space-x-1.5"
+              >
+                <XCircle className="w-4 h-4" />
+                <span>REJECT TEAM</span>
+              </button>
+            </div>
           </div>
         </div>
 

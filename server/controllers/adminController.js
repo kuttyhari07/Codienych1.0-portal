@@ -582,12 +582,113 @@ const exportReport = async (req, res) => {
   }
 };
 
+/**
+ * PATCH /api/admin/registrations/:id/approve-team
+ * 1-Click Approve Entire Team (Marks Payment + All Participant IDs as VERIFIED and sends Confirmation Email)
+ */
+const approveTeamRegistration = async (req, res) => {
+  try {
+    const registration = await Registration.findById(req.params.id);
+    if (!registration) {
+      return res.status(404).json({ success: false, message: 'Registration record not found.' });
+    }
+
+    // 1. Mark Payment Verified
+    await Payment.findOneAndUpdate(
+      { registration: registration._id },
+      { status: 'VERIFIED', verifiedAt: new Date(), rejectionReason: '' }
+    );
+
+    // 2. Mark All Participants Verified
+    await Participant.updateMany(
+      { registration: registration._id },
+      { verificationStatus: 'VERIFIED', rejectionReason: '' }
+    );
+
+    // 3. Mark Registration Confirmed
+    registration.status = 'REGISTRATION CONFIRMED';
+    await registration.save();
+
+    // 4. Send Confirmation Email to Team Leader
+    const leader = await Participant.findOne({ registration: registration._id, role: 'LEADER' }) || await Participant.findOne({ registration: registration._id });
+    if (leader) {
+      await sendRegistrationConfirmation({
+        leaderEmail: leader.email,
+        leaderName: leader.fullName,
+        teamName: registration.teamName,
+        registrationId: registration.registrationId,
+        teamSize: registration.teamSize,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: `Team ${registration.teamName} approved and confirmation email sent to ${leader ? leader.email : 'Team Leader'}!`,
+      data: registration,
+    });
+  } catch (error) {
+    console.error('[Admin Approve Team Error]', error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+/**
+ * PATCH /api/admin/registrations/:id/reject-team
+ * 1-Click Reject Entire Team with Reason (Sends Rejection Email to Team Leader)
+ */
+const rejectTeamRegistration = async (req, res) => {
+  try {
+    const { rejectionReason } = req.body;
+    if (!rejectionReason || !rejectionReason.trim()) {
+      return res.status(400).json({ success: false, message: 'Rejection reason is mandatory.' });
+    }
+
+    const registration = await Registration.findById(req.params.id);
+    if (!registration) {
+      return res.status(404).json({ success: false, message: 'Registration record not found.' });
+    }
+
+    // 1. Mark Payment & Registration as REJECTED
+    await Payment.findOneAndUpdate(
+      { registration: registration._id },
+      { status: 'REJECTED', rejectionReason: rejectionReason.trim() }
+    );
+
+    registration.status = 'REJECTED';
+    await registration.save();
+
+    // 2. Send Rejection Email to Team Leader
+    const leader = await Participant.findOne({ registration: registration._id, role: 'LEADER' }) || await Participant.findOne({ registration: registration._id });
+    if (leader) {
+      await sendRegistrationRejection({
+        leaderEmail: leader.email,
+        leaderName: leader.fullName,
+        teamName: registration.teamName,
+        registrationId: registration.registrationId,
+        rejectionType: 'Team Registration Verification',
+        reason: rejectionReason.trim(),
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: `Team ${registration.teamName} rejected and notice sent to ${leader ? leader.email : 'Team Leader'}.`,
+      data: registration,
+    });
+  } catch (error) {
+    console.error('[Admin Reject Team Error]', error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 module.exports = {
   loginAdmin,
   logoutAdmin,
   getDashboardStats,
   getRegistrations,
   getRegistrationById,
+  approveTeamRegistration,
+  rejectTeamRegistration,
   getPayments,
   verifyPayment,
   rejectPayment,

@@ -7,6 +7,8 @@ const {
   getDashboardStats,
   getRegistrations,
   getRegistrationById,
+  approveTeamRegistration,
+  rejectTeamRegistration,
   getPayments,
   verifyPayment,
   rejectPayment,
@@ -28,6 +30,8 @@ router.get('/export-report', exportReport);
 
 router.get('/registrations', getRegistrations);
 router.get('/registrations/:id', getRegistrationById);
+router.patch('/registrations/:id/approve-team', approveTeamRegistration);
+router.patch('/registrations/:id/reject-team', rejectTeamRegistration);
 
 router.get('/payments', getPayments);
 router.patch('/payments/:id/verify', verifyPayment);

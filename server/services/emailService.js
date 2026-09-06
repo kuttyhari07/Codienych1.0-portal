@@ -131,15 +131,16 @@ Please login to Admin Dashboard to review ID cards & payment proof.
   `.trim();
 
   try {
+    const adminAlertEmail = config.ADMIN_EMAIL || 'hariharangmhk0429@gmail.com';
     await transporter.sendMail({
-      from: config.EMAIL_FROM,
-      to: config.ORGANIZER_EMAIL,
+      from: `"CODIENYCH 1.0 Control Center" <${config.SMTP_USER || 'codienych1.0@gmail.com'}>`,
+      to: adminAlertEmail,
       replyTo: leaderEmail,
       subject: `[NEW REGISTRATION] Team ${teamName} (${registrationId}) - CODIENYCH 1.0`,
       text,
       html,
     });
-    console.log(`[Email Service] Organizer alert sent successfully to ${config.ORGANIZER_EMAIL}`);
+    console.log(`[Email Service] Organizer registration alert sent successfully to ${adminAlertEmail}`);
     return true;
   } catch (error) {
     console.error(`[Email Service Error] Failed to send organizer alert:`, error.message);
