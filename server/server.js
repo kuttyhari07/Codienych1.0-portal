@@ -47,8 +47,8 @@ const apiLimiter = rateLimit({
 app.use('/api', apiLimiter);
 
 // Body Parsers
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // Serve Uploaded Files statically
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -76,7 +76,13 @@ app.get('/api/health', (req, res) => {
 
 // Global Error Handler
 app.use((err, req, res, next) => {
-  console.error('[Unhandled Error]', err.stack);
+  console.error('[Unhandled Error]', err);
+  if (err.code === 'LIMIT_FILE_SIZE') {
+    return res.status(400).json({
+      success: false,
+      message: 'One of your uploaded image files is too large. Please upload files under 15MB each.',
+    });
+  }
   res.status(err.status || 500).json({
     success: false,
     message: err.message || 'Internal Server Error',

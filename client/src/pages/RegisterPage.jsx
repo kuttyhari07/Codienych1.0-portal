@@ -73,10 +73,82 @@ const RegisterPage = () => {
     setMembers(updated);
   };
 
-  const handleMemberIdCard = (index, file) => {
+  // Client-side quick image compression to make uploads instant (< 1 second)
+  const compressImage = async (file) => {
+    if (!file || !file.type.startsWith('image/')) return file;
+    // If file is already small (< 500KB), no heavy compression needed
+    if (file.size < 500 * 1024) return file;
+
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 1200;
+          const MAX_HEIGHT = 1200;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          canvas.toBlob(
+            (blob) => {
+              if (blob) {
+                const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".webp", {
+                  type: 'image/webp',
+                  lastModified: Date.now(),
+                });
+                resolve(compressedFile);
+              } else {
+                resolve(file);
+              }
+            },
+            'image/webp',
+            0.8
+          );
+        };
+        img.onerror = () => resolve(file);
+      };
+      reader.onerror = () => resolve(file);
+    });
+  };
+
+  const handleLeaderIdCard = async (file) => {
+    if (!file) return;
+    const processed = await compressImage(file);
+    setLeader((prev) => ({ ...prev, idCardFile: processed }));
+  };
+
+  const handleMemberIdCard = async (index, file) => {
+    if (!file) return;
+    const processed = await compressImage(file);
     const updated = [...members];
-    updated[index].idCardFile = file;
+    updated[index].idCardFile = processed;
     setMembers(updated);
+  };
+
+  const handlePaymentScreenshot = async (file) => {
+    if (!file) return;
+    const processed = await compressImage(file);
+    setPaymentScreenshotFile(processed);
   };
 
   const copyUpiId = () => {
@@ -654,7 +726,7 @@ const RegisterPage = () => {
                     <input
                       type="file"
                       accept="image/jpeg,image/png,image/webp"
-                      onChange={(e) => setLeader({ ...leader, idCardFile: e.target.files[0] })}
+                      onChange={(e) => handleLeaderIdCard(e.target.files[0])}
                       className="hidden"
                     />
                   </label>
@@ -827,7 +899,7 @@ const RegisterPage = () => {
                   <input
                     type="file"
                     accept="image/jpeg,image/png,image/webp"
-                    onChange={(e) => setPaymentScreenshotFile(e.target.files[0])}
+                    onChange={(e) => handlePaymentScreenshot(e.target.files[0])}
                     className="hidden"
                   />
                 </label>
