@@ -23,46 +23,39 @@ const createTransporter = () => {
 };
 
 /**
- * Common HTML wrapper with premium cyberpunk/dark theme
+ * Common HTML wrapper with clean email-client compatible styling (avoiding spam triggers)
  */
 const wrapEmailTemplate = (title, badgeText, contentHtml) => `
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <style>
-    body { margin: 0; padding: 0; background-color: #030712; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
-    .container { max-width: 600px; margin: 20px auto; background: #0b0f19; border: 1px solid #1f293d; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-    .header { background: linear-gradient(135deg, #09131f 0%, #030712 100%); padding: 30px; border-bottom: 1px solid #1e293b; text-align: center; }
-    .header h1 { margin: 0; font-size: 26px; color: #00ff66; letter-spacing: 2px; text-transform: uppercase; font-weight: 800; text-shadow: 0 0 10px rgba(0,255,102,0.3); }
-    .header p { margin: 5px 0 0; color: #94a3b8; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; }
-    .badge { display: inline-block; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-top: 15px; }
-    .badge-success { background: rgba(0, 255, 102, 0.1); color: #00ff66; border: 1px solid #00ff66; }
-    .badge-info { background: rgba(56, 189, 248, 0.1); color: #38bdf8; border: 1px solid #38bdf8; }
-    .badge-danger { background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid #ef4444; }
-    .content { padding: 30px; color: #e2e8f0; line-height: 1.6; font-size: 15px; }
-    .card { background: #131b2e; border: 1px solid #23304b; border-radius: 8px; padding: 18px; margin: 20px 0; }
-    .label { color: #94a3b8; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .value { color: #f8fafc; font-weight: 600; font-family: monospace; font-size: 14px; }
-    .footer { background: #060a12; padding: 20px 30px; border-top: 1px solid #1e293b; text-align: center; color: #64748b; font-size: 12px; }
-    .footer a { color: #00ff66; text-decoration: none; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${title}</title>
 </head>
-<body>
-  <div class="container">
-    <div class="header">
-      <h1>CODIENYCH 1.0</h1>
-      <p>24-Hour Software Hackathon</p>
-      <div class="badge ${badgeText.type}">${badgeText.text}</div>
-    </div>
-    <div class="content">
-      ${contentHtml}
-    </div>
-    <div class="footer">
-      <p style="margin: 0 0 6px 0;">Organized by Department of Information Technology, Erode Sengunthar Engineering College</p>
-      <p style="margin: 0;">For queries, contact <a href="mailto:${config.ORGANIZER_EMAIL}">${config.ORGANIZER_EMAIL}</a></p>
-    </div>
-  </div>
+<body style="margin: 0; padding: 20px; background-color: #030712; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #e2e8f0;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width: 600px; margin: 0 auto; background: #0b0f19; border: 1px solid #1f293d; border-radius: 12px; overflow: hidden;">
+    <tr>
+      <td style="background: #09131f; padding: 25px; border-bottom: 1px solid #1e293b; text-align: center;">
+        <h1 style="margin: 0; font-size: 24px; color: #00ff66; letter-spacing: 2px; text-transform: uppercase;">CODIENYCH 1.0</h1>
+        <p style="margin: 4px 0 0; color: #94a3b8; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;">24-Hour Software Hackathon</p>
+        <div style="display: inline-block; padding: 4px 12px; border-radius: 16px; font-size: 11px; font-weight: bold; margin-top: 10px; background: rgba(0,255,102,0.1); color: #00ff66; border: 1px solid #00ff66;">
+          ${badgeText.text}
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding: 25px; color: #e2e8f0; font-size: 14px; line-height: 1.6;">
+        ${contentHtml}
+      </td>
+    </tr>
+    <tr>
+      <td style="background: #060a12; padding: 15px 25px; border-top: 1px solid #1e293b; text-align: center; color: #64748b; font-size: 11px;">
+        <p style="margin: 0 0 4px 0;">Department of Information Technology, Erode Sengunthar Engineering College</p>
+        <p style="margin: 0;">Need help? Email <a href="mailto:${config.ORGANIZER_EMAIL}" style="color: #00ff66; text-decoration: none;">${config.ORGANIZER_EMAIL}</a></p>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>
 `;
@@ -118,11 +111,32 @@ const sendOrganizerNewRegistrationAlert = async ({
     contentHtml
   );
 
+  const text = `
+⚡ NEW TEAM REGISTRATION SUBMITTED - CODIENYCH 1.0
+
+Registration ID: ${registrationId}
+Team Name: ${teamName}
+Team Size: ${teamSize} Members
+Expected Fee: ₹${expectedAmount}
+UPI UTR / Tx ID: ${transactionId}
+
+Team Leader Contact:
+Name: ${leaderName}
+Email: ${leaderEmail}
+Phone: ${leaderPhone}
+College: ${college}
+Department: ${department}
+
+Please login to Admin Dashboard to review ID cards & payment proof.
+  `.trim();
+
   try {
     await transporter.sendMail({
       from: config.EMAIL_FROM,
       to: config.ORGANIZER_EMAIL,
+      replyTo: leaderEmail,
       subject: `[NEW REGISTRATION] Team ${teamName} (${registrationId}) - CODIENYCH 1.0`,
+      text,
       html,
     });
     console.log(`[Email Service] Organizer alert sent successfully to ${config.ORGANIZER_EMAIL}`);
@@ -181,11 +195,30 @@ const sendRegistrationReceivedToLeader = async ({
     contentHtml
   );
 
+  const text = `
+Registration Received - CODIENYCH 1.0
+
+Hello ${leaderName},
+Thank you for registering Team ${teamName} for CODIENYCH 1.0!
+
+Registration ID: ${registrationId}
+Team Name: ${teamName}
+Team Size: ${teamSize} Members
+Amount: ₹${expectedAmount}
+Transaction ID: ${transactionId}
+Status: PENDING VERIFICATION
+
+Our team is currently verifying your payment UTR and student ID cards.
+Track your status on our portal anytime using Registration ID: ${registrationId}.
+  `.trim();
+
   try {
     await transporter.sendMail({
       from: config.EMAIL_FROM,
       to: leaderEmail,
+      replyTo: config.ORGANIZER_EMAIL,
       subject: `[CODIENYCH 1.0] Registration Received - ${teamName} (${registrationId})`,
+      text,
       html,
     });
     console.log(`[Email Service] Registration acknowledgement sent to leader: ${leaderEmail}`);
@@ -211,12 +244,12 @@ const sendRegistrationConfirmation = async ({ leaderEmail, leaderName, teamName,
     <p>Hello <strong>${leaderName}</strong>,</p>
     <p>Congratulations! Your team payment and student credentials for <strong>${teamName}</strong> have been <strong>verified and approved</strong> by the CODIENYCH 1.0 organizing committee.</p>
     
-    <div class="card" style="border-color: #00ff66;">
-      <div style="margin-bottom: 8px;"><span class="label">Registration ID:</span> <span class="value" style="color:#00ff66; font-size: 16px;">${registrationId}</span></div>
-      <div style="margin-bottom: 8px;"><span class="label">Team Name:</span> <span class="value">${teamName}</span></div>
-      <div style="margin-bottom: 8px;"><span class="label">Team Size:</span> <span class="value">${teamSize} Members</span></div>
-      <div style="margin-bottom: 8px;"><span class="label">Status:</span> <span class="value" style="color:#00ff66;">CONFIRMED & SEAT RESERVED</span></div>
-      <div><span class="label">Venue:</span> <span class="value">${config.VENUE}</span></div>
+    <div style="background: #131b2e; border: 1px solid #00ff66; border-radius: 8px; padding: 18px; margin: 20px 0;">
+      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Registration ID:</span> <span style="color:#00ff66; font-size: 16px; font-weight: bold;">${registrationId}</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Team Name:</span> <span style="color: #fff; font-weight: bold;">${teamName}</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Team Size:</span> <span style="color: #fff; font-weight: bold;">${teamSize} Members</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Status:</span> <span style="color:#00ff66; font-weight: bold;">CONFIRMED & SEAT RESERVED</span></div>
+      <div><span style="color: #94a3b8; font-size: 13px;">Venue:</span> <span style="color: #fff; font-weight: bold;">${config.VENUE}</span></div>
     </div>
 
     <p><strong>Important Instructions:</strong></p>
@@ -235,11 +268,28 @@ const sendRegistrationConfirmation = async ({ leaderEmail, leaderName, teamName,
     contentHtml
   );
 
+  const text = `
+🎉 REGISTRATION CONFIRMED - CODIENYCH 1.0
+
+Hello ${leaderName},
+Congratulations! Your team payment and student credentials for ${teamName} have been verified and approved.
+
+Registration ID: ${registrationId}
+Team Name: ${teamName}
+Team Size: ${teamSize} Members
+Status: CONFIRMED & SEAT RESERVED
+Venue: ${config.VENUE}
+
+Please bring physical College ID cards and laptops on the event day.
+  `.trim();
+
   try {
     await transporter.sendMail({
       from: config.EMAIL_FROM,
       to: leaderEmail,
+      replyTo: config.ORGANIZER_EMAIL,
       subject: `[CODIENYCH 1.0] Registration Approved & Confirmed! - ${registrationId}`,
+      text,
       html,
     });
     console.log(`[Email Service] Confirmation email sent successfully to leader: ${leaderEmail}`);
@@ -271,20 +321,19 @@ const sendRegistrationRejection = async ({
     <h2 style="color: #ef4444; margin-top: 0;">Registration Update: Action Required ⚠️</h2>
     <p>Hello <strong>${leaderName}</strong>,</p>
     <p>We are contacting you regarding the registration for <strong>Team ${teamName}</strong> (ID: <strong style="color: #ef4444;">${registrationId}</strong>) for CODIENYCH 1.0.</p>
-    <p>During the verification process by our review committee, an issue was detected with your <strong>${rejectionType}</strong> and the status has been marked as <strong>REJECTED</strong>.</p>
+    <p>During verification, an issue was found with your <strong>${rejectionType}</strong> and the status has been marked as <strong>REJECTED</strong>.</p>
     
-    <div class="card" style="border-color: #ef4444; background: #1c1117;">
-      <div style="margin-bottom: 8px;"><span class="label">Registration ID:</span> <span class="value">${registrationId}</span></div>
-      <div style="margin-bottom: 8px;"><span class="label">Team Name:</span> <span class="value">${teamName}</span></div>
-      <div style="margin-bottom: 8px;"><span class="label">Rejected Component:</span> <span class="value" style="color: #f87171;">${rejectionType}</span></div>
-      <div style="margin-top: 12px; padding: 10px; background: rgba(239,68,68,0.1); border-left: 3px solid #ef4444; border-radius: 4px;">
-        <span class="label" style="color: #fca5a5; display: block; margin-bottom: 4px;">Reason for Rejection:</span>
-        <span style="color: #ffffff; font-weight: 500;">${reason || 'Verification criteria not met. Please contact support.'}</span>
+    <div style="background: #1c1117; border: 1px solid #ef4444; border-radius: 8px; padding: 18px; margin: 20px 0;">
+      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Registration ID:</span> <span style="color: #fff; font-weight: bold;">${registrationId}</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Team Name:</span> <span style="color: #fff; font-weight: bold;">${teamName}</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Rejected Item:</span> <span style="color: #f87171; font-weight: bold;">${rejectionType}</span></div>
+      <div style="margin-top: 10px; padding: 10px; background: rgba(239,68,68,0.1); border-left: 3px solid #ef4444; border-radius: 4px;">
+        <span style="color: #fca5a5; display: block; margin-bottom: 4px; font-size: 12px;">Reason:</span>
+        <span style="color: #ffffff; font-weight: bold;">${reason || 'Verification criteria not met.'}</span>
       </div>
     </div>
 
-    <p><strong>What should you do next?</strong></p>
-    <p>If you believe this is a mistake or if you need to submit corrected proof/documents, please reach out to the organizing team immediately at <a href="mailto:${config.ORGANIZER_EMAIL}" style="color: #00ff66;">${config.ORGANIZER_EMAIL}</a> or contact the student coordinators with your Registration ID.</p>
+    <p>If you believe this is a mistake, contact us at <a href="mailto:${config.ORGANIZER_EMAIL}" style="color: #00ff66;">${config.ORGANIZER_EMAIL}</a>.</p>
   `;
 
   const html = wrapEmailTemplate(
@@ -293,11 +342,25 @@ const sendRegistrationRejection = async ({
     contentHtml
   );
 
+  const text = `
+Registration Update: Action Required - CODIENYCH 1.0
+
+Hello ${leaderName},
+We are contacting you regarding the registration for Team ${teamName} (ID: ${registrationId}).
+Your ${rejectionType} has been marked as REJECTED.
+
+Reason: ${reason || 'Verification criteria not met.'}
+
+Please contact the organizing team at ${config.ORGANIZER_EMAIL} for assistance.
+  `.trim();
+
   try {
     await transporter.sendMail({
       from: config.EMAIL_FROM,
       to: leaderEmail,
+      replyTo: config.ORGANIZER_EMAIL,
       subject: `[CODIENYCH 1.0] Registration Issue / Rejection Notice - ${registrationId}`,
+      text,
       html,
     });
     console.log(`[Email Service] Rejection notification sent to leader: ${leaderEmail}`);
@@ -314,3 +377,4 @@ module.exports = {
   sendRegistrationConfirmation,
   sendRegistrationRejection,
 };
+
