@@ -2,16 +2,22 @@ const nodemailer = require('nodemailer');
 const config = require('../config/env');
 
 const createTransporter = () => {
-  if (!config.ENABLE_EMAIL || !config.SMTP_USER || !config.SMTP_PASS) {
+  const isEnabled = config.ENABLE_EMAIL || (process.env.ENABLE_EMAIL === 'true') || Boolean(config.SMTP_PASS);
+  const smtpUser = config.SMTP_USER || config.ORGANIZER_EMAIL || 'codienych1.0@gmail.com';
+  const smtpPass = (config.SMTP_PASS || '').trim();
+
+  if (!isEnabled || !smtpUser || !smtpPass) {
+    console.warn(`[Email Service Warning] Transporter cannot be created. isEnabled: ${isEnabled}, smtpUser: ${smtpUser}, smtpPass present: ${Boolean(smtpPass)}`);
     return null;
   }
+
   return nodemailer.createTransport({
-    host: config.SMTP_HOST,
-    port: config.SMTP_PORT,
-    secure: config.SMTP_PORT === 465,
+    host: config.SMTP_HOST || 'smtp.gmail.com',
+    port: parseInt(config.SMTP_PORT, 10) || 587,
+    secure: parseInt(config.SMTP_PORT, 10) === 465,
     auth: {
-      user: config.SMTP_USER,
-      pass: config.SMTP_PASS,
+      user: smtpUser,
+      pass: smtpPass,
     },
   });
 };
