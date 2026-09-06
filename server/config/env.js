@@ -20,7 +20,7 @@ module.exports = {
 
   COLLEGE_NAME: process.env.COLLEGE_NAME || '[COLLEGE NAME PLACEHOLDER]',
   VENUE: process.env.VENUE || '[VENUE PLACEHOLDER]',
-  ORGANIZER_EMAIL: process.env.ORGANIZER_EMAIL || 'organizer@codienych.com',
+  ORGANIZER_EMAIL: process.env.ORGANIZER_EMAIL || 'codienych1.0@gmail.com',
   PHONE_NUMBER: process.env.PHONE_NUMBER || '+91 9876543210',
 
   USE_CLOUDINARY: process.env.USE_CLOUDINARY === 'true',
