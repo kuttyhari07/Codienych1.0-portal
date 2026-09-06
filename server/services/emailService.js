@@ -1,7 +1,13 @@
 const nodemailer = require('nodemailer');
 const config = require('../config/env');
 
+let cachedTransporter = null;
+
 const createTransporter = () => {
+  if (cachedTransporter) {
+    return cachedTransporter;
+  }
+
   const isEnabled = config.ENABLE_EMAIL || (process.env.ENABLE_EMAIL === 'true') || Boolean(config.SMTP_PASS);
   const smtpUser = config.SMTP_USER || config.ORGANIZER_EMAIL || 'codienych1.0@gmail.com';
   const smtpPass = (config.SMTP_PASS || '').trim();
@@ -11,15 +17,15 @@ const createTransporter = () => {
     return null;
   }
 
-  return nodemailer.createTransport({
-    host: config.SMTP_HOST || 'smtp.gmail.com',
-    port: parseInt(config.SMTP_PORT, 10) || 587,
-    secure: parseInt(config.SMTP_PORT, 10) === 465,
+  cachedTransporter = nodemailer.createTransport({
+    service: 'gmail',
     auth: {
       user: smtpUser,
       pass: smtpPass,
     },
   });
+
+  return cachedTransporter;
 };
 
 /**
