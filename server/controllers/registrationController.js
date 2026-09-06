@@ -190,42 +190,8 @@ const registerTeam = async (req, res) => {
 
     await Participant.insertMany(participantDocs);
 
-    // Guaranteed Email Dispatch (Awaited with try/catch to ensure execution on Render/cloud instances)
-    const leaderDoc = participantDocs[0];
-    if (leaderDoc) {
-      try {
-        await Promise.allSettled([
-          // 1. Send Alert to Admin / Organizer (hariharangmhk0429@gmail.com)
-          sendOrganizerNewRegistrationAlert({
-            teamName: registration.teamName,
-            registrationId,
-            teamSize: registration.teamSize,
-            expectedAmount,
-            transactionId: trimmedTxId,
-            leaderName: leaderDoc.fullName,
-            leaderEmail: leaderDoc.email,
-            leaderPhone: leaderDoc.phone,
-            college: leaderDoc.college,
-            department: leaderDoc.department,
-          }),
-          // 2. Send Acknowledgement to Team Leader
-          sendRegistrationReceivedToLeader({
-            leaderEmail: leaderDoc.email,
-            leaderName: leaderDoc.fullName,
-            teamName: registration.teamName,
-            registrationId,
-            teamSize: registration.teamSize,
-            expectedAmount,
-            transactionId: trimmedTxId,
-          }),
-        ]);
-        console.log(`[Registration] Emails dispatched successfully for ${registration.teamName} (${registrationId})`);
-      } catch (emailErr) {
-        console.error('[Registration Email Error]', emailErr);
-      }
-    }
-
-    return res.status(201).json({
+    // Send immediate response so student/user gets instant SUCCESS confirmation screen without waiting
+    res.status(201).json({
       success: true,
       message: 'Registration submitted successfully. Waiting for admin verification.',
       data: {
@@ -237,6 +203,42 @@ const registerTeam = async (req, res) => {
         status: registration.status,
       },
     });
+
+    // Background Email Dispatch (Runs asynchronously in background without blocking HTTP response)
+    const leaderDoc = participantDocs[0];
+    if (leaderDoc) {
+      Promise.allSettled([
+        // 1. Send Alert to Admin / Organizer (hariharangmhk0429@gmail.com)
+        sendOrganizerNewRegistrationAlert({
+          teamName: registration.teamName,
+          registrationId,
+          teamSize: registration.teamSize,
+          expectedAmount,
+          transactionId: trimmedTxId,
+          leaderName: leaderDoc.fullName,
+          leaderEmail: leaderDoc.email,
+          leaderPhone: leaderDoc.phone,
+          college: leaderDoc.college,
+          department: leaderDoc.department,
+        }),
+        // 2. Send Acknowledgement to Team Leader
+        sendRegistrationReceivedToLeader({
+          leaderEmail: leaderDoc.email,
+          leaderName: leaderDoc.fullName,
+          teamName: registration.teamName,
+          registrationId,
+          teamSize: registration.teamSize,
+          expectedAmount,
+          transactionId: trimmedTxId,
+        }),
+      ])
+        .then(() => {
+          console.log(`[Registration] Background emails sent for ${registration.teamName} (${registrationId})`);
+        })
+        .catch((emailErr) => {
+          console.error('[Registration Email Error]', emailErr);
+        });
+    }
   } catch (error) {
     console.error('[Registration Error]', error);
     return res.status(500).json({
