@@ -3,6 +3,10 @@ const Participant = require('../models/Participant');
 const Payment = require('../models/Payment');
 const config = require('../config/env');
 const { uploadFile } = require('../services/storageService');
+const {
+  sendOrganizerNewRegistrationAlert,
+  sendRegistrationReceivedToLeader,
+} = require('../services/emailService');
 
 /**
  * Generate sequential Registration ID starting from 0001
@@ -189,6 +193,35 @@ const registerTeam = async (req, res) => {
     }
 
     await Participant.insertMany(participantDocs);
+
+    // Trigger async emails to Organizer and Team Leader
+    const leaderDoc = participantDocs[0];
+    if (leaderDoc) {
+      // 1. Send Alert to Organizer
+      sendOrganizerNewRegistrationAlert({
+        teamName: registration.teamName,
+        registrationId,
+        teamSize: registration.teamSize,
+        expectedAmount,
+        transactionId: trimmedTxId,
+        leaderName: leaderDoc.fullName,
+        leaderEmail: leaderDoc.email,
+        leaderPhone: leaderDoc.phone,
+        college: leaderDoc.college,
+        department: leaderDoc.department,
+      }).catch((err) => console.error('[Email Service] Error in organizer alert:', err.message));
+
+      // 2. Send Acknowledgement to Team Leader
+      sendRegistrationReceivedToLeader({
+        leaderEmail: leaderDoc.email,
+        leaderName: leaderDoc.fullName,
+        teamName: registration.teamName,
+        registrationId,
+        teamSize: registration.teamSize,
+        expectedAmount,
+        transactionId: trimmedTxId,
+      }).catch((err) => console.error('[Email Service] Error in leader ack:', err.message));
+    }
 
     return res.status(201).json({
       success: true,

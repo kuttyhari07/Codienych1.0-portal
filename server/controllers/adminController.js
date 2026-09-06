@@ -2,7 +2,10 @@ const Admin = require('../models/Admin');
 const Registration = require('../models/Registration');
 const Participant = require('../models/Participant');
 const Payment = require('../models/Payment');
-const { sendRegistrationConfirmation } = require('../services/emailService');
+const {
+  sendRegistrationConfirmation,
+  sendRegistrationRejection,
+} = require('../services/emailService');
 
 /**
  * Helper function to evaluate and update overall Registration status
@@ -286,6 +289,28 @@ const rejectPayment = async (req, res) => {
 
     await updateOverallRegistrationStatus(payment.registration);
 
+    // Asynchronously send rejection notice to Team Leader
+    (async () => {
+      try {
+        const registration = await Registration.findById(payment.registration);
+        if (registration) {
+          const leader = await Participant.findOne({ registration: registration._id, role: 'LEADER' }) || await Participant.findOne({ registration: registration._id });
+          if (leader) {
+            await sendRegistrationRejection({
+              leaderEmail: leader.email,
+              leaderName: leader.fullName,
+              teamName: registration.teamName,
+              registrationId: registration.registrationId,
+              rejectionType: 'Payment Verification',
+              reason: rejectionReason.trim(),
+            });
+          }
+        }
+      } catch (e) {
+        console.error('[Email Service] Error in rejectPayment mail trigger:', e.message);
+      }
+    })();
+
     return res.status(200).json({
       success: true,
       message: 'Payment rejected.',
@@ -354,6 +379,28 @@ const rejectParticipant = async (req, res) => {
     await participant.save();
 
     await updateOverallRegistrationStatus(participant.registration);
+
+    // Asynchronously send rejection notice to Team Leader
+    (async () => {
+      try {
+        const registration = await Registration.findById(participant.registration);
+        if (registration) {
+          const leader = await Participant.findOne({ registration: registration._id, role: 'LEADER' }) || await Participant.findOne({ registration: registration._id });
+          if (leader) {
+            await sendRegistrationRejection({
+              leaderEmail: leader.email,
+              leaderName: leader.fullName,
+              teamName: registration.teamName,
+              registrationId: registration.registrationId,
+              rejectionType: `Student ID Card (${participant.fullName})`,
+              reason: rejectionReason.trim(),
+            });
+          }
+        }
+      } catch (e) {
+        console.error('[Email Service] Error in rejectParticipant mail trigger:', e.message);
+      }
+    })();
 
     return res.status(200).json({
       success: true,
