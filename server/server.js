@@ -57,7 +57,14 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/registrations', registrationRoutes);
 app.use('/api/admin', adminRoutes);
 
-// Health check endpoint
+// Root & Health check endpoints
+app.get('/', (req, res) => {
+  res.status(200).json({
+    status: 'ONLINE',
+    message: 'CODIENYCH 1.0 Backend API Control Center is running smoothly 🚀',
+  });
+});
+
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'OK',
