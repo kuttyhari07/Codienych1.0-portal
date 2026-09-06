@@ -144,8 +144,11 @@ const registerTeam = async (req, res) => {
     // 5. Calculate Fee server-side independently
     const expectedAmount = numTeamSize * config.REGISTRATION_FEE;
 
-    // Save screenshot
-    const screenshotUrl = await uploadFile(screenshotFile, 'payments');
+    // Parallel Concurrent Uploads (Payment Screenshot + All ID Cards concurrently in 1-2 seconds)
+    const [screenshotUrl, ...idCardUrls] = await Promise.all([
+      uploadFile(screenshotFile, 'payments'),
+      ...idCardFiles.map((file) => uploadFile(file, 'idcards')),
+    ]);
 
     // Generate unique Registration ID
     const registrationId = await generateRegistrationId();
@@ -171,26 +174,19 @@ const registerTeam = async (req, res) => {
     });
 
     // Create Participants
-    const participantDocs = [];
-    for (let i = 0; i < parsedParticipants.length; i++) {
-      const p = parsedParticipants[i];
-      const idCardFile = idCardFiles[i];
-      const idCardUrl = await uploadFile(idCardFile, 'idcards');
-
-      participantDocs.push({
-        registration: registration._id,
-        role: i === 0 ? 'LEADER' : 'MEMBER',
-        fullName: p.fullName.trim(),
-        email: p.email.toLowerCase().trim(),
-        phone: p.phone.trim(),
-        college: p.college.trim(),
-        department: p.department.trim(),
-        year: p.year.toString().trim(),
-        studentId: p.studentId.trim(),
-        idCardUrl,
-        verificationStatus: 'PENDING',
-      });
-    }
+    const participantDocs = parsedParticipants.map((p, i) => ({
+      registration: registration._id,
+      role: i === 0 ? 'LEADER' : 'MEMBER',
+      fullName: p.fullName.trim(),
+      email: p.email.toLowerCase().trim(),
+      phone: p.phone.trim(),
+      college: p.college.trim(),
+      department: p.department.trim(),
+      year: p.year.toString().trim(),
+      studentId: p.studentId.trim(),
+      idCardUrl: idCardUrls[i],
+      verificationStatus: 'PENDING',
+    }));
 
     await Participant.insertMany(participantDocs);
 
