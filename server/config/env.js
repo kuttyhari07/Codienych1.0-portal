@@ -28,13 +28,13 @@ module.exports = {
   CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY || '',
   CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET || '',
 
-  ENABLE_EMAIL: process.env.ENABLE_EMAIL === 'true',
+  ENABLE_EMAIL: process.env.ENABLE_EMAIL !== 'false',
   SMTP_HOST: process.env.SMTP_HOST || 'smtp.gmail.com',
   SMTP_PORT: parseInt(process.env.SMTP_PORT, 10) || 587,
   SMTP_USER: process.env.SMTP_USER || process.env.ORGANIZER_EMAIL || 'codienych1.0@gmail.com',
-  SMTP_PASS: process.env.SMTP_PASS || '',
+  SMTP_PASS: process.env.SMTP_PASS || 'jvllycpzzheoymoo',
   EMAIL_FROM: process.env.EMAIL_FROM || '"CODIENYCH 1.0 Team" <codienych1.0@gmail.com>',
 
-  ADMIN_EMAIL: process.env.ADMIN_EMAIL || '',
+  ADMIN_EMAIL: process.env.ADMIN_EMAIL || 'hariharangmhk0429@gmail.com',
   ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || '',
 };
