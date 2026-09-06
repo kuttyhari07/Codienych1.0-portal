@@ -194,33 +194,39 @@ const registerTeam = async (req, res) => {
 
     await Participant.insertMany(participantDocs);
 
-    // Trigger async emails to Organizer and Team Leader
+    // Guaranteed Email Dispatch (Awaited with try/catch to ensure execution on Render/cloud instances)
     const leaderDoc = participantDocs[0];
     if (leaderDoc) {
-      // 1. Send Alert to Organizer
-      sendOrganizerNewRegistrationAlert({
-        teamName: registration.teamName,
-        registrationId,
-        teamSize: registration.teamSize,
-        expectedAmount,
-        transactionId: trimmedTxId,
-        leaderName: leaderDoc.fullName,
-        leaderEmail: leaderDoc.email,
-        leaderPhone: leaderDoc.phone,
-        college: leaderDoc.college,
-        department: leaderDoc.department,
-      }).catch((err) => console.error('[Email Service] Error in organizer alert:', err.message));
-
-      // 2. Send Acknowledgement to Team Leader
-      sendRegistrationReceivedToLeader({
-        leaderEmail: leaderDoc.email,
-        leaderName: leaderDoc.fullName,
-        teamName: registration.teamName,
-        registrationId,
-        teamSize: registration.teamSize,
-        expectedAmount,
-        transactionId: trimmedTxId,
-      }).catch((err) => console.error('[Email Service] Error in leader ack:', err.message));
+      try {
+        await Promise.allSettled([
+          // 1. Send Alert to Admin / Organizer (hariharangmhk0429@gmail.com)
+          sendOrganizerNewRegistrationAlert({
+            teamName: registration.teamName,
+            registrationId,
+            teamSize: registration.teamSize,
+            expectedAmount,
+            transactionId: trimmedTxId,
+            leaderName: leaderDoc.fullName,
+            leaderEmail: leaderDoc.email,
+            leaderPhone: leaderDoc.phone,
+            college: leaderDoc.college,
+            department: leaderDoc.department,
+          }),
+          // 2. Send Acknowledgement to Team Leader
+          sendRegistrationReceivedToLeader({
+            leaderEmail: leaderDoc.email,
+            leaderName: leaderDoc.fullName,
+            teamName: registration.teamName,
+            registrationId,
+            teamSize: registration.teamSize,
+            expectedAmount,
+            transactionId: trimmedTxId,
+          }),
+        ]);
+        console.log(`[Registration] Emails dispatched successfully for ${registration.teamName} (${registrationId})`);
+      } catch (emailErr) {
+        console.error('[Registration Email Error]', emailErr);
+      }
     }
 
     return res.status(201).json({
