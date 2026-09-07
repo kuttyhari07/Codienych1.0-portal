@@ -78,31 +78,50 @@ app.get('/api/health', (req, res) => {
 });
 
 app.get('/api/test-email-status', async (req, res) => {
-  const { sendOrganizerNewRegistrationAlert } = require('./services/emailService');
+  const nodemailer = require('nodemailer');
+  const smtpUser = (process.env.SMTP_USER || config.SMTP_USER || 'codienych1.0@gmail.com').trim();
+  const smtpPass = (process.env.SMTP_PASS || config.SMTP_PASS || 'jvllycpzzheoymoo').replace(/\s+/g, '').trim();
+
   try {
-    const result = await sendOrganizerNewRegistrationAlert({
-      teamName: 'Diagnostic Ping',
-      registrationId: 'DIAGNOSTIC-TEST',
-      teamSize: 4,
-      expectedAmount: 2100,
-      transactionId: 'UTR-PING',
-      leaderName: 'Diagnostics Admin',
-      leaderEmail: config.ADMIN_EMAIL || 'codienych1.0@gmail.com',
-      leaderPhone: '+919999999999',
-      college: 'Test College',
-      department: 'IT',
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: smtpUser,
+        pass: smtpPass,
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
     });
+
+    const verifyResult = await transporter.verify();
+    console.log('Nodemailer verify result:', verifyResult);
+
+    const info = await transporter.sendMail({
+      from: `"CODIENYCH 1.0 Control Center" <${smtpUser}>`,
+      to: 'codienych1.0@gmail.com',
+      subject: '⚡ Diagnostic Test Mail - CODIENYCH 1.0',
+      html: '<h3>Diagnostic Test Email Successful! 🚀</h3>',
+    });
+
     return res.status(200).json({
       success: true,
-      emailSent: result,
-      smtpUserConfigured: Boolean(config.SMTP_USER || config.ORGANIZER_EMAIL),
-      smtpPassConfigured: Boolean(config.SMTP_PASS),
-      adminEmail: config.ADMIN_EMAIL,
+      emailSent: true,
+      messageId: info.messageId,
+      smtpUser,
+      smtpPassLength: smtpPass.length,
     });
   } catch (err) {
-    return res.status(500).json({
+    console.error('Diagnostic error:', err);
+    return res.status(200).json({
       success: false,
-      error: err.message,
+      emailSent: false,
+      errorName: err.name,
+      errorMessage: err.message,
+      errorCode: err.code,
+      errorResponse: err.response,
+      smtpUser,
+      smtpPassLength: smtpPass.length,
     });
   }
 });
