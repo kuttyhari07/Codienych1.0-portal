@@ -35,6 +35,6 @@ module.exports = {
   SMTP_PASS: process.env.SMTP_PASS || 'jvllycpzzheoymoo',
   EMAIL_FROM: process.env.EMAIL_FROM || '"CODIENYCH 1.0 Team" <codienych1.0@gmail.com>',
 
-  ADMIN_EMAIL: process.env.ADMIN_EMAIL || 'hariharangmhk0429@gmail.com',
+  ADMIN_EMAIL: process.env.ADMIN_EMAIL || 'codienych1.0@gmail.com',
   ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || '',
 };

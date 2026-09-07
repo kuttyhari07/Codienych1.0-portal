@@ -372,7 +372,7 @@ const RegisterPage = () => {
                 </div>
                 <p className="mt-1 text-gray-300 font-sans text-xs">
                   {submissionSuccess.emailStatus?.adminAlertSent
-                    ? 'Official registration alert has been successfully delivered from codienych1.0@gmail.com to Organizer (hariharangmhk0429@gmail.com).'
+                    ? 'Official registration alert has been successfully delivered from codienych1.0@gmail.com to Organizer (codienych1.0@gmail.com).'
                     : 'Admin notification will be reviewed directly from Admin Control Dashboard.'}
                 </p>
               </div>

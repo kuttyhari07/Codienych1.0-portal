@@ -150,7 +150,7 @@ Please login to Admin Dashboard to review ID cards & payment proof.
   `.trim();
 
   try {
-    const adminAlertEmail = config.ADMIN_EMAIL || 'hariharangmhk0429@gmail.com';
+    const adminAlertEmail = config.ADMIN_EMAIL || 'codienych1.0@gmail.com';
     await transporter.sendMail({
       from: `"CODIENYCH 1.0 Control Center" <${config.SMTP_USER || 'codienych1.0@gmail.com'}>`,
       to: adminAlertEmail,

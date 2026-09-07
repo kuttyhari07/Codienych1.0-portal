@@ -87,7 +87,7 @@ app.get('/api/test-email-status', async (req, res) => {
       expectedAmount: 2100,
       transactionId: 'UTR-PING',
       leaderName: 'Diagnostics Admin',
-      leaderEmail: config.ADMIN_EMAIL || 'hariharangmhk0429@gmail.com',
+      leaderEmail: config.ADMIN_EMAIL || 'codienych1.0@gmail.com',
       leaderPhone: '+919999999999',
       college: 'Test College',
       department: 'IT',
