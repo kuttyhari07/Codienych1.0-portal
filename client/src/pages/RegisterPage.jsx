@@ -838,68 +838,129 @@ const RegisterPage = () => {
             </div>
           )}
 
-          {/* STEP 6: UPI PAYMENT */}
+          {/* STEP 6: UPI & BANK PAYMENT */}
           {currentStep === 6 && (
             <div className="space-y-6 text-center animate-fadeIn">
               <h2 className="font-orbitron font-bold text-xl text-[#00ff66] border-b border-[#1b3524] pb-3">
-                STEP 6: OFFICIAL UPI PAYMENT
+                STEP 6: REGISTRATION FEE PAYMENT
               </h2>
 
-              <div className="max-w-sm mx-auto bg-[#0a140e] border-2 border-[#00ff66] rounded-3xl p-6 shadow-[0_0_35px_rgba(0,255,102,0.25)]">
-                {/* GPay Style Top Header */}
-                <div className="flex items-center justify-center space-x-3 mb-5">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#00ff66] to-[#10b981] flex items-center justify-center font-orbitron font-bold text-black text-sm shadow-[0_0_10px_#00ff66]">
-                    HG
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto text-left">
+                {/* 1. Official College Bank Account Card */}
+                <div className="bg-[#0a140e] border-2 border-[#10b981] rounded-3xl p-6 shadow-[0_0_30px_rgba(16,185,129,0.2)] space-y-4">
+                  <div className="flex items-center space-x-3 pb-3 border-b border-[#1b3524]">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-950/80 border border-blue-400 flex items-center justify-center font-orbitron font-extrabold text-blue-400 text-xs shadow-md">
+                      CUB
+                    </div>
+                    <div>
+                      <h3 className="font-orbitron font-bold text-base text-white">
+                        {EVENT_CONFIG.BANK_NAME}
+                      </h3>
+                      <span className="font-mono text-[11px] text-[#00ff66] block">
+                        {EVENT_CONFIG.BRANCH_NAME}
+                      </span>
+                    </div>
                   </div>
-                  <div className="text-left">
-                    <h3 className="font-orbitron font-bold text-base text-white leading-tight">
-                      {EVENT_CONFIG.UPI_MERCHANT_NAME}
-                    </h3>
-                    <span className="font-mono text-[11px] text-[#00ff66] block">
-                      CODIENYCH 1.0 ORGANIZER
+
+                  <div className="space-y-3 font-mono text-xs">
+                    <div className="bg-[#050b07] p-3 rounded-xl border border-[#1b3524]">
+                      <span className="text-gray-400 block text-[10px]">BENEFICIARY / ACCOUNT NAME</span>
+                      <span className="text-white font-bold text-xs">{EVENT_CONFIG.ACCOUNT_NAME}</span>
+                    </div>
+
+                    <div className="bg-[#050b07] p-3 rounded-xl border border-[#1b3524] flex items-center justify-between">
+                      <div>
+                        <span className="text-gray-400 block text-[10px]">SB ACCOUNT NUMBER</span>
+                        <span className="text-[#00ff66] font-extrabold text-base tracking-wider">{EVENT_CONFIG.ACCOUNT_NUMBER}</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          navigator.clipboard.writeText(EVENT_CONFIG.ACCOUNT_NUMBER);
+                          alert('Account Number copied to clipboard!');
+                        }}
+                        className="px-2.5 py-1 bg-[#10b981]/20 hover:bg-[#10b981] text-[#00ff66] hover:text-black border border-[#10b981] rounded text-[10px] font-orbitron font-bold transition-all"
+                      >
+                        COPY
+                      </button>
+                    </div>
+
+                    <div className="bg-[#050b07] p-3 rounded-xl border border-[#1b3524] flex items-center justify-between">
+                      <div>
+                        <span className="text-gray-400 block text-[10px]">IFS CODE (CUB)</span>
+                        <span className="text-white font-bold text-sm tracking-wider">{EVENT_CONFIG.IFSC_CODE}</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          navigator.clipboard.writeText(EVENT_CONFIG.IFSC_CODE);
+                          alert('IFSC Code copied to clipboard!');
+                        }}
+                        className="px-2.5 py-1 bg-[#10b981]/20 hover:bg-[#10b981] text-[#00ff66] hover:text-black border border-[#10b981] rounded text-[10px] font-orbitron font-bold transition-all"
+                      >
+                        COPY
+                      </button>
+                    </div>
+
+                    <div className="bg-[#050b07] p-3 rounded-xl border border-[#1b3524] flex items-center justify-between">
+                      <div>
+                        <span className="text-gray-400 block text-[10px]">UPI VPA / ID</span>
+                        <span className="text-[#38bdf8] font-bold text-xs">{EVENT_CONFIG.UPI_ID}</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={copyUpiId}
+                        className="px-2.5 py-1 bg-[#00ff66] text-black font-orbitron font-bold rounded text-[10px] transition-all shadow-[0_0_10px_#00ff66]"
+                      >
+                        {copiedUpi ? 'COPIED!' : 'COPY'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2. Official Dynamic QR Code Card */}
+                <div className="bg-[#0a140e] border-2 border-[#00ff66] rounded-3xl p-6 shadow-[0_0_35px_rgba(0,255,102,0.25)] flex flex-col items-center justify-center text-center">
+                  <div className="w-full flex items-center justify-between pb-3 mb-3 border-b border-[#1b3524]">
+                    <span className="font-orbitron font-bold text-xs text-gray-300">SCAN & PAY VIA UPI</span>
+                    <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-blue-950 text-blue-400 border border-blue-500/40">
+                      CITY UNION BANK UPI
                     </span>
                   </div>
-                </div>
 
-                {/* Dynamic QR Code Box */}
-                <div className="w-56 h-56 mx-auto bg-white p-3 rounded-2xl flex items-center justify-center mb-4 shadow-xl border border-gray-200">
-                  <img
-                    src={`https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=0&data=${encodeURIComponent(
-                      `upi://pay?pa=${EVENT_CONFIG.UPI_ID}&pn=${encodeURIComponent(
-                        EVENT_CONFIG.UPI_MERCHANT_NAME
-                      )}&am=${calculatedFee}&cu=INR&tn=${encodeURIComponent(`CODIENYCH 1.0 Team ${teamName || 'Registration'}`)}`
-                    )}`}
-                    alt="UPI QR Code"
-                    className="w-full h-full object-contain"
-                  />
-                </div>
+                  {/* Dynamic QR Code tailored to Exact Team Fee */}
+                  <div className="w-56 h-56 bg-white p-3 rounded-2xl flex items-center justify-center mb-3 shadow-xl border-2 border-[#00ff66]/60 relative">
+                    <img
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=0&data=${encodeURIComponent(
+                        `upi://pay?pa=${EVENT_CONFIG.UPI_ID}&pn=${encodeURIComponent(
+                          EVENT_CONFIG.UPI_MERCHANT_NAME
+                        )}&am=${calculatedFee}&cu=INR&tn=${encodeURIComponent(`CODIENYCH 1.0 Team ${teamName || 'Registration'}`)}`
+                      )}`}
+                      alt="College CUB UPI QR Code"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
 
-                {/* Dynamic Amount Display */}
-                <div className="font-orbitron font-black text-3xl text-[#00ff66] neon-glow-green mb-1">
-                  ₹{calculatedFee}
-                </div>
-                <p className="font-mono text-[11px] text-gray-400 mb-4">
-                  ({teamSize} Participants × ₹{EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER})
-                </p>
+                  {/* Dynamic Exact Fee Display */}
+                  <div className="font-orbitron font-black text-3xl text-[#00ff66] neon-glow-green mb-0.5">
+                    ₹{calculatedFee}
+                  </div>
+                  <p className="font-mono text-[11px] text-gray-400 mb-2">
+                    ({teamSize} Members × ₹{EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER} per person)
+                  </p>
 
-                {/* UPI ID Pill & Copy Button */}
-                <div className="bg-[#050b07] border border-[#1b3524] rounded-xl p-3 flex items-center justify-between font-mono text-xs mb-3">
-                  <span className="text-gray-300 font-semibold truncate text-left mr-2">
-                    {EVENT_CONFIG.UPI_ID}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={copyUpiId}
-                    className="px-3 py-1.5 bg-[#00ff66] hover:bg-[#10b981] text-black font-orbitron font-bold text-[11px] rounded-lg transition-all shadow-[0_0_10px_rgba(0,255,102,0.3)] flex items-center space-x-1 flex-shrink-0"
-                  >
-                    <Copy className="w-3.5 h-3.5" />
-                    <span>{copiedUpi ? 'COPIED!' : 'COPY'}</span>
-                  </button>
-                </div>
+                  <div className="w-full bg-[#050b07] border border-[#1b3524] rounded-xl p-2 text-center">
+                    <span className="font-mono text-[10px] text-gray-300 block">
+                      Payee: <strong>{EVENT_CONFIG.UPI_MERCHANT_NAME}</strong>
+                    </span>
+                    <span className="font-mono text-[10px] text-[#00ff66] block font-bold">
+                      UPI ID: {EVENT_CONFIG.UPI_ID}
+                    </span>
+                  </div>
 
-                <p className="font-mono text-[10px] text-gray-400 tracking-wider">
-                  Scan with Google Pay, PhonePe, Paytm or any UPI App
-                </p>
+                  <p className="font-mono text-[10px] text-gray-400 mt-3">
+                    Supported: GPay, PhonePe, Paytm, BHIM, Cred, CUB Mobile & All UPI Apps
+                  </p>
+                </div>
               </div>
             </div>
           )}
