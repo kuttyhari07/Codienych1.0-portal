@@ -233,10 +233,11 @@ Track your status on our portal anytime using Registration ID: ${registrationId}
   `.trim();
 
   try {
+    const fromAddress = `"CODIENYCH 1.0 Team" <${config.SMTP_USER || 'codienych1.0@gmail.com'}>`;
     await transporter.sendMail({
-      from: config.EMAIL_FROM,
+      from: fromAddress,
       to: leaderEmail,
-      replyTo: config.ORGANIZER_EMAIL,
+      replyTo: config.ORGANIZER_EMAIL || 'codienych1.0@gmail.com',
       subject: `[CODIENYCH 1.0] Registration Received - ${teamName} (${registrationId})`,
       text,
       html,
@@ -304,10 +305,11 @@ Please bring physical College ID cards and laptops on the event day.
   `.trim();
 
   try {
+    const fromAddress = `"CODIENYCH 1.0 Team" <${config.SMTP_USER || 'codienych1.0@gmail.com'}>`;
     await transporter.sendMail({
-      from: config.EMAIL_FROM,
+      from: fromAddress,
       to: leaderEmail,
-      replyTo: config.ORGANIZER_EMAIL,
+      replyTo: config.ORGANIZER_EMAIL || 'codienych1.0@gmail.com',
       subject: `[CODIENYCH 1.0] Registration Approved & Confirmed! - ${registrationId}`,
       text,
       html,
