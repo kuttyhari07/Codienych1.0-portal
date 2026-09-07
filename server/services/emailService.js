@@ -8,7 +8,7 @@ const { Resend } = require('resend');
 const nodemailer = require('nodemailer');
 const config = require('../config/env');
 
-const resendApiKey = (process.env.RESEND_API_KEY || config.RESEND_API_KEY || 're_fEHF4sA9_2HFGQmY7kMhXKg42KLjnTdMo').trim();
+const resendApiKey = (process.env.RESEND_API_KEY || config.RESEND_API_KEY || 're_TBxxbbbu_Jngpv56yDyzcXr9PDo6pwoYM').trim();
 let resendClient = null;
 if (resendApiKey) {
   try {
@@ -22,6 +22,33 @@ const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
   const fromName = 'CODIENYCH 1.0 Hackathon';
   const organizerEmail = (process.env.ORGANIZER_EMAIL || config.ORGANIZER_EMAIL || 'codienych@gmail.com').trim();
   const activeReplyTo = replyTo || organizerEmail;
+
+  // 1. Resend REST API (Primary Cloud Dispatch)
+  if (resendClient) {
+    try {
+      const recipientList = Array.isArray(to) ? to : [to];
+      const response = await resendClient.emails.send({
+        from: `${fromName} <onboarding@resend.dev>`,
+        to: recipientList,
+        reply_to: activeReplyTo,
+        subject,
+        html,
+        text,
+      });
+
+      if (response && response.data && response.data.id) {
+        console.log(`[Resend API Success] Email sent to ${to}. ID: ${response.data.id}`);
+        return true;
+      }
+      if (response && response.error) {
+        console.warn(`[Resend API Notice]: ${response.error.message}, routing to backup SMTP...`);
+      }
+    } catch (resendErr) {
+      console.warn(`[Resend API Notice]: ${resendErr.message}, routing to backup SMTP...`);
+    }
+  }
+
+  // 2. Direct SMTP Backup Dispatch
   const smtpUser = (process.env.SMTP_USER || config.SMTP_USER || 'codienych@gmail.com').trim();
   const smtpPass = (process.env.SMTP_PASS || config.SMTP_PASS || 'subfywhhtpobafgy').replace(/\s+/g, '').trim();
 
@@ -73,28 +100,6 @@ const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
       return true;
     } catch (smtpErr) {
       console.warn(`[SMTP Warning - ${method.name}] Failed to send to ${to}: ${smtpErr.message}`);
-    }
-  }
-
-  // 2. Fallback to Resend REST API if SMTP had issues
-  if (resendClient) {
-    try {
-      const recipientList = Array.isArray(to) ? to : [to];
-      const response = await resendClient.emails.send({
-        from: `${fromName} <onboarding@resend.dev>`,
-        to: recipientList,
-        reply_to: activeReplyTo,
-        subject,
-        html,
-        text,
-      });
-
-      if (response && response.data && response.data.id) {
-        console.log(`[Resend Fallback Success] Email sent to ${to}. ID: ${response.data.id}`);
-        return true;
-      }
-    } catch (resendErr) {
-      console.error(`[Resend Fallback Error] ${resendErr.message}`);
     }
   }
 
