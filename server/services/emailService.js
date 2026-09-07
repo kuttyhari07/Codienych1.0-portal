@@ -1,6 +1,7 @@
 const dns = require('dns');
 try {
   dns.setDefaultResultOrder('ipv4first');
+  dns.setServers(['8.8.8.8', '1.1.1.1', '8.8.4.4']);
 } catch (e) {}
 
 const { Resend } = require('resend');
@@ -19,8 +20,9 @@ if (resendApiKey) {
 
 /**
  * Universal Mail Dispatcher:
- * 1. Tries Resend REST API (HTTPS Port 443 - Never blocked on Render)
- * 2. Falls back to Nodemailer SMTP
+ * 1. Tries Resend REST API (HTTPS Port 443 - for admin alerts or verified domain)
+ * 2. Tries Nodemailer SMTP Port 465 (Direct SSL)
+ * 3. Tries Nodemailer SMTP Port 587 (STARTTLS)
  */
 const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
   const fromName = 'CODIENYCH 1.0 Hackathon';
@@ -42,41 +44,54 @@ const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
         return true;
       }
       if (response && response.error) {
-        console.warn(`[Resend API Warning] ${response.error.message}, falling back to SMTP...`);
+        console.warn(`[Resend API Notice] ${response.error.message}, trying direct SMTP...`);
       }
     } catch (resendErr) {
-      console.warn(`[Resend API Fallback Error] ${resendErr.message}, trying SMTP...`);
+      console.warn(`[Resend API Fallback Error] ${resendErr.message}, trying direct SMTP...`);
     }
   }
 
-  // 2. Fallback to Nodemailer SMTP
-  try {
-    const smtpUser = (process.env.SMTP_USER || config.SMTP_USER || 'codienych1.0@gmail.com').trim();
-    const smtpPass = (process.env.SMTP_PASS || config.SMTP_PASS || 'jvllycpzzheoymoo').replace(/\s+/g, '').trim();
+  // 2. Fallback to Multi-port Nodemailer SMTP (Port 465 SSL, then Port 587 TLS)
+  const smtpUser = (process.env.SMTP_USER || config.SMTP_USER || 'codienych1.0@gmail.com').trim();
+  const smtpPass = (process.env.SMTP_PASS || config.SMTP_PASS || 'jvllycpzzheoymoo').replace(/\s+/g, '').trim();
 
-    const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 587,
-      secure: false,
-      auth: { user: smtpUser, pass: smtpPass },
-      family: 4,
-      tls: { rejectUnauthorized: false },
-    });
+  const configs = [
+    { port: 465, secure: true, name: 'Port 465 SSL' },
+    { port: 587, secure: false, name: 'Port 587 TLS' },
+  ];
 
-    const info = await transporter.sendMail({
-      from: `"${fromName}" <${smtpUser}>`,
-      to,
-      replyTo: replyTo || 'codienych1.0@gmail.com',
-      subject,
-      text,
-      html,
-    });
-    console.log(`[SMTP Success] Email sent to ${to}. MessageId: ${info.messageId}`);
-    return true;
-  } catch (smtpErr) {
-    console.error(`[SMTP Final Error] Failed to send email to ${to}:`, smtpErr.message);
-    return false;
+  for (const cfg of configs) {
+    try {
+      const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: cfg.port,
+        secure: cfg.secure,
+        auth: { user: smtpUser, pass: smtpPass },
+        family: 4,
+        connectionTimeout: 7000,
+        greetingTimeout: 7000,
+        socketTimeout: 10000,
+        tls: { rejectUnauthorized: false },
+      });
+
+      const info = await transporter.sendMail({
+        from: `"${fromName}" <${smtpUser}>`,
+        to,
+        replyTo: replyTo || 'codienych1.0@gmail.com',
+        subject,
+        text,
+        html,
+      });
+
+      console.log(`[SMTP Success - ${cfg.name}] Email sent to ${to}. MessageId: ${info.messageId}`);
+      return true;
+    } catch (smtpErr) {
+      console.warn(`[SMTP Warning - ${cfg.name}] Failed to send to ${to}: ${smtpErr.message}`);
+    }
   }
+
+  console.error(`[SMTP Final Error] All email dispatch methods failed for recipient ${to}`);
+  return false;
 };
 
 const createTransporter = () => {
