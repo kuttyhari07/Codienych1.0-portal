@@ -34,13 +34,20 @@ const LoadingScreen = ({ onFinish }) => {
       <div className="absolute inset-0 bg-radial from-[#0f2b19]/30 to-transparent blur-3xl" />
 
       <div className="relative z-10 text-center px-4 max-w-md">
-        {/* Futuristic Shield Icon */}
-        <div className="mx-auto w-24 h-24 mb-6 relative flex items-center justify-center">
-          <div className="absolute inset-0 rounded-full border-2 border-[#00ff66]/30 animate-ping" />
-          <div className="w-20 h-20 bg-[#0a1b10] border-2 border-[#00ff66] rounded-xl flex items-center justify-center shadow-[0_0_30px_rgba(0,255,102,0.4)] transform rotate-45">
-            <span className="font-orbitron font-extrabold text-2xl text-[#00ff66] transform -rotate-45">
-              C1.0
-            </span>
+        {/* Hackathon Logo with Cyber Glow Animation */}
+        <div className="mx-auto w-32 h-32 mb-6 relative flex items-center justify-center">
+          {/* Animated Glowing Rings & Radar Effect */}
+          <div className="absolute inset-0 rounded-full border border-[#00ff66]/30 animate-ping" />
+          <div className="absolute -inset-2 rounded-full border border-[#00ff66]/20 animate-pulse" />
+          <div className="absolute -inset-4 rounded-full border border-dashed border-[#00ff66]/40 animate-[spin_8s_linear_infinite]" />
+          
+          {/* Logo Frame */}
+          <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-[#0a1b10]/90 border-2 border-[#00ff66] p-2.5 flex items-center justify-center shadow-[0_0_35px_rgba(0,255,102,0.5)] backdrop-blur-sm transform transition-transform duration-300">
+            <img
+              src="/favicon.png"
+              alt="CODIENYCH 1.0 Logo"
+              className="w-full h-full object-contain filter drop-shadow-[0_0_12px_rgba(0,255,102,0.8)] animate-pulse"
+            />
           </div>
         </div>
 
