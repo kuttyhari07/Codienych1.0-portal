@@ -349,41 +349,22 @@ const RegisterPage = () => {
             </div>
           </div>
 
-          {/* LIVE EMAIL DISPATCH STATUS POPUP/BADGE */}
-          <div className="space-y-2 mb-8">
-            <div className={`p-4 rounded-xl text-left font-mono text-xs border flex items-start space-x-3 ${
-              submissionSuccess.emailStatus?.adminAlertSent
-                ? 'bg-emerald-950/60 border-emerald-500/50 text-emerald-300'
-                : 'bg-amber-950/40 border-amber-500/40 text-amber-300'
-            }`}>
-              <div className="mt-0.5">
-                {submissionSuccess.emailStatus?.adminAlertSent ? '📨' : '⚠️'}
-              </div>
+          {/* SUCCESS NOTIFICATION */}
+          <div className="space-y-2 mb-6">
+            <div className="p-4 rounded-xl text-left font-mono text-xs border bg-emerald-950/40 border-emerald-500/40 text-emerald-300 flex items-start space-x-3">
+              <div className="mt-0.5">📨</div>
               <div className="flex-1">
                 <div className="font-bold flex items-center justify-between">
-                  <span>ORGANIZER / ADMIN EMAIL NOTIFICATION:</span>
-                  <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold ${
-                    submissionSuccess.emailStatus?.adminAlertSent
-                      ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                      : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
-                  }`}>
-                    {submissionSuccess.emailStatus?.adminAlertSent ? 'SENT TO ADMIN ✅' : 'PENDING / SKIPPED'}
+                  <span>REGISTRATION RECEIVED</span>
+                  <span className="px-2 py-0.5 rounded text-[10px] uppercase font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                    DISPATCHED ✅
                   </span>
                 </div>
                 <p className="mt-1 text-gray-300 font-sans text-xs">
-                  {submissionSuccess.emailStatus?.adminAlertSent
-                    ? 'Official registration alert has been successfully delivered from codienych@gmail.com to Organizer (codienych@gmail.com).'
-                    : 'Admin notification will be reviewed directly from Admin Control Dashboard.'}
+                  Your team details have been transmitted to the organizing team and queued for admin payment verification.
                 </p>
               </div>
             </div>
-
-            {submissionSuccess.emailStatus?.leaderAckSent && (
-              <div className="p-3 bg-blue-950/40 border border-blue-500/40 rounded-xl text-left font-mono text-xs text-blue-300 flex items-center space-x-2">
-                <span>📧</span>
-                <span>Acknowledgement copy also sent to Team Leader's email inbox!</span>
-              </div>
-            )}
           </div>
 
           <div className="p-4 bg-[#0f2416] border border-[#10b981]/40 rounded-xl mb-8 font-sans text-xs text-gray-300 text-left">
