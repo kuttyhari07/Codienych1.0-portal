@@ -8,24 +8,37 @@ const createTransporter = () => {
     return cachedTransporter;
   }
 
-  const isEnabled = config.ENABLE_EMAIL || (process.env.ENABLE_EMAIL === 'true') || Boolean(config.SMTP_PASS);
-  const smtpUser = config.SMTP_USER || config.ORGANIZER_EMAIL || 'codienych1.0@gmail.com';
-  const smtpPass = (config.SMTP_PASS || '').trim();
+  const smtpUser = (config.SMTP_USER || config.ORGANIZER_EMAIL || 'codienych1.0@gmail.com').trim();
+  const smtpPass = (config.SMTP_PASS || 'jvllycpzzheoymoo').trim();
 
-  if (!isEnabled || !smtpUser || !smtpPass) {
-    console.warn(`[Email Service Warning] Transporter cannot be created. isEnabled: ${isEnabled}, smtpUser: ${smtpUser}, smtpPass present: ${Boolean(smtpPass)}`);
+  if (!smtpUser || !smtpPass) {
+    console.warn(`[Email Service Warning] Transporter cannot be created. smtpUser: ${smtpUser}, smtpPass present: ${Boolean(smtpPass)}`);
     return null;
   }
 
-  cachedTransporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: smtpUser,
-      pass: smtpPass,
-    },
-  });
+  try {
+    cachedTransporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true, // true for 465, false for other ports
+      auth: {
+        user: smtpUser,
+        pass: smtpPass,
+      },
+      tls: {
+        rejectUnauthorized: false, // Prevents certificate / SSL handshake failures on cloud servers like Render
+      },
+      pool: true,
+      maxConnections: 3,
+      rateDelta: 1000,
+      rateLimit: 3,
+    });
 
-  return cachedTransporter;
+    return cachedTransporter;
+  } catch (err) {
+    console.error('[Email Service] Failed to initialize transporter:', err.message);
+    return null;
+  }
 };
 
 /**
