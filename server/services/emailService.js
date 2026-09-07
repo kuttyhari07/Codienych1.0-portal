@@ -1,3 +1,8 @@
+const dns = require('dns');
+try {
+  dns.setDefaultResultOrder('ipv4first');
+} catch (e) {}
+
 const nodemailer = require('nodemailer');
 const config = require('../config/env');
 
@@ -7,11 +12,14 @@ const createTransporter = () => {
 
   try {
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false, // TLS via port 587 with STARTTLS
       auth: {
         user: smtpUser,
         pass: smtpPass,
       },
+      family: 4, // Force IPv4 (Prevents ENETUNREACH IPv6 network errors on Render)
       tls: {
         rejectUnauthorized: false,
       },

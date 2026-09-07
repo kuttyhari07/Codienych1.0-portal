@@ -84,11 +84,14 @@ app.get('/api/test-email-status', async (req, res) => {
 
   try {
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
       auth: {
         user: smtpUser,
         pass: smtpPass,
       },
+      family: 4, // Force IPv4 to eliminate ENETUNREACH IPv6 error on Render
       tls: {
         rejectUnauthorized: false,
       },
