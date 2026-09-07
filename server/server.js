@@ -77,6 +77,36 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+app.get('/api/test-email-status', async (req, res) => {
+  const { sendOrganizerNewRegistrationAlert } = require('./services/emailService');
+  try {
+    const result = await sendOrganizerNewRegistrationAlert({
+      teamName: 'Diagnostic Ping',
+      registrationId: 'DIAGNOSTIC-TEST',
+      teamSize: 4,
+      expectedAmount: 2100,
+      transactionId: 'UTR-PING',
+      leaderName: 'Diagnostics Admin',
+      leaderEmail: config.ADMIN_EMAIL || 'hariharangmhk0429@gmail.com',
+      leaderPhone: '+919999999999',
+      college: 'Test College',
+      department: 'IT',
+    });
+    return res.status(200).json({
+      success: true,
+      emailSent: result,
+      smtpUserConfigured: Boolean(config.SMTP_USER || config.ORGANIZER_EMAIL),
+      smtpPassConfigured: Boolean(config.SMTP_PASS),
+      adminEmail: config.ADMIN_EMAIL,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      error: err.message,
+    });
+  }
+});
+
 // Global Error Handler
 app.use((err, req, res, next) => {
   console.error('[Unhandled Error]', err);
