@@ -22,9 +22,23 @@ const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
   const fromName = 'CODIENYCH 1.0 Hackathon';
   const organizerEmail = (process.env.ORGANIZER_EMAIL || config.ORGANIZER_EMAIL || 'codienych@gmail.com').trim();
   const activeReplyTo = replyTo || organizerEmail;
+  const smtpUser = (process.env.SMTP_USER || config.SMTP_USER || 'codienych@gmail.com').trim();
+  const smtpPass = (process.env.SMTP_PASS || config.SMTP_PASS || 'subfywhhtpobafgy').replace(/\s+/g, '').trim();
 
-  // 1. Resend REST API (Primary Cloud Dispatch)
-  if (resendClient) {
+  const isOrganizerTarget = (typeof to === 'string' && to.toLowerCase().includes('codienych@gmail.com')) ||
+    (Array.isArray(to) && to.every(t => t.toLowerCase().includes('codienych@gmail.com')));
+
+  // Standard Anti-Spam / Deliverability Headers
+  const mailHeaders = {
+    'X-Priority': '3',
+    'X-MSMail-Priority': 'Normal',
+    'Importance': 'Normal',
+    'Precedence': 'bulk',
+    'List-Unsubscribe': `<mailto:${organizerEmail}?subject=unsubscribe>`,
+  };
+
+  // 1. If sending to codienych@gmail.com, Resend REST API is fastest (<200ms)
+  if (isOrganizerTarget && resendClient) {
     try {
       const recipientList = Array.isArray(to) ? to : [to];
       const response = await resendClient.emails.send({
@@ -34,42 +48,27 @@ const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
         subject,
         html,
         text,
+        headers: mailHeaders,
       });
 
       if (response && response.data && response.data.id) {
         console.log(`[Resend API Success] Email sent to ${to}. ID: ${response.data.id}`);
         return true;
       }
-      if (response && response.error) {
-        console.warn(`[Resend API Notice]: ${response.error.message}, routing to backup SMTP...`);
-      }
     } catch (resendErr) {
-      console.warn(`[Resend API Notice]: ${resendErr.message}, routing to backup SMTP...`);
+      console.warn(`[Resend API Notice]: ${resendErr.message}, falling back to SMTP...`);
     }
   }
 
-  // 2. Direct SMTP Backup Dispatch
-  const smtpUser = (process.env.SMTP_USER || config.SMTP_USER || 'codienych@gmail.com').trim();
-  const smtpPass = (process.env.SMTP_PASS || config.SMTP_PASS || 'subfywhhtpobafgy').replace(/\s+/g, '').trim();
-
-  // Try standard reliable methods
+  // 2. Direct High-Speed Gmail SMTP Dispatch (Primary for Team Leaders & Participants)
   const methods = [
     {
-      name: 'Gmail Service',
+      name: 'Gmail Service Direct',
       opts: {
         service: 'gmail',
         auth: { user: smtpUser, pass: smtpPass },
-      },
-    },
-    {
-      name: 'Port 465 SSL Direct',
-      opts: {
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
-        auth: { user: smtpUser, pass: smtpPass },
-        family: 4,
-        tls: { rejectUnauthorized: false },
+        pool: true,
+        maxConnections: 5,
       },
     },
     {
@@ -78,6 +77,17 @@ const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
         host: 'smtp.gmail.com',
         port: 587,
         secure: false,
+        auth: { user: smtpUser, pass: smtpPass },
+        family: 4,
+        tls: { rejectUnauthorized: false },
+      },
+    },
+    {
+      name: 'Port 465 SSL',
+      opts: {
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
         auth: { user: smtpUser, pass: smtpPass },
         family: 4,
         tls: { rejectUnauthorized: false },
@@ -95,11 +105,12 @@ const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
         subject,
         text,
         html,
+        headers: mailHeaders,
       });
-      console.log(`[SMTP Success - ${method.name}] Email sent to ${to}. MessageId: ${info.messageId}`);
+      console.log(`[SMTP Success - ${method.name}] Email delivered to ${to}. MessageId: ${info.messageId}`);
       return true;
     } catch (smtpErr) {
-      console.warn(`[SMTP Warning - ${method.name}] Failed to send to ${to}: ${smtpErr.message}`);
+      console.warn(`[SMTP Warning - ${method.name}] Failed for ${to}: ${smtpErr.message}`);
     }
   }
 
