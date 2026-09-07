@@ -97,6 +97,8 @@ const AdminTeamDetailPage = () => {
     }
   };
 
+  const [emailStatusModal, setEmailStatusModal] = useState(null);
+
   // 1-Click Approve Entire Team & Send Confirmation Email
   const handleApproveEntireTeam = async () => {
     if (!window.confirm(`Approve Team ${data.registration.teamName} and send official Confirmation Email to Team Leader?`)) return;
@@ -104,6 +106,13 @@ const AdminTeamDetailPage = () => {
       const res = await api.patch(`/admin/registrations/${id}/approve-team`);
       if (res.data.success) {
         setActionMessage(res.data.message || 'Team approved and confirmation email sent!');
+        setEmailStatusModal({
+          type: res.data.emailSent ? 'SUCCESS' : 'WARNING',
+          title: res.data.emailSent ? 'CONFIRMATION EMAIL DELIVERED! 📨' : 'TEAM APPROVED (EMAIL NOTICE)',
+          message: res.data.emailSent
+            ? `Official Registration Confirmation Email has been successfully sent from codienych1.0@gmail.com to Team Leader (${data.participants?.find(p => p.role === 'LEADER')?.email || 'Leader'})!`
+            : `Team status was updated to CONFIRMED, but the confirmation email could not be sent. Please check your SMTP configuration in Render dashboard.`,
+        });
         fetchTeamDetail();
       }
     } catch (err) {
@@ -121,6 +130,11 @@ const AdminTeamDetailPage = () => {
       const res = await api.patch(`/admin/registrations/${id}/reject-team`, { rejectionReason: reason.trim() });
       if (res.data.success) {
         setActionMessage(res.data.message || 'Team rejected and notice sent.');
+        setEmailStatusModal({
+          type: 'WARNING',
+          title: 'TEAM REJECTED & NOTICE SENT',
+          message: `Team marked as REJECTED. Notification sent to Team Leader (${data.participants?.find(p => p.role === 'LEADER')?.email || 'Leader'}). Reason: ${reason.trim()}`,
+        });
         fetchTeamDetail();
       }
     } catch (err) {
@@ -153,6 +167,34 @@ const AdminTeamDetailPage = () => {
         showBack={true}
         backTo="/admin/registrations"
       />
+
+      {/* EMAIL STATUS POPUP MODAL */}
+      {emailStatusModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-[#0a140e] border-2 border-[#00ff66] rounded-2xl p-6 sm:p-8 max-w-lg w-full shadow-[0_0_50px_rgba(0,255,102,0.4)] text-center space-y-4">
+            <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto text-2xl ${
+              emailStatusModal.type === 'SUCCESS' ? 'bg-[#00ff66]/20 border border-[#00ff66] text-[#00ff66]' : 'bg-amber-500/20 border border-amber-500 text-amber-400'
+            }`}>
+              {emailStatusModal.type === 'SUCCESS' ? '✓' : '⚠️'}
+            </div>
+
+            <h3 className="font-orbitron font-bold text-xl text-white">
+              {emailStatusModal.title}
+            </h3>
+
+            <p className="font-mono text-xs text-gray-300 leading-relaxed bg-[#050b07] p-4 rounded-xl border border-[#1b3524]">
+              {emailStatusModal.message}
+            </p>
+
+            <button
+              onClick={() => setEmailStatusModal(null)}
+              className="w-full py-3 px-4 bg-[#00ff66] hover:bg-[#10b981] text-black font-orbitron font-bold text-xs rounded-xl transition-all shadow-[0_0_15px_#00ff66]"
+            >
+              GOT IT / CLOSE POPUP
+            </button>
+          </div>
+        </div>
+      )}
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
         {actionMessage && (

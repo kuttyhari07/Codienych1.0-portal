@@ -610,9 +610,10 @@ const approveTeamRegistration = async (req, res) => {
     await registration.save();
 
     // 4. Send Confirmation Email to Team Leader
+    let emailSent = false;
     const leader = await Participant.findOne({ registration: registration._id, role: 'LEADER' }) || await Participant.findOne({ registration: registration._id });
     if (leader) {
-      await sendRegistrationConfirmation({
+      emailSent = await sendRegistrationConfirmation({
         leaderEmail: leader.email,
         leaderName: leader.fullName,
         teamName: registration.teamName,
@@ -621,9 +622,14 @@ const approveTeamRegistration = async (req, res) => {
       });
     }
 
+    const emailStatusMsg = emailSent
+      ? `Confirmation email delivered to ${leader ? leader.email : 'Team Leader'} (codienych1.0@gmail.com -> Leader)!`
+      : `Confirmation email could not be sent (check SMTP settings).`;
+
     return res.status(200).json({
       success: true,
-      message: `Team ${registration.teamName} approved and confirmation email sent to ${leader ? leader.email : 'Team Leader'}!`,
+      message: `Team ${registration.teamName} approved! ${emailStatusMsg}`,
+      emailSent: Boolean(emailSent),
       data: registration,
     });
   } catch (error) {
