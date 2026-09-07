@@ -189,45 +189,43 @@ const registerTeam = async (req, res) => {
       Participant.insertMany(participantDocs),
     ]);
 
-    // Email Dispatch (Awaited with try/catch to ensure completion before response lifecycle closes)
-    let emailStatus = { adminAlertSent: false, leaderAckSent: false };
+    // Instant response return - do not block user registration on SMTP network latency
     const leaderDoc = participantDocs[0];
     if (leaderDoc) {
-      try {
-        const [adminResult, leaderResult] = await Promise.allSettled([
-          sendOrganizerNewRegistrationAlert({
-            teamName: registration.teamName,
-            registrationId,
-            teamSize: registration.teamSize,
-            expectedAmount,
-            transactionId: trimmedTxId,
-            leaderName: leaderDoc.fullName,
-            leaderEmail: leaderDoc.email,
-            leaderPhone: leaderDoc.phone,
-            college: leaderDoc.college,
-            department: leaderDoc.department,
-          }),
-          sendRegistrationReceivedToLeader({
-            leaderEmail: leaderDoc.email,
-            leaderName: leaderDoc.fullName,
-            teamName: registration.teamName,
-            registrationId,
-            teamSize: registration.teamSize,
-            expectedAmount,
-            transactionId: trimmedTxId,
-          }),
-        ]);
-
-        emailStatus.adminAlertSent = adminResult.status === 'fulfilled' && adminResult.value === true;
-        emailStatus.leaderAckSent = leaderResult.status === 'fulfilled' && leaderResult.value === true;
-
-        console.log(`[Registration Emails] Admin Alert: ${emailStatus.adminAlertSent}, Leader Ack: ${emailStatus.leaderAckSent}`);
-      } catch (emailErr) {
-        console.error('[Registration Email Error]', emailErr.message);
-      }
+      // Detached safe background email execution
+      (async () => {
+        try {
+          await Promise.allSettled([
+            sendOrganizerNewRegistrationAlert({
+              teamName: registration.teamName,
+              registrationId,
+              teamSize: registration.teamSize,
+              expectedAmount,
+              transactionId: trimmedTxId,
+              leaderName: leaderDoc.fullName,
+              leaderEmail: leaderDoc.email,
+              leaderPhone: leaderDoc.phone,
+              college: leaderDoc.college,
+              department: leaderDoc.department,
+            }),
+            sendRegistrationReceivedToLeader({
+              leaderEmail: leaderDoc.email,
+              leaderName: leaderDoc.fullName,
+              teamName: registration.teamName,
+              registrationId,
+              teamSize: registration.teamSize,
+              expectedAmount,
+              transactionId: trimmedTxId,
+            }),
+          ]);
+          console.log(`[Registration Background Emails] Delivered for ${registration.teamName} (${registrationId})`);
+        } catch (emailErr) {
+          console.error('[Registration Email Error]', emailErr.message);
+        }
+      })();
     }
 
-    // Return response with actual email status
+    // Return instant response (<1s)
     return res.status(201).json({
       success: true,
       message: 'Registration submitted successfully. Waiting for admin verification.',
@@ -238,7 +236,6 @@ const registerTeam = async (req, res) => {
         expectedAmount,
         transactionId: trimmedTxId,
         status: registration.status,
-        emailStatus,
       },
     });
   } catch (error) {
