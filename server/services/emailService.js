@@ -18,62 +18,62 @@ if (resendApiKey) {
   }
 }
 
-// Fast Reusable Transporter Singleton for Instant Mail Sending (<1s)
-let sharedTransporter = null;
-const getOrCreateTransporter = async () => {
-  const smtpUser = (process.env.SMTP_USER || config.SMTP_USER || 'codienych@gmail.com').trim();
-  const smtpPass = (process.env.SMTP_PASS || config.SMTP_PASS || 'subfywhhtpobafgy').replace(/\s+/g, '').trim();
-
-  if (!sharedTransporter) {
-    let resolvedIpv4 = 'smtp.gmail.com';
-    try {
-      const addresses = await dns.promises.resolve4('smtp.gmail.com');
-      if (addresses && addresses.length > 0) {
-        resolvedIpv4 = addresses[0];
-      }
-    } catch (e) {}
-
-    sharedTransporter = nodemailer.createTransport({
-      host: resolvedIpv4,
-      port: 465,
-      secure: true,
-      auth: { user: smtpUser, pass: smtpPass },
-      family: 4, // Strictly force IPv4
-      tls: {
-        rejectUnauthorized: false,
-        servername: 'smtp.gmail.com', // Match TLS hostname
-      },
-      pool: true,
-      maxConnections: 5,
-      maxMessages: 100,
-      connectionTimeout: 5000,
-      greetingTimeout: 5000,
-      socketTimeout: 8000,
-    });
-  }
-  return { transporter: sharedTransporter, smtpUser };
-};
-
 const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
   const fromName = 'CODIENYCH 1.0 Hackathon';
   const organizerEmail = (process.env.ORGANIZER_EMAIL || config.ORGANIZER_EMAIL || 'codienych@gmail.com').trim();
   const activeReplyTo = replyTo || organizerEmail;
+  const smtpUser = (process.env.SMTP_USER || config.SMTP_USER || 'codienych@gmail.com').trim();
+  const smtpPass = (process.env.SMTP_PASS || config.SMTP_PASS || 'subfywhhtpobafgy').replace(/\s+/g, '').trim();
 
-  // 1. Direct High-Speed Pooled Gmail Dispatch (<800ms)
-  try {
-    const { transporter, smtpUser } = await getOrCreateTransporter();
-    const info = await transporter.sendMail({
-      from: `"${fromName}" <${smtpUser}>`,
-      to,
-      replyTo: activeReplyTo,
-      subject,
-      text,
-      html,
-    });
-    console.log(`[Fast SMTP Success] Email sent to ${to}. MessageId: ${info.messageId}`);
-    return true;
-  } catch (smtpErr) {
-    console.warn(`[Fast SMTP Notice] Direct SMTP failed (${smtpErr.message}), trying Resend fallback...`);
+  // Try standard reliable methods
+  const methods = [
+    {
+      name: 'Gmail Service',
+      opts: {
+        service: 'gmail',
+        auth: { user: smtpUser, pass: smtpPass },
+      },
+    },
+    {
+      name: 'Port 465 SSL Direct',
+      opts: {
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
+        auth: { user: smtpUser, pass: smtpPass },
+        family: 4,
+        tls: { rejectUnauthorized: false },
+      },
+    },
+    {
+      name: 'Port 587 TLS',
+      opts: {
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false,
+        auth: { user: smtpUser, pass: smtpPass },
+        family: 4,
+        tls: { rejectUnauthorized: false },
+      },
+    },
+  ];
+
+  for (const method of methods) {
+    try {
+      const transporter = nodemailer.createTransport(method.opts);
+      const info = await transporter.sendMail({
+        from: `"${fromName}" <${smtpUser}>`,
+        to,
+        replyTo: activeReplyTo,
+        subject,
+        text,
+        html,
+      });
+      console.log(`[SMTP Success - ${method.name}] Email sent to ${to}. MessageId: ${info.messageId}`);
+      return true;
+    } catch (smtpErr) {
+      console.warn(`[SMTP Warning - ${method.name}] Failed to send to ${to}: ${smtpErr.message}`);
+    }
   }
 
   // 2. Fallback to Resend REST API if SMTP had issues
