@@ -33,7 +33,7 @@ const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
       const response = await resendClient.emails.send({
         from: `${fromName} <onboarding@resend.dev>`,
         to: Array.isArray(to) ? to : [to],
-        reply_to: replyTo || 'codienych1.0@gmail.com',
+        reply_to: replyTo || 'codienych@gmail.com',
         subject,
         html,
         text,

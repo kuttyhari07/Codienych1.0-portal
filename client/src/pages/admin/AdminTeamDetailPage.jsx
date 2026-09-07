@@ -110,7 +110,7 @@ const AdminTeamDetailPage = () => {
           type: res.data.emailSent ? 'SUCCESS' : 'WARNING',
           title: res.data.emailSent ? 'CONFIRMATION EMAIL DELIVERED! 📨' : 'TEAM APPROVED (EMAIL NOTICE)',
           message: res.data.emailSent
-            ? `Official Registration Confirmation Email has been successfully sent from codienych1.0@gmail.com to Team Leader (${data.participants?.find(p => p.role === 'LEADER')?.email || 'Leader'})!`
+            ? `Official Registration Confirmation Email has been successfully sent from codienych@gmail.com to Team Leader (${data.participants?.find(p => p.role === 'LEADER')?.email || 'Leader'})!`
             : `Team status was updated to CONFIRMED, but the confirmation email could not be sent. Please check your SMTP configuration in Render dashboard.`,
         });
         fetchTeamDetail();

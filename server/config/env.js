@@ -20,8 +20,8 @@ module.exports = {
 
   COLLEGE_NAME: process.env.COLLEGE_NAME || '[COLLEGE NAME PLACEHOLDER]',
   VENUE: process.env.VENUE || '[VENUE PLACEHOLDER]',
-  ORGANIZER_EMAIL: process.env.ORGANIZER_EMAIL || 'codienych1.0@gmail.com',
-  PHONE_NUMBER: process.env.PHONE_NUMBER || '+91 9876543210',
+  ORGANIZER_EMAIL: process.env.ORGANIZER_EMAIL || 'codienych@gmail.com',
+  PHONE_NUMBER: process.env.PHONE_NUMBER || '+91 7904640937',
 
   USE_CLOUDINARY: process.env.USE_CLOUDINARY === 'true',
   CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME || '',
@@ -31,11 +31,11 @@ module.exports = {
   ENABLE_EMAIL: process.env.ENABLE_EMAIL !== 'false',
   SMTP_HOST: process.env.SMTP_HOST || 'smtp.gmail.com',
   SMTP_PORT: parseInt(process.env.SMTP_PORT, 10) || 587,
-  SMTP_USER: process.env.SMTP_USER || process.env.ORGANIZER_EMAIL || 'hariharangmhk0429@gmail.com',
-  SMTP_PASS: process.env.SMTP_PASS || 'blehdgylspczqjjf',
-  EMAIL_FROM: process.env.EMAIL_FROM || '"CODIENYCH 1.0 Team" <hariharangmhk0429@gmail.com>',
+  SMTP_USER: process.env.SMTP_USER || process.env.ORGANIZER_EMAIL || 'codienych@gmail.com',
+  SMTP_PASS: process.env.SMTP_PASS || 'subfywhhtpobafgy',
+  EMAIL_FROM: process.env.EMAIL_FROM || '"CODIENYCH 1.0 Team" <codienych@gmail.com>',
 
-  ADMIN_EMAIL: process.env.ADMIN_EMAIL || 'codienych1.0@gmail.com',
+  ADMIN_EMAIL: process.env.ADMIN_EMAIL || 'codienych@gmail.com',
   ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || '',
 
   RESEND_API_KEY: process.env.RESEND_API_KEY || 're_fEHF4sA9_2HFGQmY7kMhXKg42KLjnTdMo',
