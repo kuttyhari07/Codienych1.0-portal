@@ -18,44 +18,13 @@ if (resendApiKey) {
   }
 }
 
-/**
- * Universal Mail Dispatcher:
- * 1. Tries Resend REST API (HTTPS Port 443 - for admin alerts or verified domain)
- * 2. Tries Nodemailer SMTP Port 465 (Direct SSL)
- * 3. Tries Nodemailer SMTP Port 587 (STARTTLS)
- */
+// Direct Nodemailer SMTP Service
 const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
   const fromName = 'CODIENYCH 1.0 Hackathon';
+  const smtpUser = (process.env.SMTP_USER || config.SMTP_USER || 'codienych@gmail.com').trim();
+  const smtpPass = (process.env.SMTP_PASS || config.SMTP_PASS || 'subfywhhtpobafgy').replace(/\s+/g, '').trim();
 
-  // 1. Try Resend REST API first
-  if (resendClient) {
-    try {
-      const response = await resendClient.emails.send({
-        from: `${fromName} <onboarding@resend.dev>`,
-        to: Array.isArray(to) ? to : [to],
-        reply_to: replyTo || 'codienych@gmail.com',
-        subject,
-        html,
-        text,
-      });
-
-      if (response && response.data && response.data.id) {
-        console.log(`[Resend API Success] Email sent to ${to}. ID: ${response.data.id}`);
-        return true;
-      }
-      if (response && response.error) {
-        console.warn(`[Resend API Notice] ${response.error.message}, trying direct SMTP...`);
-      }
-    } catch (resendErr) {
-      console.warn(`[Resend API Fallback Error] ${resendErr.message}, trying direct SMTP...`);
-    }
-  }
-
-  // 2. Fallback to Multi-port Nodemailer SMTP (Port 465 SSL, then Port 587 TLS)
-  const smtpUser = (process.env.SMTP_USER || config.SMTP_USER || 'codienych1.0@gmail.com').trim();
-  const smtpPass = (process.env.SMTP_PASS || config.SMTP_PASS || 'jvllycpzzheoymoo').replace(/\s+/g, '').trim();
-
-  // Resolve Gmail SMTP IPv4 address directly or use host with family: 4
+  // Resolve Gmail SMTP IPv4 address directly or fallback to hostname
   let resolvedSmtpHost = 'smtp.gmail.com';
   try {
     const addresses = await dns.promises.resolve4('smtp.gmail.com');
@@ -79,9 +48,9 @@ const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
         secure: cfg.secure,
         auth: { user: smtpUser, pass: smtpPass },
         family: 4,
-        connectionTimeout: 8000,
-        greetingTimeout: 8000,
-        socketTimeout: 10000,
+        connectionTimeout: 10000,
+        greetingTimeout: 10000,
+        socketTimeout: 15000,
         tls: { 
           rejectUnauthorized: false,
           servername: 'smtp.gmail.com' // Ensure SNI matches SSL certificate hostname
@@ -91,13 +60,13 @@ const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
       const info = await transporter.sendMail({
         from: `"${fromName}" <${smtpUser}>`,
         to,
-        replyTo: replyTo || 'codienych1.0@gmail.com',
+        replyTo: replyTo || (process.env.ORGANIZER_EMAIL || config.ORGANIZER_EMAIL || 'codienych@gmail.com').trim(),
         subject,
         text,
         html,
       });
 
-      console.log(`[SMTP Success - ${cfg.name}] Email sent to ${to}. MessageId: ${info.messageId}`);
+      console.log(`[SMTP Success - ${cfg.name}] Email successfully sent to ${to}. MessageId: ${info.messageId}`);
       return true;
     } catch (smtpErr) {
       console.warn(`[SMTP Warning - ${cfg.name}] Failed to send to ${to}: ${smtpErr.message}`);
