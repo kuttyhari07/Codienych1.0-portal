@@ -232,7 +232,7 @@ Department: ${department}
 Please login to Admin Dashboard to review ID cards & payment proof.
   `.trim();
 
-  const adminAlertEmail = (process.env.ADMIN_EMAIL || config.ADMIN_EMAIL || 'codienych1.0@gmail.com').trim();
+  const adminAlertEmail = (process.env.ADMIN_EMAIL || config.ADMIN_EMAIL || config.ORGANIZER_EMAIL || 'codienych@gmail.com').trim();
   return await sendUniversalMail({
     to: adminAlertEmail,
     replyTo: leaderEmail,

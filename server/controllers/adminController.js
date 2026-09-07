@@ -607,29 +607,28 @@ const approveTeamRegistration = async (req, res) => {
       ),
     ]);
 
-    // 4. Send Confirmation Email to Team Leader in background
+    // 4. Send Confirmation Email to Team Leader
+    let emailSent = false;
     const leader = await Participant.findOne({ registration: registration._id, role: 'LEADER' }) || await Participant.findOne({ registration: registration._id });
     if (leader) {
-      setImmediate(async () => {
-        try {
-          await sendRegistrationConfirmation({
-            leaderEmail: leader.email,
-            leaderName: leader.fullName,
-            teamName: registration.teamName,
-            registrationId: registration.registrationId,
-            teamSize: registration.teamSize,
-          });
-          console.log(`[Admin] Confirmation email delivered to ${leader.email}`);
-        } catch (e) {
-          console.error('[Admin Email Error]', e);
-        }
-      });
+      try {
+        emailSent = await sendRegistrationConfirmation({
+          leaderEmail: leader.email,
+          leaderName: leader.fullName,
+          teamName: registration.teamName,
+          registrationId: registration.registrationId,
+          teamSize: registration.teamSize,
+        });
+        console.log(`[Admin] Confirmation email delivery result to ${leader.email}: ${emailSent}`);
+      } catch (e) {
+        console.error('[Admin Email Error]', e.message);
+      }
     }
 
     return res.status(200).json({
       success: true,
       message: `Team ${registration.teamName} approved! Confirmation email dispatched to ${leader ? leader.email : 'Team Leader'}.`,
-      emailSent: true,
+      emailSent,
       data: registration,
     });
   } catch (error) {
