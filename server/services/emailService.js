@@ -3,8 +3,81 @@ try {
   dns.setDefaultResultOrder('ipv4first');
 } catch (e) {}
 
+const { Resend } = require('resend');
 const nodemailer = require('nodemailer');
 const config = require('../config/env');
+
+const resendApiKey = (process.env.RESEND_API_KEY || config.RESEND_API_KEY || 're_fEHF4sA9_2HFGQmY7kMhXKg42KLjnTdMo').trim();
+let resendClient = null;
+if (resendApiKey) {
+  try {
+    resendClient = new Resend(resendApiKey);
+  } catch (e) {
+    console.error('[Resend Init Error]', e.message);
+  }
+}
+
+/**
+ * Universal Mail Dispatcher:
+ * 1. Tries Resend REST API (HTTPS Port 443 - Never blocked on Render)
+ * 2. Falls back to Nodemailer SMTP
+ */
+const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
+  const fromName = 'CODIENYCH 1.0 Hackathon';
+
+  // 1. Try Resend REST API first
+  if (resendClient) {
+    try {
+      const response = await resendClient.emails.send({
+        from: `${fromName} <onboarding@resend.dev>`,
+        to: Array.isArray(to) ? to : [to],
+        reply_to: replyTo || 'codienych1.0@gmail.com',
+        subject,
+        html,
+        text,
+      });
+
+      if (response && response.data && response.data.id) {
+        console.log(`[Resend API Success] Email sent to ${to}. ID: ${response.data.id}`);
+        return true;
+      }
+      if (response && response.error) {
+        console.warn(`[Resend API Warning] ${response.error.message}, falling back to SMTP...`);
+      }
+    } catch (resendErr) {
+      console.warn(`[Resend API Fallback Error] ${resendErr.message}, trying SMTP...`);
+    }
+  }
+
+  // 2. Fallback to Nodemailer SMTP
+  try {
+    const smtpUser = (process.env.SMTP_USER || config.SMTP_USER || 'codienych1.0@gmail.com').trim();
+    const smtpPass = (process.env.SMTP_PASS || config.SMTP_PASS || 'jvllycpzzheoymoo').replace(/\s+/g, '').trim();
+
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: { user: smtpUser, pass: smtpPass },
+      family: 4,
+      tls: { rejectUnauthorized: false },
+    });
+
+    const info = await transporter.sendMail({
+      from: `"${fromName}" <${smtpUser}>`,
+      to,
+      replyTo: replyTo || 'codienych1.0@gmail.com',
+      subject,
+      text,
+      html,
+    });
+    console.log(`[SMTP Success] Email sent to ${to}. MessageId: ${info.messageId}`);
+    return true;
+  } catch (smtpErr) {
+    console.error(`[SMTP Final Error] Failed to send email to ${to}:`, smtpErr.message);
+    return false;
+  }
+};
 
 const createTransporter = () => {
   const smtpUser = (process.env.SMTP_USER || config.SMTP_USER || config.ORGANIZER_EMAIL || 'codienych1.0@gmail.com').trim();
@@ -14,15 +87,10 @@ const createTransporter = () => {
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 587,
-      secure: false, // TLS via port 587 with STARTTLS
-      auth: {
-        user: smtpUser,
-        pass: smtpPass,
-      },
-      family: 4, // Force IPv4 (Prevents ENETUNREACH IPv6 network errors on Render)
-      tls: {
-        rejectUnauthorized: false,
-      },
+      secure: false,
+      auth: { user: smtpUser, pass: smtpPass },
+      family: 4,
+      tls: { rejectUnauthorized: false },
     });
 
     return transporter;
@@ -85,31 +153,25 @@ const sendOrganizerNewRegistrationAlert = async ({
   college,
   department,
 }) => {
-  const transporter = createTransporter();
-  if (!transporter) {
-    console.log('[Email Service] Email skipped (SMTP not configured).');
-    return false;
-  }
-
   const contentHtml = `
     <h2 style="color: #ffffff; margin-top: 0;">⚡ New Team Registration Submitted</h2>
     <p>A new team has registered for CODIENYCH 1.0 and is awaiting admin payment & ID verification.</p>
     
-    <div class="card">
-      <div style="margin-bottom: 8px;"><span class="label">Registration ID:</span> <span class="value" style="color:#00ff66;">${registrationId}</span></div>
-      <div style="margin-bottom: 8px;"><span class="label">Team Name:</span> <span class="value">${teamName}</span></div>
-      <div style="margin-bottom: 8px;"><span class="label">Team Size:</span> <span class="value">${teamSize} Members</span></div>
-      <div style="margin-bottom: 8px;"><span class="label">Expected Fee:</span> <span class="value">₹${expectedAmount}</span></div>
-      <div style="margin-bottom: 8px;"><span class="label">UPI UTR / Tx ID:</span> <span class="value">${transactionId}</span></div>
+    <div style="background: #131b2e; border: 1px solid #1f293d; border-radius: 8px; padding: 18px; margin: 20px 0;">
+      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Registration ID:</span> <span style="color:#00ff66; font-size: 16px; font-weight: bold;">${registrationId}</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Team Name:</span> <span style="color: #fff; font-weight: bold;">${teamName}</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Team Size:</span> <span style="color: #fff;">${teamSize} Members</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Expected Fee:</span> <span style="color: #fff; font-weight: bold;">₹${expectedAmount}</span></div>
+      <div><span style="color: #94a3b8; font-size: 13px;">UPI UTR / Tx ID:</span> <span style="color: #38bdf8; font-weight: bold;">${transactionId}</span></div>
     </div>
 
     <h3 style="color: #38bdf8; margin-bottom: 8px; font-size: 15px;">Team Leader Contact Details:</h3>
-    <div class="card">
-      <div style="margin-bottom: 8px;"><span class="label">Name:</span> <span class="value">${leaderName}</span></div>
-      <div style="margin-bottom: 8px;"><span class="label">Email:</span> <span class="value">${leaderEmail}</span></div>
-      <div style="margin-bottom: 8px;"><span class="label">Phone:</span> <span class="value">${leaderPhone}</span></div>
-      <div style="margin-bottom: 8px;"><span class="label">College:</span> <span class="value">${college}</span></div>
-      <div><span class="label">Department:</span> <span class="value">${department}</span></div>
+    <div style="background: #131b2e; border: 1px solid #1f293d; border-radius: 8px; padding: 18px; margin: 20px 0;">
+      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Name:</span> <span style="color: #fff;">${leaderName}</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Email:</span> <span style="color: #00ff66;">${leaderEmail}</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Phone:</span> <span style="color: #fff;">${leaderPhone}</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">College:</span> <span style="color: #fff;">${college}</span></div>
+      <div><span style="color: #94a3b8; font-size: 13px;">Department:</span> <span style="color: #fff;">${department}</span></div>
     </div>
 
     <p style="margin-top: 20px;">Please login to the Admin Dashboard to verify payment receipt and student ID credentials.</p>
@@ -140,23 +202,14 @@ Department: ${department}
 Please login to Admin Dashboard to review ID cards & payment proof.
   `.trim();
 
-  try {
-    const adminAlertEmail = (process.env.ADMIN_EMAIL || config.ADMIN_EMAIL || 'codienych1.0@gmail.com').trim();
-    const fromUser = (process.env.SMTP_USER || config.SMTP_USER || 'codienych1.0@gmail.com').trim();
-    const info = await transporter.sendMail({
-      from: `"CODIENYCH 1.0 Control Center" <${fromUser}>`,
-      to: adminAlertEmail,
-      replyTo: leaderEmail,
-      subject: `[NEW REGISTRATION] Team ${teamName} (${registrationId}) - CODIENYCH 1.0`,
-      text,
-      html,
-    });
-    console.log(`[Email Service] Organizer registration alert sent successfully to ${adminAlertEmail}. MessageId: ${info.messageId}`);
-    return true;
-  } catch (error) {
-    console.error(`[Email Service Error] Failed to send organizer alert:`, error);
-    return false;
-  }
+  const adminAlertEmail = (process.env.ADMIN_EMAIL || config.ADMIN_EMAIL || 'codienych1.0@gmail.com').trim();
+  return await sendUniversalMail({
+    to: adminAlertEmail,
+    replyTo: leaderEmail,
+    subject: `[NEW REGISTRATION] Team ${teamName} (${registrationId}) - CODIENYCH 1.0`,
+    text,
+    html,
+  });
 };
 
 /**
@@ -171,24 +224,18 @@ const sendRegistrationReceivedToLeader = async ({
   expectedAmount,
   transactionId,
 }) => {
-  const transporter = createTransporter();
-  if (!transporter) {
-    console.log('[Email Service] Email skipped (SMTP not configured).');
-    return false;
-  }
-
   const contentHtml = `
     <h2 style="color: #ffffff; margin-top: 0;">Registration Received 📥</h2>
     <p>Hello <strong>${leaderName}</strong>,</p>
     <p>Thank you for registering <strong>Team ${teamName}</strong> for <strong>CODIENYCH 1.0</strong>! Your registration details and payment proof have been received successfully.</p>
     
-    <div class="card">
-      <div style="margin-bottom: 8px;"><span class="label">Registration ID:</span> <span class="value" style="color:#00ff66;">${registrationId}</span></div>
-      <div style="margin-bottom: 8px;"><span class="label">Team Name:</span> <span class="value">${teamName}</span></div>
-      <div style="margin-bottom: 8px;"><span class="label">Team Size:</span> <span class="value">${teamSize} Members</span></div>
-      <div style="margin-bottom: 8px;"><span class="label">Amount Paid:</span> <span class="value">₹${expectedAmount}</span></div>
-      <div style="margin-bottom: 8px;"><span class="label">Transaction ID:</span> <span class="value">${transactionId}</span></div>
-      <div><span class="label">Current Status:</span> <span class="value" style="color:#38bdf8;">PENDING VERIFICATION</span></div>
+    <div style="background: #131b2e; border: 1px solid #1f293d; border-radius: 8px; padding: 18px; margin: 20px 0;">
+      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Registration ID:</span> <span style="color:#00ff66; font-size: 16px; font-weight: bold;">${registrationId}</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Team Name:</span> <span style="color: #fff; font-weight: bold;">${teamName}</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Team Size:</span> <span style="color: #fff;">${teamSize} Members</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Amount Paid:</span> <span style="color: #00ff66; font-weight: bold;">₹${expectedAmount}</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Transaction ID:</span> <span style="color: #fff;">${transactionId}</span></div>
+      <div><span style="color: #94a3b8; font-size: 13px;">Current Status:</span> <span style="color:#38bdf8; font-weight: bold;">PENDING VERIFICATION</span></div>
     </div>
 
     <p><strong>Next Steps:</strong></p>
@@ -224,35 +271,19 @@ Our team is currently verifying your payment UTR and student ID cards.
 Track your status on our portal anytime using Registration ID: ${registrationId}.
   `.trim();
 
-  try {
-    const fromUser = (process.env.SMTP_USER || config.SMTP_USER || 'codienych1.0@gmail.com').trim();
-    const fromAddress = `"CODIENYCH 1.0 Team" <${fromUser}>`;
-    const info = await transporter.sendMail({
-      from: fromAddress,
-      to: leaderEmail,
-      replyTo: (process.env.ORGANIZER_EMAIL || config.ORGANIZER_EMAIL || 'codienych1.0@gmail.com').trim(),
-      subject: `[CODIENYCH 1.0] Registration Received - ${teamName} (${registrationId})`,
-      text,
-      html,
-    });
-    console.log(`[Email Service] Registration acknowledgement sent to leader: ${leaderEmail}. MessageId: ${info.messageId}`);
-    return true;
-  } catch (error) {
-    console.error(`[Email Service Error] Failed to send leader ack:`, error);
-    return false;
-  }
+  return await sendUniversalMail({
+    to: leaderEmail,
+    replyTo: (process.env.ORGANIZER_EMAIL || config.ORGANIZER_EMAIL || 'codienych1.0@gmail.com').trim(),
+    subject: `[CODIENYCH 1.0] Registration Received - ${teamName} (${registrationId})`,
+    text,
+    html,
+  });
 };
 
 /**
  * 3. Send Registration Confirmation / Approval to Team Leader
  */
 const sendRegistrationConfirmation = async ({ leaderEmail, leaderName, teamName, registrationId, teamSize }) => {
-  const transporter = createTransporter();
-  if (!transporter) {
-    console.log('[Email Service] Email skipped (SMTP not configured).');
-    return false;
-  }
-
   const contentHtml = `
     <h2 style="color: #00ff66; margin-top: 0;">🎉 REGISTRATION CONFIRMED!</h2>
     <p>Hello <strong>${leaderName}</strong>,</p>
@@ -297,22 +328,13 @@ Venue: ${config.VENUE}
 Please bring physical College ID cards and laptops on the event day.
   `.trim();
 
-  try {
-    const fromAddress = `"CODIENYCH 1.0 Team" <${config.SMTP_USER || 'codienych1.0@gmail.com'}>`;
-    await transporter.sendMail({
-      from: fromAddress,
-      to: leaderEmail,
-      replyTo: config.ORGANIZER_EMAIL || 'codienych1.0@gmail.com',
-      subject: `[CODIENYCH 1.0] Registration Approved & Confirmed! - ${registrationId}`,
-      text,
-      html,
-    });
-    console.log(`[Email Service] Confirmation email sent successfully to leader: ${leaderEmail}`);
-    return true;
-  } catch (error) {
-    console.error(`[Email Service Error] Failed to send confirmation email:`, error.message);
-    return false;
-  }
+  return await sendUniversalMail({
+    to: leaderEmail,
+    replyTo: (process.env.ORGANIZER_EMAIL || config.ORGANIZER_EMAIL || 'codienych1.0@gmail.com').trim(),
+    subject: `[CODIENYCH 1.0] Registration Approved & Confirmed! - ${registrationId}`,
+    text,
+    html,
+  });
 };
 
 /**
@@ -326,12 +348,6 @@ const sendRegistrationRejection = async ({
   rejectionType,
   reason,
 }) => {
-  const transporter = createTransporter();
-  if (!transporter) {
-    console.log('[Email Service] Email skipped (SMTP not configured).');
-    return false;
-  }
-
   const contentHtml = `
     <h2 style="color: #ef4444; margin-top: 0;">Registration Update: Action Required ⚠️</h2>
     <p>Hello <strong>${leaderName}</strong>,</p>
@@ -369,21 +385,13 @@ Reason: ${reason || 'Verification criteria not met.'}
 Please contact the organizing team at ${config.ORGANIZER_EMAIL} for assistance.
   `.trim();
 
-  try {
-    await transporter.sendMail({
-      from: config.EMAIL_FROM,
-      to: leaderEmail,
-      replyTo: config.ORGANIZER_EMAIL,
-      subject: `[CODIENYCH 1.0] Registration Issue / Rejection Notice - ${registrationId}`,
-      text,
-      html,
-    });
-    console.log(`[Email Service] Rejection notification sent to leader: ${leaderEmail}`);
-    return true;
-  } catch (error) {
-    console.error(`[Email Service Error] Failed to send rejection email:`, error.message);
-    return false;
-  }
+  return await sendUniversalMail({
+    to: leaderEmail,
+    replyTo: (process.env.ORGANIZER_EMAIL || config.ORGANIZER_EMAIL || 'codienych1.0@gmail.com').trim(),
+    subject: `[CODIENYCH 1.0] Registration Issue / Rejection Notice - ${registrationId}`,
+    text,
+    html,
+  });
 };
 
 module.exports = {

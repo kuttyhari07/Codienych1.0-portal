@@ -37,4 +37,6 @@ module.exports = {
 
   ADMIN_EMAIL: process.env.ADMIN_EMAIL || 'codienych1.0@gmail.com',
   ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || '',
+
+  RESEND_API_KEY: process.env.RESEND_API_KEY || 're_fEHF4sA9_2HFGQmY7kMhXKg42KLjnTdMo',
 };
