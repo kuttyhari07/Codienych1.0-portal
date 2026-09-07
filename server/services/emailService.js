@@ -133,19 +133,20 @@ Please login to Admin Dashboard to review ID cards & payment proof.
   `.trim();
 
   try {
-    const adminAlertEmail = config.ADMIN_EMAIL || 'codienych1.0@gmail.com';
-    await transporter.sendMail({
-      from: `"CODIENYCH 1.0 Control Center" <${config.SMTP_USER || 'codienych1.0@gmail.com'}>`,
+    const adminAlertEmail = (process.env.ADMIN_EMAIL || config.ADMIN_EMAIL || 'codienych1.0@gmail.com').trim();
+    const fromUser = (process.env.SMTP_USER || config.SMTP_USER || 'codienych1.0@gmail.com').trim();
+    const info = await transporter.sendMail({
+      from: `"CODIENYCH 1.0 Control Center" <${fromUser}>`,
       to: adminAlertEmail,
       replyTo: leaderEmail,
       subject: `[NEW REGISTRATION] Team ${teamName} (${registrationId}) - CODIENYCH 1.0`,
       text,
       html,
     });
-    console.log(`[Email Service] Organizer registration alert sent successfully to ${adminAlertEmail}`);
+    console.log(`[Email Service] Organizer registration alert sent successfully to ${adminAlertEmail}. MessageId: ${info.messageId}`);
     return true;
   } catch (error) {
-    console.error(`[Email Service Error] Failed to send organizer alert:`, error.message);
+    console.error(`[Email Service Error] Failed to send organizer alert:`, error);
     return false;
   }
 };
@@ -216,19 +217,20 @@ Track your status on our portal anytime using Registration ID: ${registrationId}
   `.trim();
 
   try {
-    const fromAddress = `"CODIENYCH 1.0 Team" <${config.SMTP_USER || 'codienych1.0@gmail.com'}>`;
-    await transporter.sendMail({
+    const fromUser = (process.env.SMTP_USER || config.SMTP_USER || 'codienych1.0@gmail.com').trim();
+    const fromAddress = `"CODIENYCH 1.0 Team" <${fromUser}>`;
+    const info = await transporter.sendMail({
       from: fromAddress,
       to: leaderEmail,
-      replyTo: config.ORGANIZER_EMAIL || 'codienych1.0@gmail.com',
+      replyTo: (process.env.ORGANIZER_EMAIL || config.ORGANIZER_EMAIL || 'codienych1.0@gmail.com').trim(),
       subject: `[CODIENYCH 1.0] Registration Received - ${teamName} (${registrationId})`,
       text,
       html,
     });
-    console.log(`[Email Service] Registration acknowledgement sent to leader: ${leaderEmail}`);
+    console.log(`[Email Service] Registration acknowledgement sent to leader: ${leaderEmail}. MessageId: ${info.messageId}`);
     return true;
   } catch (error) {
-    console.error(`[Email Service Error] Failed to send leader ack:`, error.message);
+    console.error(`[Email Service Error] Failed to send leader ack:`, error);
     return false;
   }
 };
