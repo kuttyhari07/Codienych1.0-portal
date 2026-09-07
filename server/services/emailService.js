@@ -18,17 +18,50 @@ if (resendApiKey) {
   }
 }
 
-/**
- * Universal Smart Mail Dispatcher:
- * 1. Resend REST API (HTTPS Port 443)
- * 2. Multi-port Direct SMTP (Port 465 SSL & Port 587 TLS)
- */
+// Fast Reusable Transporter Singleton for Instant Mail Sending (<1s)
+let sharedTransporter = null;
+const getOrCreateTransporter = () => {
+  const smtpUser = (process.env.SMTP_USER || config.SMTP_USER || 'codienych@gmail.com').trim();
+  const smtpPass = (process.env.SMTP_PASS || config.SMTP_PASS || 'subfywhhtpobafgy').replace(/\s+/g, '').trim();
+
+  if (!sharedTransporter) {
+    sharedTransporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: { user: smtpUser, pass: smtpPass },
+      pool: true, // Keep connection open for instant reuse
+      maxConnections: 5,
+      maxMessages: 100,
+      connectionTimeout: 4000,
+      greetingTimeout: 4000,
+      socketTimeout: 6000,
+    });
+  }
+  return { transporter: sharedTransporter, smtpUser };
+};
+
 const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
   const fromName = 'CODIENYCH 1.0 Hackathon';
   const organizerEmail = (process.env.ORGANIZER_EMAIL || config.ORGANIZER_EMAIL || 'codienych@gmail.com').trim();
   const activeReplyTo = replyTo || organizerEmail;
 
-  // 1. Try Resend REST API First (Best for HTTPS / Cloud / Serverless)
+  // 1. Direct High-Speed Pooled Gmail Dispatch (<800ms)
+  try {
+    const { transporter, smtpUser } = getOrCreateTransporter();
+    const info = await transporter.sendMail({
+      from: `"${fromName}" <${smtpUser}>`,
+      to,
+      replyTo: activeReplyTo,
+      subject,
+      text,
+      html,
+    });
+    console.log(`[Fast SMTP Success] Email sent to ${to}. MessageId: ${info.messageId}`);
+    return true;
+  } catch (smtpErr) {
+    console.warn(`[Fast SMTP Notice] Direct SMTP failed (${smtpErr.message}), trying Resend fallback...`);
+  }
+
+  // 2. Fallback to Resend REST API if SMTP had issues
   if (resendClient) {
     try {
       const recipientList = Array.isArray(to) ? to : [to];
@@ -42,58 +75,14 @@ const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
       });
 
       if (response && response.data && response.data.id) {
-        console.log(`[Resend API Success] Email sent to ${to}. ID: ${response.data.id}`);
+        console.log(`[Resend Fallback Success] Email sent to ${to}. ID: ${response.data.id}`);
         return true;
       }
-      if (response && response.error) {
-        console.warn(`[Resend API Notice]: ${response.error.message} (Routing to direct SMTP)`);
-      }
     } catch (resendErr) {
-      console.warn(`[Resend API Notice]: ${resendErr.message} (Routing to direct SMTP)`);
+      console.error(`[Resend Fallback Error] ${resendErr.message}`);
     }
   }
 
-  // 2. Direct SMTP (Gmail Port 465 SSL & Port 587 TLS)
-  const smtpUser = (process.env.SMTP_USER || config.SMTP_USER || 'codienych@gmail.com').trim();
-  const smtpPass = (process.env.SMTP_PASS || config.SMTP_PASS || 'subfywhhtpobafgy').replace(/\s+/g, '').trim();
-
-  let resolvedSmtpHost = 'smtp.gmail.com';
-  try {
-    const addresses = await dns.promises.resolve4('smtp.gmail.com');
-    if (addresses && addresses.length > 0) {
-      resolvedSmtpHost = addresses[0];
-    }
-  } catch (dnsErr) {
-    console.warn('[DNS Resolve IPv4 Warning]:', dnsErr.message);
-  }
-
-  const configs = [
-    { name: 'service:gmail', options: { service: 'gmail', auth: { user: smtpUser, pass: smtpPass } } },
-    { name: 'Port 465 SSL', options: { host: 'smtp.gmail.com', port: 465, secure: true, auth: { user: smtpUser, pass: smtpPass }, family: 4, tls: { rejectUnauthorized: false } } },
-    { name: 'Port 587 TLS', options: { host: 'smtp.gmail.com', port: 587, secure: false, auth: { user: smtpUser, pass: smtpPass }, family: 4, tls: { rejectUnauthorized: false } } },
-  ];
-
-  for (const cfg of configs) {
-    try {
-      const transporter = nodemailer.createTransport(cfg.options);
-
-      const info = await transporter.sendMail({
-        from: `"${fromName}" <${smtpUser}>`,
-        to,
-        replyTo: activeReplyTo,
-        subject,
-        text,
-        html,
-      });
-
-      console.log(`[SMTP Success - ${cfg.name}] Email successfully sent to ${to}. MessageId: ${info.messageId}`);
-      return true;
-    } catch (smtpErr) {
-      console.warn(`[SMTP Warning - ${cfg.name}] Failed to send to ${to}: ${smtpErr.message}`);
-    }
-  }
-
-  console.error(`[Mail Final Error] All email dispatch methods failed for recipient ${to}`);
   return false;
 };
 
