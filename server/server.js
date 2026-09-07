@@ -78,36 +78,76 @@ app.get('/api/health', (req, res) => {
 });
 
 app.get('/api/test-email-status', async (req, res) => {
-  const { sendRegistrationConfirmation } = require('./services/emailService');
+  const dns = require('dns');
+  const nodemailer = require('nodemailer');
+  const { Resend } = require('resend');
+
   const smtpUser = (process.env.SMTP_USER || config.SMTP_USER || 'codienych@gmail.com').trim();
   const smtpPass = (process.env.SMTP_PASS || config.SMTP_PASS || 'subfywhhtpobafgy').replace(/\s+/g, '').trim();
+  const resendApiKey = (process.env.RESEND_API_KEY || config.RESEND_API_KEY || 're_fEHF4sA9_2HFGQmY7kMhXKg42KLjnTdMo').trim();
+  const targetEmail = req.query.email || 'codienych@gmail.com';
 
+  const logs = [];
+
+  // 1. Test Resend
+  let resendSuccess = false;
   try {
-    const success = await sendRegistrationConfirmation({
-      leaderEmail: req.query.email || 'codienych@gmail.com',
-      leaderName: 'Test Leader',
-      teamName: 'Test Team',
-      registrationId: 'TEST-1234',
-      teamSize: 4,
+    const resend = new Resend(resendApiKey);
+    const rRes = await resend.emails.send({
+      from: 'CODIENYCH 1.0 Hackathon <onboarding@resend.dev>',
+      to: [targetEmail],
+      subject: '⚡ Diagnostic Resend Test',
+      html: '<p>Resend Test</p>',
     });
-
-    return res.status(200).json({
-      success,
-      emailSent: success,
-      smtpUser,
-      smtpPassLength: smtpPass.length,
-      resendKeyConfigured: !!(process.env.RESEND_API_KEY || config.RESEND_API_KEY),
-    });
-  } catch (err) {
-    console.error('Diagnostic error:', err);
-    return res.status(200).json({
-      success: false,
-      emailSent: false,
-      errorMessage: err.message,
-      smtpUser,
-      smtpPassLength: smtpPass.length,
-    });
+    logs.push({ step: 'Resend API', result: rRes });
+    if (rRes && rRes.data && rRes.data.id) resendSuccess = true;
+  } catch (rErr) {
+    logs.push({ step: 'Resend Error', error: rErr.message });
   }
+
+  // 2. Test Direct SMTP configs
+  const smtpResults = [];
+  const configs = [
+    { name: 'Port 465 SSL host:smtp.gmail.com', host: 'smtp.gmail.com', port: 465, secure: true },
+    { name: 'Port 587 TLS host:smtp.gmail.com', host: 'smtp.gmail.com', port: 587, secure: false },
+    { name: 'service:gmail', service: 'gmail' },
+  ];
+
+  for (const cfg of configs) {
+    try {
+      const opts = cfg.service 
+        ? { service: 'gmail', auth: { user: smtpUser, pass: smtpPass } }
+        : { 
+            host: cfg.host, 
+            port: cfg.port, 
+            secure: cfg.secure, 
+            auth: { user: smtpUser, pass: smtpPass },
+            family: 4,
+            connectionTimeout: 5000,
+            tls: { rejectUnauthorized: false } 
+          };
+      
+      const transporter = nodemailer.createTransport(opts);
+      const info = await transporter.sendMail({
+        from: `"CODIENYCH 1.0" <${smtpUser}>`,
+        to: targetEmail,
+        subject: `⚡ Diagnostic Test - ${cfg.name}`,
+        html: '<p>SMTP Test</p>',
+      });
+      smtpResults.push({ config: cfg.name, success: true, messageId: info.messageId });
+    } catch (sErr) {
+      smtpResults.push({ config: cfg.name, success: false, error: sErr.message, code: sErr.code });
+    }
+  }
+
+  return res.status(200).json({
+    targetEmail,
+    smtpUser,
+    smtpPassLength: smtpPass.length,
+    resendSuccess,
+    smtpResults,
+    logs,
+  });
 });
 
 // Global Error Handler
