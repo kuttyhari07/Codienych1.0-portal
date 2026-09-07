@@ -78,51 +78,32 @@ app.get('/api/health', (req, res) => {
 });
 
 app.get('/api/test-email-status', async (req, res) => {
-  const nodemailer = require('nodemailer');
-  const smtpUser = (process.env.SMTP_USER || config.SMTP_USER || 'codienych1.0@gmail.com').trim();
-  const smtpPass = (process.env.SMTP_PASS || config.SMTP_PASS || 'jvllycpzzheoymoo').replace(/\s+/g, '').trim();
+  const { sendRegistrationConfirmation } = require('./services/emailService');
+  const smtpUser = (process.env.SMTP_USER || config.SMTP_USER || 'codienych@gmail.com').trim();
+  const smtpPass = (process.env.SMTP_PASS || config.SMTP_PASS || 'subfywhhtpobafgy').replace(/\s+/g, '').trim();
 
   try {
-    const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 587,
-      secure: false,
-      auth: {
-        user: smtpUser,
-        pass: smtpPass,
-      },
-      family: 4, // Force IPv4 to eliminate ENETUNREACH IPv6 error on Render
-      tls: {
-        rejectUnauthorized: false,
-      },
-    });
-
-    const verifyResult = await transporter.verify();
-    console.log('Nodemailer verify result:', verifyResult);
-
-    const info = await transporter.sendMail({
-      from: `"CODIENYCH 1.0 Control Center" <${smtpUser}>`,
-      to: 'codienych1.0@gmail.com',
-      subject: '⚡ Diagnostic Test Mail - CODIENYCH 1.0',
-      html: '<h3>Diagnostic Test Email Successful! 🚀</h3>',
+    const success = await sendRegistrationConfirmation({
+      leaderEmail: req.query.email || 'codienych@gmail.com',
+      leaderName: 'Test Leader',
+      teamName: 'Test Team',
+      registrationId: 'TEST-1234',
+      teamSize: 4,
     });
 
     return res.status(200).json({
-      success: true,
-      emailSent: true,
-      messageId: info.messageId,
+      success,
+      emailSent: success,
       smtpUser,
       smtpPassLength: smtpPass.length,
+      resendKeyConfigured: !!(process.env.RESEND_API_KEY || config.RESEND_API_KEY),
     });
   } catch (err) {
     console.error('Diagnostic error:', err);
     return res.status(200).json({
       success: false,
       emailSent: false,
-      errorName: err.name,
       errorMessage: err.message,
-      errorCode: err.code,
-      errorResponse: err.response,
       smtpUser,
       smtpPassLength: smtpPass.length,
     });
