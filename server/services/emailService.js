@@ -20,20 +20,35 @@ if (resendApiKey) {
 
 // Fast Reusable Transporter Singleton for Instant Mail Sending (<1s)
 let sharedTransporter = null;
-const getOrCreateTransporter = () => {
+const getOrCreateTransporter = async () => {
   const smtpUser = (process.env.SMTP_USER || config.SMTP_USER || 'codienych@gmail.com').trim();
   const smtpPass = (process.env.SMTP_PASS || config.SMTP_PASS || 'subfywhhtpobafgy').replace(/\s+/g, '').trim();
 
   if (!sharedTransporter) {
+    let resolvedIpv4 = 'smtp.gmail.com';
+    try {
+      const addresses = await dns.promises.resolve4('smtp.gmail.com');
+      if (addresses && addresses.length > 0) {
+        resolvedIpv4 = addresses[0];
+      }
+    } catch (e) {}
+
     sharedTransporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: resolvedIpv4,
+      port: 465,
+      secure: true,
       auth: { user: smtpUser, pass: smtpPass },
-      pool: true, // Keep connection open for instant reuse
+      family: 4, // Strictly force IPv4
+      tls: {
+        rejectUnauthorized: false,
+        servername: 'smtp.gmail.com', // Match TLS hostname
+      },
+      pool: true,
       maxConnections: 5,
       maxMessages: 100,
-      connectionTimeout: 4000,
-      greetingTimeout: 4000,
-      socketTimeout: 6000,
+      connectionTimeout: 5000,
+      greetingTimeout: 5000,
+      socketTimeout: 8000,
     });
   }
   return { transporter: sharedTransporter, smtpUser };
@@ -46,7 +61,7 @@ const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
 
   // 1. Direct High-Speed Pooled Gmail Dispatch (<800ms)
   try {
-    const { transporter, smtpUser } = getOrCreateTransporter();
+    const { transporter, smtpUser } = await getOrCreateTransporter();
     const info = await transporter.sendMail({
       from: `"${fromName}" <${smtpUser}>`,
       to,
