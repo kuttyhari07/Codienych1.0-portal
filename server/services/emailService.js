@@ -68,26 +68,14 @@ const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
   }
 
   const configs = [
-    { port: 465, secure: true, name: 'Port 465 SSL' },
-    { port: 587, secure: false, name: 'Port 587 TLS' },
+    { name: 'service:gmail', options: { service: 'gmail', auth: { user: smtpUser, pass: smtpPass } } },
+    { name: 'Port 465 SSL', options: { host: 'smtp.gmail.com', port: 465, secure: true, auth: { user: smtpUser, pass: smtpPass }, family: 4, tls: { rejectUnauthorized: false } } },
+    { name: 'Port 587 TLS', options: { host: 'smtp.gmail.com', port: 587, secure: false, auth: { user: smtpUser, pass: smtpPass }, family: 4, tls: { rejectUnauthorized: false } } },
   ];
 
   for (const cfg of configs) {
     try {
-      const transporter = nodemailer.createTransport({
-        host: resolvedSmtpHost,
-        port: cfg.port,
-        secure: cfg.secure,
-        auth: { user: smtpUser, pass: smtpPass },
-        family: 4,
-        connectionTimeout: 10000,
-        greetingTimeout: 10000,
-        socketTimeout: 15000,
-        tls: { 
-          rejectUnauthorized: false,
-          servername: 'smtp.gmail.com'
-        },
-      });
+      const transporter = nodemailer.createTransport(cfg.options);
 
       const info = await transporter.sendMail({
         from: `"${fromName}" <${smtpUser}>`,
