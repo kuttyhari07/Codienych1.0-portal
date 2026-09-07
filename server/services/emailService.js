@@ -18,13 +18,45 @@ if (resendApiKey) {
   }
 }
 
-// Direct Nodemailer SMTP Service
+/**
+ * Universal Smart Mail Dispatcher:
+ * 1. Resend REST API (HTTPS Port 443)
+ * 2. Multi-port Direct SMTP (Port 465 SSL & Port 587 TLS)
+ */
 const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
   const fromName = 'CODIENYCH 1.0 Hackathon';
+  const organizerEmail = (process.env.ORGANIZER_EMAIL || config.ORGANIZER_EMAIL || 'codienych@gmail.com').trim();
+  const activeReplyTo = replyTo || organizerEmail;
+
+  // 1. Try Resend REST API First (Best for HTTPS / Cloud / Serverless)
+  if (resendClient) {
+    try {
+      const recipientList = Array.isArray(to) ? to : [to];
+      const response = await resendClient.emails.send({
+        from: `${fromName} <onboarding@resend.dev>`,
+        to: recipientList,
+        reply_to: activeReplyTo,
+        subject,
+        html,
+        text,
+      });
+
+      if (response && response.data && response.data.id) {
+        console.log(`[Resend API Success] Email sent to ${to}. ID: ${response.data.id}`);
+        return true;
+      }
+      if (response && response.error) {
+        console.warn(`[Resend API Notice]: ${response.error.message} (Routing to direct SMTP)`);
+      }
+    } catch (resendErr) {
+      console.warn(`[Resend API Notice]: ${resendErr.message} (Routing to direct SMTP)`);
+    }
+  }
+
+  // 2. Direct SMTP (Gmail Port 465 SSL & Port 587 TLS)
   const smtpUser = (process.env.SMTP_USER || config.SMTP_USER || 'codienych@gmail.com').trim();
   const smtpPass = (process.env.SMTP_PASS || config.SMTP_PASS || 'subfywhhtpobafgy').replace(/\s+/g, '').trim();
 
-  // Resolve Gmail SMTP IPv4 address directly or fallback to hostname
   let resolvedSmtpHost = 'smtp.gmail.com';
   try {
     const addresses = await dns.promises.resolve4('smtp.gmail.com');
@@ -53,14 +85,14 @@ const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
         socketTimeout: 15000,
         tls: { 
           rejectUnauthorized: false,
-          servername: 'smtp.gmail.com' // Ensure SNI matches SSL certificate hostname
+          servername: 'smtp.gmail.com'
         },
       });
 
       const info = await transporter.sendMail({
         from: `"${fromName}" <${smtpUser}>`,
         to,
-        replyTo: replyTo || (process.env.ORGANIZER_EMAIL || config.ORGANIZER_EMAIL || 'codienych@gmail.com').trim(),
+        replyTo: activeReplyTo,
         subject,
         text,
         html,
@@ -73,7 +105,7 @@ const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
     }
   }
 
-  console.error(`[SMTP Final Error] All email dispatch methods failed for recipient ${to}`);
+  console.error(`[Mail Final Error] All email dispatch methods failed for recipient ${to}`);
   return false;
 };
 
