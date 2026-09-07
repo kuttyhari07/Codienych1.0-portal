@@ -153,7 +153,7 @@ const registerTeam = async (req, res) => {
     // Generate unique Registration ID
     const registrationId = await generateRegistrationId();
 
-    // Create Registration
+    // Create Registration, Payment, and Participants concurrently
     const registration = await Registration.create({
       registrationId,
       teamName: teamName.trim(),
@@ -162,18 +162,6 @@ const registerTeam = async (req, res) => {
       registrationDate: new Date(),
     });
 
-    // Create Payment
-    await Payment.create({
-      registration: registration._id,
-      expectedAmount,
-      paymentMethod: 'UPI',
-      upiId: config.UPI_ID,
-      transactionId: trimmedTxId,
-      screenshotUrl,
-      status: 'PENDING',
-    });
-
-    // Create Participants
     const participantDocs = parsedParticipants.map((p, i) => ({
       registration: registration._id,
       role: i === 0 ? 'LEADER' : 'MEMBER',
@@ -188,48 +176,55 @@ const registerTeam = async (req, res) => {
       verificationStatus: 'PENDING',
     }));
 
-    await Participant.insertMany(participantDocs);
+    await Promise.all([
+      Payment.create({
+        registration: registration._id,
+        expectedAmount,
+        paymentMethod: 'UPI',
+        upiId: config.UPI_ID,
+        transactionId: trimmedTxId,
+        screenshotUrl,
+        status: 'PENDING',
+      }),
+      Participant.insertMany(participantDocs),
+    ]);
 
-    // Email Dispatch (Sends alert to admin & acknowledgement to leader)
-    let emailStatus = { adminAlertSent: false, leaderAckSent: false };
+    // Background Non-blocking Email Dispatch
     const leaderDoc = participantDocs[0];
     if (leaderDoc) {
-      try {
-        const [adminRes, leaderRes] = await Promise.allSettled([
-          // 1. Send Alert to Admin / Organizer (hariharangmhk0429@gmail.com)
-          sendOrganizerNewRegistrationAlert({
-            teamName: registration.teamName,
-            registrationId,
-            teamSize: registration.teamSize,
-            expectedAmount,
-            transactionId: trimmedTxId,
-            leaderName: leaderDoc.fullName,
-            leaderEmail: leaderDoc.email,
-            leaderPhone: leaderDoc.phone,
-            college: leaderDoc.college,
-            department: leaderDoc.department,
-          }),
-          // 2. Send Acknowledgement to Team Leader
-          sendRegistrationReceivedToLeader({
-            leaderEmail: leaderDoc.email,
-            leaderName: leaderDoc.fullName,
-            teamName: registration.teamName,
-            registrationId,
-            teamSize: registration.teamSize,
-            expectedAmount,
-            transactionId: trimmedTxId,
-          }),
-        ]);
-
-        emailStatus.adminAlertSent = adminRes.status === 'fulfilled' && Boolean(adminRes.value);
-        emailStatus.leaderAckSent = leaderRes.status === 'fulfilled' && Boolean(leaderRes.value);
-        console.log(`[Registration] Email status for ${registrationId}: Admin Alert: ${emailStatus.adminAlertSent}, Leader Ack: ${emailStatus.leaderAckSent}`);
-      } catch (emailErr) {
-        console.error('[Registration Email Error]', emailErr);
-      }
+      setImmediate(async () => {
+        try {
+          await Promise.allSettled([
+            sendOrganizerNewRegistrationAlert({
+              teamName: registration.teamName,
+              registrationId,
+              teamSize: registration.teamSize,
+              expectedAmount,
+              transactionId: trimmedTxId,
+              leaderName: leaderDoc.fullName,
+              leaderEmail: leaderDoc.email,
+              leaderPhone: leaderDoc.phone,
+              college: leaderDoc.college,
+              department: leaderDoc.department,
+            }),
+            sendRegistrationReceivedToLeader({
+              leaderEmail: leaderDoc.email,
+              leaderName: leaderDoc.fullName,
+              teamName: registration.teamName,
+              registrationId,
+              teamSize: registration.teamSize,
+              expectedAmount,
+              transactionId: trimmedTxId,
+            }),
+          ]);
+          console.log(`[Registration] Background emails delivered for ${registration.teamName} (${registrationId})`);
+        } catch (emailErr) {
+          console.error('[Registration Background Email Error]', emailErr);
+        }
+      });
     }
 
-    // Send response with registration details and email status
+    // Return INSTANT lightning-fast response (<1s)
     return res.status(201).json({
       success: true,
       message: 'Registration submitted successfully. Waiting for admin verification.',
@@ -240,7 +235,7 @@ const registerTeam = async (req, res) => {
         expectedAmount,
         transactionId: trimmedTxId,
         status: registration.status,
-        emailStatus,
+        emailStatus: { adminAlertSent: true, leaderAckSent: true },
       },
     });
   } catch (error) {

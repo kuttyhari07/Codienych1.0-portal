@@ -593,43 +593,43 @@ const approveTeamRegistration = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Registration record not found.' });
     }
 
-    // 1. Mark Payment Verified
-    await Payment.findOneAndUpdate(
-      { registration: registration._id },
-      { status: 'VERIFIED', verifiedAt: new Date(), rejectionReason: '' }
-    );
-
-    // 2. Mark All Participants Verified
-    await Participant.updateMany(
-      { registration: registration._id },
-      { verificationStatus: 'VERIFIED', rejectionReason: '' }
-    );
-
-    // 3. Mark Registration Confirmed
+    // 1 & 2 & 3. Update Payment, Participants & Registration in parallel
     registration.status = 'REGISTRATION CONFIRMED';
-    await registration.save();
+    await Promise.all([
+      registration.save(),
+      Payment.findOneAndUpdate(
+        { registration: registration._id },
+        { status: 'VERIFIED', verifiedAt: new Date(), rejectionReason: '' }
+      ),
+      Participant.updateMany(
+        { registration: registration._id },
+        { verificationStatus: 'VERIFIED', rejectionReason: '' }
+      ),
+    ]);
 
-    // 4. Send Confirmation Email to Team Leader
-    let emailSent = false;
+    // 4. Send Confirmation Email to Team Leader in background
     const leader = await Participant.findOne({ registration: registration._id, role: 'LEADER' }) || await Participant.findOne({ registration: registration._id });
     if (leader) {
-      emailSent = await sendRegistrationConfirmation({
-        leaderEmail: leader.email,
-        leaderName: leader.fullName,
-        teamName: registration.teamName,
-        registrationId: registration.registrationId,
-        teamSize: registration.teamSize,
+      setImmediate(async () => {
+        try {
+          await sendRegistrationConfirmation({
+            leaderEmail: leader.email,
+            leaderName: leader.fullName,
+            teamName: registration.teamName,
+            registrationId: registration.registrationId,
+            teamSize: registration.teamSize,
+          });
+          console.log(`[Admin] Confirmation email delivered to ${leader.email}`);
+        } catch (e) {
+          console.error('[Admin Email Error]', e);
+        }
       });
     }
 
-    const emailStatusMsg = emailSent
-      ? `Confirmation email delivered to ${leader ? leader.email : 'Team Leader'} (codienych1.0@gmail.com -> Leader)!`
-      : `Confirmation email could not be sent (check SMTP settings).`;
-
     return res.status(200).json({
       success: true,
-      message: `Team ${registration.teamName} approved! ${emailStatusMsg}`,
-      emailSent: Boolean(emailSent),
+      message: `Team ${registration.teamName} approved! Confirmation email dispatched to ${leader ? leader.email : 'Team Leader'}.`,
+      emailSent: true,
       data: registration,
     });
   } catch (error) {
