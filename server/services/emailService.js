@@ -55,6 +55,17 @@ const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
   const smtpUser = (process.env.SMTP_USER || config.SMTP_USER || 'codienych1.0@gmail.com').trim();
   const smtpPass = (process.env.SMTP_PASS || config.SMTP_PASS || 'jvllycpzzheoymoo').replace(/\s+/g, '').trim();
 
+  // Resolve Gmail SMTP IPv4 address directly or use host with family: 4
+  let resolvedSmtpHost = 'smtp.gmail.com';
+  try {
+    const addresses = await dns.promises.resolve4('smtp.gmail.com');
+    if (addresses && addresses.length > 0) {
+      resolvedSmtpHost = addresses[0];
+    }
+  } catch (dnsErr) {
+    console.warn('[DNS Resolve IPv4 Warning]:', dnsErr.message);
+  }
+
   const configs = [
     { port: 465, secure: true, name: 'Port 465 SSL' },
     { port: 587, secure: false, name: 'Port 587 TLS' },
@@ -63,15 +74,18 @@ const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
   for (const cfg of configs) {
     try {
       const transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
+        host: resolvedSmtpHost,
         port: cfg.port,
         secure: cfg.secure,
         auth: { user: smtpUser, pass: smtpPass },
         family: 4,
-        connectionTimeout: 7000,
-        greetingTimeout: 7000,
+        connectionTimeout: 8000,
+        greetingTimeout: 8000,
         socketTimeout: 10000,
-        tls: { rejectUnauthorized: false },
+        tls: { 
+          rejectUnauthorized: false,
+          servername: 'smtp.gmail.com' // Ensure SNI matches SSL certificate hostname
+        },
       });
 
       const info = await transporter.sendMail({
