@@ -1,42 +1,25 @@
 const nodemailer = require('nodemailer');
 const config = require('../config/env');
 
-let cachedTransporter = null;
-
 const createTransporter = () => {
-  if (cachedTransporter) {
-    return cachedTransporter;
-  }
-
-  const smtpUser = (config.SMTP_USER || config.ORGANIZER_EMAIL || 'codienych1.0@gmail.com').trim();
-  const smtpPass = (config.SMTP_PASS || 'jvllycpzzheoymoo').trim();
-
-  if (!smtpUser || !smtpPass) {
-    console.warn(`[Email Service Warning] Transporter cannot be created. smtpUser: ${smtpUser}, smtpPass present: ${Boolean(smtpPass)}`);
-    return null;
-  }
+  const smtpUser = (process.env.SMTP_USER || config.SMTP_USER || config.ORGANIZER_EMAIL || 'codienych1.0@gmail.com').trim();
+  const smtpPass = (process.env.SMTP_PASS || config.SMTP_PASS || 'jvllycpzzheoymoo').replace(/\s+/g, '').trim();
 
   try {
-    cachedTransporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 465,
-      secure: true, // true for 465, false for other ports
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
       auth: {
         user: smtpUser,
         pass: smtpPass,
       },
       tls: {
-        rejectUnauthorized: false, // Prevents certificate / SSL handshake failures on cloud servers like Render
+        rejectUnauthorized: false,
       },
-      pool: true,
-      maxConnections: 3,
-      rateDelta: 1000,
-      rateLimit: 3,
     });
 
-    return cachedTransporter;
+    return transporter;
   } catch (err) {
-    console.error('[Email Service] Failed to initialize transporter:', err.message);
+    console.error('[Email Service] Failed to create transporter:', err.message);
     return null;
   }
 };
