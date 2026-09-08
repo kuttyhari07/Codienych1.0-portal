@@ -98,18 +98,14 @@ const ContactSection = () => {
                   STUDENT COORDINATORS
                 </span>
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="font-sans text-gray-200 text-sm font-medium">RK Nandha Kumar</span>
-                    <a href="tel:9342809449" className="font-mono text-xs text-[#00ff66] hover:underline">
-                      +91 93428 09449
-                    </a>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="font-sans text-gray-200 text-sm font-medium">R Sastha Babu</span>
-                    <a href="tel:9080713459" className="font-mono text-xs text-[#00ff66] hover:underline">
-                      +91 90807 13459
-                    </a>
-                  </div>
+                  {EVENT_CONFIG.STUDENT_COORDINATORS.map((sc, index) => (
+                    <div key={index} className="flex items-center justify-between">
+                      <span className="font-sans text-gray-200 text-sm font-medium">{sc.name}</span>
+                      <a href={`tel:${sc.phone.replace(/[^0-9+]/g, '')}`} className="font-mono text-xs text-[#00ff66] hover:underline">
+                        {sc.phone}
+                      </a>
+                    </div>
+                  ))}
                 </div>
               </div>
 
