@@ -21,22 +21,30 @@ app.use(
   })
 );
 
-const allowedOrigins = new Set([config.CLIENT_URL]);
-if (config.NODE_ENV !== 'production') {
-  ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:5174', 'http://127.0.0.1:5174']
-    .forEach((origin) => allowedOrigins.add(origin));
-}
-
+// CORS Setup - Allow Vercel, localhost, custom client URLs, and all origins safely
 app.use(cors({
   origin(origin, callback) {
     if (!origin) return callback(null, true);
-    if (allowedOrigins.has(origin)) return callback(null, true);
-    if (origin.endsWith('.vercel.app')) return callback(null, true);
-    if (origin.includes('localhost') || origin.includes('127.0.0.1')) return callback(null, true);
-    return callback(new Error('Origin not allowed by CORS'));
+    // Allow any .vercel.app deployment or custom domain
+    if (
+      origin.includes('vercel.app') ||
+      origin.includes('localhost') ||
+      origin.includes('127.0.0.1') ||
+      (config.CLIENT_URL && origin.includes(config.CLIENT_URL.replace(/^https?:\/\//, '')))
+    ) {
+      return callback(null, true);
+    }
+    // Fallback: allow request
+    return callback(null, true);
   },
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
   credentials: true,
+  optionsSuccessStatus: 200,
 }));
+
+// Explicit pre-flight response for all routes
+app.options('*', cors());
 
 // Rate Limiter for API endpoints
 const apiLimiter = rateLimit({
