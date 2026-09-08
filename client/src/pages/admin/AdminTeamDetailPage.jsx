@@ -97,48 +97,67 @@ const AdminTeamDetailPage = () => {
     }
   };
 
+  const [isApproving, setIsApproving] = useState(false);
   const [emailStatusModal, setEmailStatusModal] = useState(null);
+  const [showConfirmApproveModal, setShowConfirmApproveModal] = useState(false);
+  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [teamRejectionReasonInput, setTeamRejectionReasonInput] = useState('');
 
   // 1-Click Approve Entire Team & Send Confirmation Email
   const handleApproveEntireTeam = async () => {
-    if (!window.confirm(`Approve Team ${data.registration.teamName} and send official Confirmation Email to Team Leader?`)) return;
+    setShowConfirmApproveModal(false);
+    setIsApproving(true);
     try {
       const res = await api.patch(`/admin/registrations/${id}/approve-team`);
       if (res.data.success) {
         setActionMessage(res.data.message || 'Team approved and confirmation email sent!');
         setEmailStatusModal({
           type: res.data.emailSent ? 'SUCCESS' : 'WARNING',
-          title: res.data.emailSent ? 'CONFIRMATION EMAIL DELIVERED! 📨' : 'TEAM APPROVED (EMAIL NOTICE)',
+          title: res.data.emailSent ? 'CONFIRMATION EMAIL DELIVERED! 📨' : 'TEAM APPROVED (EMAIL ISSUE)',
           message: res.data.emailSent
             ? `Official Registration Confirmation Email has been successfully sent from codienych@gmail.com to Team Leader (${data.participants?.find(p => p.role === 'LEADER')?.email || 'Leader'})!`
-            : `Team status was updated to CONFIRMED, but the confirmation email could not be sent. Please check your SMTP configuration in Render dashboard.`,
+            : `Team status was updated to CONFIRMED, but the confirmation email could not be delivered to ${data.participants?.find(p => p.role === 'LEADER')?.email || 'Leader'}. Please check SMTP configuration.`,
         });
-        fetchTeamDetail();
+        await fetchTeamDetail();
       }
     } catch (err) {
-      alert(err.response?.data?.message || 'Error approving team.');
+      setEmailStatusModal({
+        type: 'ERROR',
+        title: 'APPROVAL FAILED',
+        message: err.response?.data?.message || 'Error occurred while approving team.',
+      });
+    } finally {
+      setIsApproving(false);
     }
   };
 
   const handleRejectEntireTeam = async () => {
-    const reason = prompt('Enter mandatory reason for rejecting this team registration:');
-    if (!reason || !reason.trim()) {
+    if (!teamRejectionReasonInput.trim()) {
       alert('Rejection reason is mandatory.');
       return;
     }
+    setShowRejectModal(false);
+    setIsApproving(true);
     try {
-      const res = await api.patch(`/admin/registrations/${id}/reject-team`, { rejectionReason: reason.trim() });
+      const res = await api.patch(`/admin/registrations/${id}/reject-team`, { rejectionReason: teamRejectionReasonInput.trim() });
       if (res.data.success) {
         setActionMessage(res.data.message || 'Team rejected and notice sent.');
         setEmailStatusModal({
           type: 'WARNING',
-          title: 'TEAM REJECTED & NOTICE SENT',
-          message: `Team marked as REJECTED. Notification sent to Team Leader (${data.participants?.find(p => p.role === 'LEADER')?.email || 'Leader'}). Reason: ${reason.trim()}`,
+          title: 'TEAM REJECTED & NOTICE DISPATCHED',
+          message: `Team marked as REJECTED. Notification sent to Team Leader (${data.participants?.find(p => p.role === 'LEADER')?.email || 'Leader'}). Reason: ${teamRejectionReasonInput.trim()}`,
         });
-        fetchTeamDetail();
+        await fetchTeamDetail();
       }
     } catch (err) {
-      alert(err.response?.data?.message || 'Error rejecting team.');
+      setEmailStatusModal({
+        type: 'ERROR',
+        title: 'REJECTION FAILED',
+        message: err.response?.data?.message || 'Error rejecting team.',
+      });
+    } finally {
+      setIsApproving(false);
+      setTeamRejectionReasonInput('');
     }
   };
 
@@ -168,6 +187,77 @@ const AdminTeamDetailPage = () => {
         backTo="/admin/registrations"
       />
 
+      {/* MODAL: CONFIRM APPROVE ENTIRE TEAM */}
+      {showConfirmApproveModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-[#0a140e] border-2 border-[#00ff66] rounded-2xl p-6 sm:p-8 max-w-lg w-full shadow-[0_0_50px_rgba(0,255,102,0.4)] text-center space-y-4">
+            <div className="w-16 h-16 rounded-full bg-[#00ff66]/20 border border-[#00ff66] flex items-center justify-center mx-auto text-[#00ff66] text-2xl">
+              ✓
+            </div>
+            <h3 className="font-orbitron font-bold text-xl text-white">
+              APPROVE TEAM REGISTRATION?
+            </h3>
+            <p className="font-mono text-xs text-gray-300 leading-relaxed bg-[#050b07] p-4 rounded-xl border border-[#1b3524]">
+              This will mark Payment & All Participant IDs as <span className="text-[#00ff66] font-bold">VERIFIED</span> and automatically dispatch the official <span className="text-white font-bold">Registration Confirmation Email</span> to Team Leader (<span className="text-[#00ff66]">{data?.participants?.find(p => p.role === 'LEADER')?.email || 'Leader'}</span>).
+            </p>
+            <div className="flex gap-3 pt-2">
+              <button
+                onClick={() => setShowConfirmApproveModal(false)}
+                className="flex-1 py-3 px-4 bg-gray-800 hover:bg-gray-700 text-gray-300 font-orbitron font-bold text-xs rounded-xl transition-colors"
+              >
+                CANCEL
+              </button>
+              <button
+                onClick={handleApproveEntireTeam}
+                disabled={isApproving}
+                className="flex-1 py-3 px-4 bg-[#00ff66] hover:bg-[#10b981] text-black font-orbitron font-bold text-xs rounded-xl transition-all shadow-[0_0_20px_#00ff66] cursor-pointer"
+              >
+                {isApproving ? 'SENDING EMAIL...' : 'CONFIRM & SEND EMAIL'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: REJECT ENTIRE TEAM */}
+      {showRejectModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-[#0a140e] border-2 border-red-500 rounded-2xl p-6 sm:p-8 max-w-lg w-full shadow-[0_0_50px_rgba(239,68,68,0.4)] text-center space-y-4">
+            <div className="w-16 h-16 rounded-full bg-red-500/20 border border-red-500 flex items-center justify-center mx-auto text-red-400 text-2xl">
+              ✕
+            </div>
+            <h3 className="font-orbitron font-bold text-xl text-white">
+              REJECT TEAM REGISTRATION
+            </h3>
+            <div className="space-y-2 text-left">
+              <label className="font-mono text-xs text-gray-400 block">Mandatory Rejection Reason:</label>
+              <textarea
+                value={teamRejectionReasonInput}
+                onChange={(e) => setTeamRejectionReasonInput(e.target.value)}
+                placeholder="e.g. Fake payment UTR / Invalid College ID Card uploaded..."
+                rows={3}
+                className="w-full bg-[#050b07] border border-red-500/50 rounded-xl p-3 font-mono text-xs text-white outline-none focus:border-red-400"
+              />
+            </div>
+            <div className="flex gap-3 pt-2">
+              <button
+                onClick={() => setShowRejectModal(false)}
+                className="flex-1 py-3 px-4 bg-gray-800 hover:bg-gray-700 text-gray-300 font-orbitron font-bold text-xs rounded-xl transition-colors"
+              >
+                CANCEL
+              </button>
+              <button
+                onClick={handleRejectEntireTeam}
+                disabled={isApproving}
+                className="flex-1 py-3 px-4 bg-red-600 hover:bg-red-700 text-white font-orbitron font-bold text-xs rounded-xl transition-all shadow-[0_0_20px_rgba(239,68,68,0.4)] cursor-pointer"
+              >
+                {isApproving ? 'DISPATCHING...' : 'REJECT & NOTIFY LEADER'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* EMAIL STATUS POPUP MODAL */}
       {emailStatusModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
@@ -188,7 +278,7 @@ const AdminTeamDetailPage = () => {
 
             <button
               onClick={() => setEmailStatusModal(null)}
-              className="w-full py-3 px-4 bg-[#00ff66] hover:bg-[#10b981] text-black font-orbitron font-bold text-xs rounded-xl transition-all shadow-[0_0_15px_#00ff66]"
+              className="w-full py-3 px-4 bg-[#00ff66] hover:bg-[#10b981] text-black font-orbitron font-bold text-xs rounded-xl transition-all shadow-[0_0_15px_#00ff66] cursor-pointer"
             >
               GOT IT / CLOSE POPUP
             </button>
@@ -232,16 +322,18 @@ const AdminTeamDetailPage = () => {
             {/* QUICK ACTIONS */}
             <div className="flex gap-2">
               <button
-                onClick={handleApproveEntireTeam}
-                className="px-4 py-2.5 bg-[#00ff66] hover:bg-[#10b981] text-black hover:text-white font-orbitron font-bold text-xs rounded-xl transition-all shadow-[0_0_20px_rgba(0,255,102,0.4)] flex items-center space-x-1.5"
+                onClick={() => setShowConfirmApproveModal(true)}
+                disabled={isApproving}
+                className="px-4 py-2.5 bg-[#00ff66] hover:bg-[#10b981] text-black hover:text-white font-orbitron font-bold text-xs rounded-xl transition-all shadow-[0_0_20px_rgba(0,255,102,0.4)] flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
               >
                 <CheckCircle className="w-4 h-4" />
-                <span>APPROVE TEAM & SEND EMAIL</span>
+                <span>{isApproving ? 'PROCESSING...' : 'APPROVE TEAM & SEND EMAIL'}</span>
               </button>
 
               <button
-                onClick={handleRejectEntireTeam}
-                className="px-4 py-2.5 bg-red-950/90 hover:bg-red-900 border border-red-500/60 text-red-300 font-mono text-xs rounded-xl transition-all flex items-center space-x-1.5"
+                onClick={() => setShowRejectModal(true)}
+                disabled={isApproving}
+                className="px-4 py-2.5 bg-red-950/90 hover:bg-red-900 border border-red-500/60 text-red-300 font-mono text-xs rounded-xl transition-all flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
               >
                 <XCircle className="w-4 h-4" />
                 <span>REJECT TEAM</span>

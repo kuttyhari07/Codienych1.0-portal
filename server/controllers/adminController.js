@@ -37,13 +37,18 @@ const updateOverallRegistrationStatus = async (registrationId) => {
     if (!wasAlreadyConfirmed) {
       const leader = participants.find((p) => p.role === 'LEADER') || participants[0];
       if (leader) {
-        await sendRegistrationConfirmation({
-          leaderEmail: leader.email,
-          leaderName: leader.fullName,
-          teamName: registration.teamName,
-          registrationId: registration.registrationId,
-          teamSize: registration.teamSize,
-        });
+        try {
+          const sent = await sendRegistrationConfirmation({
+            leaderEmail: leader.email,
+            leaderName: leader.fullName,
+            teamName: registration.teamName,
+            registrationId: registration.registrationId,
+            teamSize: registration.teamSize,
+          });
+          console.log(`[Email Dispatch on Full Verification] Delivery to ${leader.email}: ${sent}`);
+        } catch (mailErr) {
+          console.error('[Email Dispatch on Full Verification Error]:', mailErr.message);
+        }
       }
     }
   } else {
