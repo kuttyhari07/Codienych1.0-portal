@@ -320,65 +320,15 @@ const AdminTeamDetailPage = () => {
             </div>
 
             {/* QUICK ACTIONS */}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex gap-2">
               <button
                 onClick={() => setShowConfirmApproveModal(true)}
                 disabled={isApproving}
                 className="px-4 py-2.5 bg-[#00ff66] hover:bg-[#10b981] text-black hover:text-white font-orbitron font-bold text-xs rounded-xl transition-all shadow-[0_0_20px_rgba(0,255,102,0.4)] flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
               >
                 <CheckCircle className="w-4 h-4" />
-                <span>{isApproving ? 'PROCESSING...' : 'APPROVE & DISPATCH'}</span>
+                <span>{isApproving ? 'PROCESSING...' : 'APPROVE TEAM & SEND EMAIL'}</span>
               </button>
-
-              {/* 1-CLICK DIRECT GMAIL WEB / APP COMPOSE */}
-              {data?.participants?.find(p => p.role === 'LEADER') && (
-                <a
-                  href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(data.participants.find(p => p.role === 'LEADER').email)}&su=${encodeURIComponent(`[CODIENYCH 1.0] Registration Approved & Confirmed! - ${registration.registrationId}`)}&body=${encodeURIComponent(
-`Hello ${data.participants.find(p => p.role === 'LEADER').fullName},
-
-🎉 Congratulations! Your team registration and payment for "${registration.teamName}" (Registration ID: ${registration.registrationId}) have been APPROVED & CONFIRMED for CODIENYCH 1.0 (24-Hour Software Hackathon)!
-
-Team Details:
-- Team Name: ${registration.teamName}
-- Registration ID: ${registration.registrationId}
-- Status: CONFIRMED & SEAT RESERVED
-- Venue: ESEC CONVENTION CENTER, ERODE SENGUNTHAR ENGINEERING COLLEGE
-
-Important:
-- Please bring original College ID cards & laptops on event day.
-
-Organizing Committee,
-CODIENYCH 1.0 | Dept of IT`
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-mono font-bold text-xs rounded-xl transition-all shadow-[0_0_15px_rgba(37,99,235,0.4)] flex items-center space-x-1.5 cursor-pointer"
-                >
-                  <span>✉️ DIRECT GMAIL SEND</span>
-                </a>
-              )}
-
-              {/* 1-CLICK WHATSAPP CONFIRMATION DISPATCH */}
-              {data?.participants?.find(p => p.role === 'LEADER')?.phone && (
-                <a
-                  href={`https://wa.me/${data.participants.find(p => p.role === 'LEADER').phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
-`🎉 *CODIENYCH 1.0 - REGISTRATION APPROVED!*
-
-Hello *${data.participants.find(p => p.role === 'LEADER').fullName}*,
-Your team *${registration.teamName}* (Reg ID: *${registration.registrationId}*) has been *APPROVED & CONFIRMED*!
-
-📍 *Venue:* ESEC Convention Center, Erode Sengunthar Engineering College
-📅 *Hackathon Dates:* Oct 8 - 9, 2026
-
-Please carry your College ID cards and laptops. See you at the hackathon! 🚀`
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-mono font-bold text-xs rounded-xl transition-all shadow-[0_0_15px_rgba(16,185,129,0.4)] flex items-center space-x-1.5 cursor-pointer"
-                >
-                  <span>💬 SEND WHATSAPP</span>
-                </a>
-              )}
 
               <button
                 onClick={() => setShowRejectModal(true)}
