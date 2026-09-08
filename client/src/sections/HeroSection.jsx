@@ -17,7 +17,7 @@ const HeroSection = () => {
 
       {/* Presenter / Institution Header */}
       <div className="mb-5 sm:mb-8 max-w-3xl mx-auto px-3 space-y-2 sm:space-y-3">
-        <h3 className="font-orbitron font-bold text-sm sm:text-lg md:text-2xl text-white uppercase tracking-wider sm:tracking-[0.2em] leading-relaxed drop-shadow-[0_0_12px_rgba(255,255,255,0.4)]">
+        <h3 className="font-orbitron font-extrabold text-sm sm:text-lg md:text-2xl text-white uppercase tracking-wider sm:tracking-[0.2em] leading-relaxed neon-glow-green">
           {EVENT_CONFIG.COLLEGE_NAME}
         </h3>
         <div className="flex flex-col items-center justify-center font-orbitron font-extrabold text-xs sm:text-base md:text-lg text-[#00ff66] tracking-wider sm:tracking-[0.25em] uppercase leading-relaxed">
