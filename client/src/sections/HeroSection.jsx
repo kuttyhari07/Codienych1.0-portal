@@ -16,15 +16,15 @@ const HeroSection = () => {
       </div>
 
       {/* Presenter / Institution Header */}
-      <div className="mb-4 sm:mb-6 max-w-xl mx-auto px-2 space-y-1.5 sm:space-y-2">
-        <p className="font-mono text-[11px] sm:text-sm md:text-base text-gray-300 uppercase tracking-widest leading-relaxed">
+      <div className="mb-5 sm:mb-8 max-w-3xl mx-auto px-3 space-y-2 sm:space-y-3">
+        <h3 className="font-orbitron font-bold text-sm sm:text-lg md:text-2xl text-white uppercase tracking-wider sm:tracking-[0.2em] leading-relaxed drop-shadow-[0_0_12px_rgba(255,255,255,0.4)]">
           {EVENT_CONFIG.COLLEGE_NAME}
-        </p>
-        <div className="flex flex-col items-center justify-center font-orbitron font-semibold text-xs sm:text-sm text-[#00ff66] tracking-wider sm:tracking-[0.2em] uppercase leading-relaxed">
-          <span className="text-[#00ff66] drop-shadow-[0_0_8px_rgba(0,255,102,0.4)]">
-            DEPARTMENT OF INFORMATION TECHNOLOGY
+        </h3>
+        <div className="flex flex-col items-center justify-center font-orbitron font-extrabold text-xs sm:text-base md:text-lg text-[#00ff66] tracking-wider sm:tracking-[0.25em] uppercase leading-relaxed">
+          <span className="text-[#00ff66] neon-glow-green drop-shadow-[0_0_15px_rgba(0,255,102,0.8)]">
+            {EVENT_CONFIG.DEPARTMENT}
           </span>
-          <span className="text-gray-400 font-normal text-[10px] sm:text-xs tracking-[0.25em] mt-0.5 sm:mt-1">
+          <span className="text-gray-300 font-semibold text-[11px] sm:text-xs md:text-sm tracking-[0.35em] mt-1 sm:mt-1.5 drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]">
             PRESENTS
           </span>
         </div>
