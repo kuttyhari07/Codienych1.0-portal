@@ -63,40 +63,32 @@ const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
   // 2. Direct High-Speed Gmail SMTP Dispatch (Primary for Team Leaders & Participants)
   const methods = [
     {
-      name: 'Gmail Service Direct',
+      name: 'Gmail Service Direct (Default)',
       opts: {
         service: 'gmail',
         auth: { user: smtpUser, pass: smtpPass },
-        connectionTimeout: 4000,
-        greetingTimeout: 3000,
-        socketTimeout: 5000,
-      },
-    },
-    {
-      name: 'Port 587 TLS',
-      opts: {
-        host: 'smtp.gmail.com',
-        port: 587,
-        secure: false,
-        auth: { user: smtpUser, pass: smtpPass },
-        family: 4,
-        connectionTimeout: 4000,
-        greetingTimeout: 3000,
-        socketTimeout: 5000,
         tls: { rejectUnauthorized: false },
       },
     },
     {
-      name: 'Port 465 SSL',
+      name: 'Port 465 SSL Direct',
       opts: {
         host: 'smtp.gmail.com',
         port: 465,
         secure: true,
         auth: { user: smtpUser, pass: smtpPass },
         family: 4,
-        connectionTimeout: 4000,
-        greetingTimeout: 3000,
-        socketTimeout: 5000,
+        tls: { rejectUnauthorized: false },
+      },
+    },
+    {
+      name: 'Port 587 TLS Direct',
+      opts: {
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false,
+        auth: { user: smtpUser, pass: smtpPass },
+        family: 4,
         tls: { rejectUnauthorized: false },
       },
     },
@@ -117,7 +109,7 @@ const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
       console.log(`[SMTP Success - ${method.name}] Email delivered to ${to}. MessageId: ${info.messageId}`);
       return true;
     } catch (smtpErr) {
-      console.warn(`[SMTP Warning - ${method.name}] Failed for ${to}: ${smtpErr.message}`);
+      console.error(`[SMTP Warning - ${method.name}] Failed for ${to}:`, smtpErr.message);
     }
   }
 
