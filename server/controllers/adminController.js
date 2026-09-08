@@ -607,30 +607,30 @@ const approveTeamRegistration = async (req, res) => {
       ),
     ]);
 
-    // 4. Send Confirmation Email to Team Leader in background (Non-blocking)
+    // 4. Send Confirmation Email to Team Leader
+    let emailDelivered = false;
     const leader = await Participant.findOne({ registration: registration._id, role: 'LEADER' }) || await Participant.findOne({ registration: registration._id });
     if (leader) {
-      (async () => {
-        try {
-          const sent = await sendRegistrationConfirmation({
-            leaderEmail: leader.email,
-            leaderName: leader.fullName,
-            teamName: registration.teamName,
-            registrationId: registration.registrationId,
-            teamSize: registration.teamSize,
-          });
-          console.log(`[Admin Background Email] Confirmation delivered to ${leader.email}: ${sent}`);
-        } catch (e) {
-          console.error('[Admin Email Error]', e.message);
-        }
-      })();
+      try {
+        emailDelivered = await sendRegistrationConfirmation({
+          leaderEmail: leader.email,
+          leaderName: leader.fullName,
+          teamName: registration.teamName,
+          registrationId: registration.registrationId,
+          teamSize: registration.teamSize,
+        });
+        console.log(`[Admin Approve Team Email] Delivery to ${leader.email}: ${emailDelivered}`);
+      } catch (e) {
+        console.error('[Admin Email Error]', e.message);
+      }
     }
 
-    // Return INSTANT lightning response (<400ms)
     return res.status(200).json({
       success: true,
-      message: `Team ${registration.teamName} approved! Confirmation email dispatched to ${leader ? leader.email : 'Team Leader'}.`,
-      emailSent: true,
+      message: emailDelivered
+        ? `Team ${registration.teamName} approved! Confirmation email delivered to ${leader ? leader.email : 'Team Leader'}.`
+        : `Team ${registration.teamName} approved, but email delivery to ${leader ? leader.email : 'Team Leader'} failed. Please verify email address or SMTP service.`,
+      emailSent: emailDelivered,
       data: registration,
     });
   } catch (error) {
