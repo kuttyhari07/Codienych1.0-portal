@@ -43,7 +43,7 @@ const ContactSection = () => {
             <div className="flex items-start space-x-4">
               <Phone className="w-6 h-6 text-[#00ff66] flex-shrink-0 mt-1" />
               <div>
-                <span className="font-mono text-xs text-gray-400 block uppercase">HOTLINE PHONE</span>
+                <span className="font-mono text-xs text-gray-400 block uppercase">ADMIN PHONE</span>
                 <a href={`tel:${EVENT_CONFIG.PHONE_NUMBER.replace(/\s+/g, '')}`} className="font-mono text-sm text-gray-200 hover:text-[#00ff66] transition-colors">
                   {EVENT_CONFIG.PHONE_NUMBER}
                 </a>
