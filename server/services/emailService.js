@@ -23,7 +23,7 @@ const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
   const organizerEmail = (process.env.ORGANIZER_EMAIL || config.ORGANIZER_EMAIL || 'codienych@gmail.com').trim();
   const activeReplyTo = replyTo || organizerEmail;
   const smtpUser = (process.env.SMTP_USER || config.SMTP_USER || 'codienych@gmail.com').trim();
-  const smtpPass = (process.env.SMTP_PASS || config.SMTP_PASS || 'subfywhhtpobafgy').replace(/\s+/g, '').trim();
+  const smtpPass = (process.env.SMTP_PASS || config.SMTP_PASS || 'qbklstzmumnnfndh').replace(/\s+/g, '').trim();
 
   const isOrganizerTarget = (typeof to === 'string' && to.toLowerCase().includes('codienych@gmail.com')) ||
     (Array.isArray(to) && to.every(t => t.toLowerCase().includes('codienych@gmail.com')));

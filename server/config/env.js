@@ -32,7 +32,7 @@ module.exports = {
   SMTP_HOST: process.env.SMTP_HOST || 'smtp.gmail.com',
   SMTP_PORT: parseInt(process.env.SMTP_PORT, 10) || 587,
   SMTP_USER: process.env.SMTP_USER || process.env.ORGANIZER_EMAIL || 'codienych@gmail.com',
-  SMTP_PASS: process.env.SMTP_PASS || 'subfywhhtpobafgy',
+  SMTP_PASS: process.env.SMTP_PASS || 'qbklstzmumnnfndh',
   EMAIL_FROM: process.env.EMAIL_FROM || '"CODIENYCH 1.0 Team" <codienych@gmail.com>',
 
   ADMIN_EMAIL: process.env.ADMIN_EMAIL || 'codienych@gmail.com',
