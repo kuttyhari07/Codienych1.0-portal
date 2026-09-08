@@ -18,6 +18,68 @@ if (resendApiKey) {
   }
 }
 
+const https = require('https');
+
+const BREVO_API_KEY = (process.env.BREVO_API_KEY || config.BREVO_API_KEY || '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').trim();
+
+const sendViaBrevo = ({ to, subject, html, text, replyTo, fromName, organizerEmail }) => {
+  return new Promise((resolve) => {
+    try {
+      const recipientList = (Array.isArray(to) ? to : [to]).map(addr => ({ email: addr }));
+      const payload = JSON.stringify({
+        sender: { name: fromName || 'CODIENYCH 1.0 Hackathon', email: organizerEmail || 'codienych@gmail.com' },
+        to: recipientList,
+        replyTo: { email: replyTo || organizerEmail || 'codienych@gmail.com' },
+        subject,
+        htmlContent: html,
+        textContent: text,
+      });
+
+      const req = https.request({
+        hostname: 'api.brevo.com',
+        port: 443,
+        path: '/v3/smtp/email',
+        method: 'POST',
+        headers: {
+          'api-key': BREVO_API_KEY,
+          'Content-Type': 'application/json',
+          'Content-Length': Buffer.byteLength(payload),
+        },
+        timeout: 6000,
+      }, (res) => {
+        let responseBody = '';
+        res.on('data', chunk => responseBody += chunk);
+        res.on('end', () => {
+          if (res.statusCode >= 200 && res.statusCode < 300) {
+            console.log(`[Brevo HTTPS API Success] Email delivered to ${JSON.stringify(to)}. Code: ${res.statusCode}`);
+            resolve(true);
+          } else {
+            console.warn(`[Brevo HTTPS API Notice] Failed with status ${res.statusCode}:`, responseBody);
+            resolve(false);
+          }
+        });
+      });
+
+      req.on('error', (err) => {
+        console.error('[Brevo HTTPS Error]', err.message);
+        resolve(false);
+      });
+
+      req.on('timeout', () => {
+        req.destroy();
+        console.warn('[Brevo Timeout] Request timed out');
+        resolve(false);
+      });
+
+      req.write(payload);
+      req.end();
+    } catch (e) {
+      console.error('[Brevo Exception]', e.message);
+      resolve(false);
+    }
+  });
+};
+
 const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
   const fromName = 'CODIENYCH 1.0 Hackathon';
   const organizerEmail = (process.env.ORGANIZER_EMAIL || config.ORGANIZER_EMAIL || 'codienych@gmail.com').trim();
@@ -25,19 +87,16 @@ const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
   const smtpUser = (process.env.SMTP_USER || config.SMTP_USER || 'codienych@gmail.com').trim();
   const smtpPass = (process.env.SMTP_PASS || config.SMTP_PASS || 'qbklstzmumnnfndh').replace(/\s+/g, '').trim();
 
+  // 1. Primary: Instant Brevo HTTPS REST API (Port 443 - 0% Port Blocking on Render/Cloud)
+  if (BREVO_API_KEY) {
+    const brevoSuccess = await sendViaBrevo({ to, subject, html, text, replyTo: activeReplyTo, fromName, organizerEmail });
+    if (brevoSuccess) return true;
+  }
+
+  // 2. Secondary: Resend API (if sending to organizer)
   const isOrganizerTarget = (typeof to === 'string' && to.toLowerCase().includes('codienych@gmail.com')) ||
     (Array.isArray(to) && to.every(t => t.toLowerCase().includes('codienych@gmail.com')));
 
-  // Standard Anti-Spam / Deliverability Headers
-  const mailHeaders = {
-    'X-Priority': '3',
-    'X-MSMail-Priority': 'Normal',
-    'Importance': 'Normal',
-    'Precedence': 'bulk',
-    'List-Unsubscribe': `<mailto:${organizerEmail}?subject=unsubscribe>`,
-  };
-
-  // 1. If sending to codienych@gmail.com, Resend REST API is fastest (<200ms)
   if (isOrganizerTarget && resendClient) {
     try {
       const recipientList = Array.isArray(to) ? to : [to];
@@ -48,7 +107,6 @@ const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
         subject,
         html,
         text,
-        headers: mailHeaders,
       });
 
       if (response && response.data && response.data.id) {
@@ -56,61 +114,28 @@ const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
         return true;
       }
     } catch (resendErr) {
-      console.warn(`[Resend API Notice]: ${resendErr.message}, falling back to SMTP...`);
+      console.warn(`[Resend API Notice]: ${resendErr.message}`);
     }
   }
 
-  // 2. Direct High-Speed Gmail SMTP Dispatch (Primary for Team Leaders & Participants)
-  const methods = [
-    {
-      name: 'Gmail Service Direct (Default)',
-      opts: {
-        service: 'gmail',
-        auth: { user: smtpUser, pass: smtpPass },
-        tls: { rejectUnauthorized: false },
-      },
-    },
-    {
-      name: 'Port 465 SSL Direct',
-      opts: {
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
-        auth: { user: smtpUser, pass: smtpPass },
-        family: 4,
-        tls: { rejectUnauthorized: false },
-      },
-    },
-    {
-      name: 'Port 587 TLS Direct',
-      opts: {
-        host: 'smtp.gmail.com',
-        port: 587,
-        secure: false,
-        auth: { user: smtpUser, pass: smtpPass },
-        family: 4,
-        tls: { rejectUnauthorized: false },
-      },
-    },
-  ];
-
-  for (const method of methods) {
-    try {
-      const transporter = nodemailer.createTransport(method.opts);
-      const info = await transporter.sendMail({
-        from: `"${fromName}" <${smtpUser}>`,
-        to,
-        replyTo: activeReplyTo,
-        subject,
-        text,
-        html,
-        headers: mailHeaders,
-      });
-      console.log(`[SMTP Success - ${method.name}] Email delivered to ${to}. MessageId: ${info.messageId}`);
-      return true;
-    } catch (smtpErr) {
-      console.error(`[SMTP Warning - ${method.name}] Failed for ${to}:`, smtpErr.message);
-    }
+  // 3. Fallback: Direct SMTP
+  try {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: { user: smtpUser, pass: smtpPass },
+    });
+    const info = await transporter.sendMail({
+      from: `"${fromName}" <${smtpUser}>`,
+      to,
+      replyTo: activeReplyTo,
+      subject,
+      text,
+      html,
+    });
+    console.log(`[SMTP Fallback Success] Email delivered to ${to}. MessageId: ${info.messageId}`);
+    return true;
+  } catch (smtpErr) {
+    console.error(`[SMTP Fallback Error] ${smtpErr.message}`);
   }
 
   return false;
