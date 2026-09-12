@@ -19,6 +19,7 @@ if (resendApiKey) {
 }
 
 const https = require('https');
+const BREVO_API_KEY = (process.env.BREVO_API_KEY || config.BREVO_API_KEY || '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').trim();
 
 const sendViaResend = async ({ to, subject, html, text, replyTo, fromName }) => {
   if (!resendClient) return false;
