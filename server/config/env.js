@@ -39,4 +39,6 @@ module.exports = {
   ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || '',
 
   RESEND_API_KEY: process.env.RESEND_API_KEY || 're_TBxxbbbu_Jngpv56yDyzcXr9PDo6pwoYM',
+  RESEND_FROM_EMAIL: process.env.RESEND_FROM_EMAIL || 'CODIENYCH 1.0 <onboarding@resend.dev>',
+  BREVO_API_KEY: process.env.BREVO_API_KEY || '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',
 };

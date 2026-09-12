@@ -20,10 +20,39 @@ if (resendApiKey) {
 
 const https = require('https');
 
-const BREVO_API_KEY = (process.env.BREVO_API_KEY || config.BREVO_API_KEY || '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').trim();
+const sendViaResend = async ({ to, subject, html, text, replyTo, fromName }) => {
+  if (!resendClient) return false;
+  try {
+    const recipientList = Array.isArray(to) ? to : [to];
+    const defaultSender = (process.env.RESEND_FROM_EMAIL || config.RESEND_FROM_EMAIL || 'CODIENYCH 1.0 <onboarding@resend.dev>').trim();
+    const fromAddress = defaultSender.includes('<') ? defaultSender : `${fromName || 'CODIENYCH 1.0'} <${defaultSender}>`;
+
+    const response = await resendClient.emails.send({
+      from: fromAddress,
+      to: recipientList,
+      reply_to: replyTo || 'codienych@gmail.com',
+      subject,
+      html,
+      text,
+    });
+
+    if (response && (response.data?.id || response.id)) {
+      console.log(`[Resend API Success] Email delivered to ${JSON.stringify(to)}. MessageId: ${response.data?.id || response.id}`);
+      return true;
+    } else if (response && response.error) {
+      console.warn(`[Resend API Notice]: ${response.error.message || JSON.stringify(response.error)}`);
+      return false;
+    }
+    return true;
+  } catch (resendErr) {
+    console.warn(`[Resend API Exception]: ${resendErr.message}`);
+    return false;
+  }
+};
 
 const sendViaBrevo = ({ to, subject, html, text, replyTo, fromName, organizerEmail }) => {
   return new Promise((resolve) => {
+    if (!BREVO_API_KEY) return resolve(false);
     try {
       const recipientList = (Array.isArray(to) ? to : [to]).map(addr => ({ email: addr }));
       const payload = JSON.stringify({
@@ -84,58 +113,56 @@ const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
   const fromName = 'CODIENYCH 1.0 Hackathon';
   const organizerEmail = (process.env.ORGANIZER_EMAIL || config.ORGANIZER_EMAIL || 'codienych@gmail.com').trim();
   const activeReplyTo = replyTo || organizerEmail;
-  const smtpUser = (process.env.SMTP_USER || config.SMTP_USER || 'codienych@gmail.com').trim();
-  const smtpPass = (process.env.SMTP_PASS || config.SMTP_PASS || 'qbklstzmumnnfndh').replace(/\s+/g, '').trim();
 
-  // 1. Primary: Instant Brevo HTTPS REST API (Port 443 - 0% Port Blocking on Render/Cloud)
+  // 1. Primary Method: Resend API (HTTP REST - No App Password required)
+  if (resendClient) {
+    const resendSuccess = await sendViaResend({
+      to,
+      subject,
+      html,
+      text,
+      replyTo: activeReplyTo,
+      fromName,
+    });
+    if (resendSuccess) return true;
+  }
+
+  // 2. Secondary Method: Brevo HTTPS REST API (Zero port block / Port 443 - No App Password required)
   if (BREVO_API_KEY) {
-    const brevoSuccess = await sendViaBrevo({ to, subject, html, text, replyTo: activeReplyTo, fromName, organizerEmail });
+    const brevoSuccess = await sendViaBrevo({
+      to,
+      subject,
+      html,
+      text,
+      replyTo: activeReplyTo,
+      fromName,
+      organizerEmail,
+    });
     if (brevoSuccess) return true;
   }
 
-  // 2. Secondary: Resend API (if sending to organizer)
-  const isOrganizerTarget = (typeof to === 'string' && to.toLowerCase().includes('codienych@gmail.com')) ||
-    (Array.isArray(to) && to.every(t => t.toLowerCase().includes('codienych@gmail.com')));
-
-  if (isOrganizerTarget && resendClient) {
+  // 3. Fallback: Direct SMTP (Only if SMTP user & pass are explicitly supplied)
+  const smtpUser = (process.env.SMTP_USER || config.SMTP_USER || '').trim();
+  const smtpPass = (process.env.SMTP_PASS || config.SMTP_PASS || '').replace(/\s+/g, '').trim();
+  if (smtpUser && smtpPass) {
     try {
-      const recipientList = Array.isArray(to) ? to : [to];
-      const response = await resendClient.emails.send({
-        from: `${fromName} <onboarding@resend.dev>`,
-        to: recipientList,
-        reply_to: activeReplyTo,
-        subject,
-        html,
-        text,
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: { user: smtpUser, pass: smtpPass },
       });
-
-      if (response && response.data && response.data.id) {
-        console.log(`[Resend API Success] Email sent to ${to}. ID: ${response.data.id}`);
-        return true;
-      }
-    } catch (resendErr) {
-      console.warn(`[Resend API Notice]: ${resendErr.message}`);
+      const info = await transporter.sendMail({
+        from: `"${fromName}" <${smtpUser}>`,
+        to,
+        replyTo: activeReplyTo,
+        subject,
+        text,
+        html,
+      });
+      console.log(`[SMTP Fallback Success] Email delivered to ${to}. MessageId: ${info.messageId}`);
+      return true;
+    } catch (smtpErr) {
+      console.error(`[SMTP Fallback Error] ${smtpErr.message}`);
     }
-  }
-
-  // 3. Fallback: Direct SMTP
-  try {
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: { user: smtpUser, pass: smtpPass },
-    });
-    const info = await transporter.sendMail({
-      from: `"${fromName}" <${smtpUser}>`,
-      to,
-      replyTo: activeReplyTo,
-      subject,
-      text,
-      html,
-    });
-    console.log(`[SMTP Fallback Success] Email delivered to ${to}. MessageId: ${info.messageId}`);
-    return true;
-  } catch (smtpErr) {
-    console.error(`[SMTP Fallback Error] ${smtpErr.message}`);
   }
 
   return false;
