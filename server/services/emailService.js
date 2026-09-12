@@ -178,7 +178,7 @@ const wrapEmailTemplate = (title, badgeText, contentHtml) => `
     <tr>
       <td style="background: #09131f; padding: 25px; border-bottom: 1px solid #1e293b; text-align: center;">
         <h1 style="margin: 0; font-size: 24px; color: #00ff66; letter-spacing: 2px; text-transform: uppercase;">CODIENYCH 1.0</h1>
-        <p style="margin: 4px 0 0; color: #94a3b8; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;">24-Hour Software Hackathon</p>
+        <p style="margin: 4px 0 0; color: #94a3b8; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;">24-Hour Hackathon</p>
         <div style="display: inline-block; padding: 4px 12px; border-radius: 16px; font-size: 11px; font-weight: bold; margin-top: 10px; background: rgba(0,255,102,0.1); color: #00ff66; border: 1px solid #00ff66;">
           ${badgeText.text}
         </div>

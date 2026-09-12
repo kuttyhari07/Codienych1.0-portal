@@ -1,7 +1,7 @@
 {
   "name": "codienych1.0-portal",
   "version": "1.0.0",
-  "description": "CODIENYCH 1.0 - 24-Hour Software Hackathon Web Application",
+  "description": "CODIENYCH 1.0 - 24-Hour Hackathon Web Application",
   "main": "server/server.js",
   "scripts": {
     "install-all": "npm install && cd server && npm install && cd ../client && npm install",

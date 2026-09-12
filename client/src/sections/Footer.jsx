@@ -24,7 +24,7 @@ const Footer = () => {
             {EVENT_CONFIG.DEPARTMENT} <span className="text-[#00ff66]">PRESENTS</span>
           </p>
           <p className="font-mono text-[11px] text-[#10b981] tracking-widest uppercase">
-            24-HOUR SOFTWARE HACKATHON
+            24-HOUR HACKATHON
           </p>
           <p className="font-sans text-sm text-gray-400 max-w-sm leading-relaxed">
             “24 Hours of Coding, Creativity and Innovation.” Form your team, build software solutions, and conquer the mission.

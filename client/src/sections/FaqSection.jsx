@@ -5,7 +5,7 @@ import { EVENT_CONFIG } from '../utils/config';
 const faqs = [
   {
     q: 'What is CODIENYCH 1.0?',
-    a: 'CODIENYCH 1.0 is a 24-hour software hackathon where participants collaborate, innovate and build software solutions within a limited time.',
+    a: 'CODIENYCH 1.0 is a 24-hour hackathon where participants collaborate, innovate and build solutions within a limited time.',
   },
   {
     q: 'How long is the hackathon?',

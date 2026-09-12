@@ -17,7 +17,7 @@ const AboutSection = () => {
           </h2>
 
           <p className="font-sans text-lg sm:text-xl text-gray-300 leading-relaxed mb-10 border-l-4 border-[#00ff66] pl-6">
-            CODIENYCH 1.0 is a 24-hour software hackathon where participants collaborate, innovate and build software solutions within a limited time.
+            CODIENYCH 1.0 is a 24-hour hackathon where participants collaborate, innovate and build solutions within a limited time.
           </p>
 
           {/* Core Pillars */}
