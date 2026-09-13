@@ -4,11 +4,13 @@
   "description": "CODIENYCH 1.0 - 24-Hour Hackathon Web Application",
   "main": "server/server.js",
   "scripts": {
+    "start": "cd server && node server.js",
+    "build": "cd client && npm install && npm run build",
+    "render-build": "cd server && npm install",
     "install-all": "npm install && cd server && npm install && cd ../client && npm install",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "cd server && npm run dev",
     "client": "cd client && npm run dev",
-    "build": "cd client && npm run build",
     "seed-admin": "cd server && npm run seed-admin"
   },
   "devDependencies": {

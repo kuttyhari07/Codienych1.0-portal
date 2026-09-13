@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: codienych-backend
+    env: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: USE_CLOUDINARY
+        value: "true"
+      - key: ENABLE_EMAIL
+        value: "true"

@@ -175,11 +175,28 @@ app.use((err, req, res, next) => {
 
 const PORT = config.PORT;
 
-const startServer = async () => {
-  if (config.NODE_ENV === 'production' && (!config.CLIENT_URL || !config.MONGODB_URI || !config.JWT_SECRET)) {
-    throw new Error('CLIENT_URL, MONGODB_URI, and JWT_SECRET are required in production.');
+const autoSeedAdmin = async () => {
+  try {
+    const Admin = require('./models/Admin');
+    if (!config.ADMIN_EMAIL || !config.ADMIN_PASSWORD) return;
+    const adminExists = await Admin.findOne({ email: config.ADMIN_EMAIL.toLowerCase().trim() });
+    if (!adminExists) {
+      await Admin.create({
+        name: 'CODIENYCH Super Admin',
+        email: config.ADMIN_EMAIL.toLowerCase().trim(),
+        password: config.ADMIN_PASSWORD,
+        role: 'SUPER_ADMIN',
+      });
+      console.log(`[Auto-Seed] Super Admin created: ${config.ADMIN_EMAIL}`);
+    }
+  } catch (err) {
+    console.warn(`[Auto-Seed Info] ${err.message}`);
   }
+};
+
+const startServer = async () => {
   await connectDB();
+  await autoSeedAdmin();
 
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`==================================================`);
