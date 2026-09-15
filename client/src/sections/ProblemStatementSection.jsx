@@ -1,5 +1,6 @@
 import React from 'react';
 import { Lock, EyeOff, Sparkles, ShieldCheck } from 'lucide-react';
+import ProblemDecryptionVault from '../components/ProblemDecryptionVault';
 
 const ProblemStatementSection = () => {
   return (
@@ -39,6 +40,9 @@ const ProblemStatementSection = () => {
             <span>•</span>
             <span className="text-gray-300">Release: Day 1 (Opening Ceremony)</span>
           </div>
+
+          {/* Interactive Cipher Decryption Mini-Vault */}
+          <ProblemDecryptionVault />
         </div>
       </div>
     </section>
