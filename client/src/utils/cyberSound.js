@@ -120,25 +120,28 @@ export const speakIntelTransmission = (text, onStart, onEnd) => {
   try {
     window.speechSynthesis.cancel();
 
-    // Clean up text for natural pronunciation
+    // Clean up text and add subtle natural pauses for crystal clear pronunciation
     const cleanText = text
       .replace(/₹/g, 'Rupees ')
       .replace(/@CUB/gi, ' at C U B')
       .replace(/UG/g, 'Undergraduate')
       .replace(/ESEC/g, 'E S E C')
       .replace(/24-HR/gi, '24 hour')
+      .replace(/\(/g, ', ')
+      .replace(/\)/g, ', ')
       .replace(/\//g, ' and ');
 
     const utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.rate = 1.0;
-    utterance.pitch = 1.05;
+    // Relaxed, clear and steady speaking speed (0.85 for clear human pace)
+    utterance.rate = 0.85;
+    utterance.pitch = 1.0;
     utterance.volume = 1.0;
 
     const voices = window.speechSynthesis.getVoices();
-    // Prefer high quality English voices (Google, Natural, Samantha, Microsoft)
+    // Prefer high quality calm natural English voices (Google, Natural, Samantha, Microsoft)
     const naturalVoice = voices.find(
       (v) =>
-        (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha') || v.name.includes('David')) &&
+        (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha') || v.name.includes('David') || v.name.includes('Zira')) &&
         v.lang.startsWith('en')
     ) || voices.find((v) => v.lang.startsWith('en'));
 
