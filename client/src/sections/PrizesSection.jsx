@@ -3,6 +3,7 @@ import { Award, Lock, Sparkles } from 'lucide-react';
 import TreasureBox from '../components/TreasureBox';
 import SpotlightCard from '../components/SpotlightCard';
 import DecipherText from '../components/DecipherText';
+import SquadHonorBadgeShowcase from '../components/SquadHonorBadgeShowcase';
 
 const PrizesSection = () => {
   return (
@@ -81,6 +82,9 @@ const PrizesSection = () => {
             </p>
           </SpotlightCard>
         </div>
+
+        {/* Interactive Digital Trophy & Honor Badges Showcase */}
+        <SquadHonorBadgeShowcase />
       </div>
     </section>
   );
