@@ -111,13 +111,9 @@ const TreasureBox = () => {
               </div>
 
               <div className="flex sm:flex-col gap-2 flex-shrink-0 w-full sm:w-auto">
-                <div className="bg-[#050b07] border border-[#00ff66]/40 px-3 py-1.5 rounded-lg flex items-center space-x-1.5 font-mono text-[11px] text-gray-200">
+                <div className="bg-[#050b07] border border-[#00ff66]/40 px-3 py-1.5 rounded-lg flex items-center space-x-1.5 font-mono text-[11px] text-[#00ff66]">
                   <GraduationCap className="w-3.5 h-3.5 text-[#00ff66]" />
                   <span>Real-World Projects</span>
-                </div>
-                <div className="bg-[#050b07] border border-[#00ff66]/40 px-3 py-1.5 rounded-lg flex items-center space-x-1.5 font-mono text-[11px] text-[#00ff66]">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#00ff66]" />
-                  <span>Direct Placement</span>
                 </div>
               </div>
             </div>
