@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Clock, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { EVENT_CONFIG } from '../utils/config';
+import CyberEnergyMatrixCanvas from '../components/CyberEnergyMatrixCanvas';
 
 const AnimatedDigit = ({ value, label, isSeconds }) => {
   return (
@@ -96,6 +97,9 @@ const CountdownSection = () => {
             <AnimatedDigit value={String(timeLeft.seconds).padStart(2, '0')} label="SECONDS" isSeconds />
           </div>
         )}
+
+        {/* Real-time Quantum Chrono Waveform */}
+        <CyberEnergyMatrixCanvas />
       </div>
     </section>
   );
