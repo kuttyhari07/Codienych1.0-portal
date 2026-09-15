@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Shield, ChevronDown, Terminal, Zap, Crosshair } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { EVENT_CONFIG } from '../utils/config';
+import Cyber3dReactorCanvas from '../components/Cyber3dReactorCanvas';
 
 const HeroSection = () => {
   const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
@@ -106,10 +107,20 @@ const HeroSection = () => {
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.6 }}
-        className="font-mono text-sm sm:text-base md:text-xl text-gray-300 max-w-2xl mx-auto mb-5 sm:mb-7 leading-relaxed px-2"
+        className="font-mono text-sm sm:text-base md:text-xl text-gray-300 max-w-2xl mx-auto mb-2 leading-relaxed px-2"
       >
         “{EVENT_CONFIG.TAGLINE}”
       </motion.p>
+
+      {/* 3D Interactive Cybernetic Hologram Core */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.85 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.8, delay: 0.65 }}
+        className="my-2"
+      >
+        <Cyber3dReactorCanvas />
+      </motion.div>
 
       {/* Registration Fee Highlight Pill */}
       <motion.div
