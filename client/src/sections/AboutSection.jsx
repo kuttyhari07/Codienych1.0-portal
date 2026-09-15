@@ -3,6 +3,7 @@ import { Cpu, Code, Lightbulb, Flame, Zap } from 'lucide-react';
 import { EVENT_CONFIG } from '../utils/config';
 import SpotlightCard from '../components/SpotlightCard';
 import DecipherText from '../components/DecipherText';
+import LiveWarRoomTelemetry from '../components/LiveWarRoomTelemetry';
 
 const AboutSection = () => {
   return (
@@ -60,6 +61,9 @@ const AboutSection = () => {
               </p>
             </SpotlightCard>
           </div>
+
+          {/* Interactive Live Mission War Room Telemetry */}
+          <LiveWarRoomTelemetry />
         </SpotlightCard>
       </div>
     </section>
