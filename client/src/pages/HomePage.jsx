@@ -4,6 +4,7 @@ import CinematicBackground from '../components/CinematicBackground';
 import InteractiveCursor from '../components/InteractiveCursor';
 import CyberEasterEggHud from '../components/CyberEasterEggHud';
 import CyberTerminalCli from '../components/CyberTerminalCli';
+import CyberBotAssistant from '../components/CyberBotAssistant';
 import Navbar from '../components/Navbar';
 import MissionHudIndex from '../components/MissionHudIndex';
 import HeroSection from '../sections/HeroSection';
@@ -56,6 +57,9 @@ const HomePage = () => {
           isOpen={isCliOpen}
           onClose={() => setIsCliOpen(false)}
         />
+
+        {/* Interactive Cartoon Cyber Bot Companion Mascot */}
+        <CyberBotAssistant />
 
         {/* Sticky Cinematic Scroll Background */}
         <CinematicBackground />
