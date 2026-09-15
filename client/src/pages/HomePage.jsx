@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import LoadingScreen from '../components/LoadingScreen';
 import CinematicBackground from '../components/CinematicBackground';
 import Navbar from '../components/Navbar';
+import MissionHudIndex from '../components/MissionHudIndex';
+import MissionIdBadgeGenerator from '../components/MissionIdBadgeGenerator';
 import HeroSection from '../sections/HeroSection';
 import AboutSection from '../sections/AboutSection';
 import DatesSection from '../sections/DatesSection';
@@ -29,8 +31,9 @@ const HomePage = () => {
         {/* Sticky Cinematic Scroll Background */}
         <CinematicBackground />
 
-        {/* Navigation */}
+        {/* Navigation & Desktop HUD Sidebar Index */}
         <Navbar />
+        <MissionHudIndex />
 
         {/* Main Content Sections with Sondaven Scroll Reveal Physics */}
         <main className="relative z-10">
@@ -74,6 +77,10 @@ const HomePage = () => {
 
           <ScrollReveal variant="fade-up">
             <FaqSection />
+          </ScrollReveal>
+
+          <ScrollReveal variant="scale-up">
+            <MissionIdBadgeGenerator />
           </ScrollReveal>
 
           <ScrollReveal variant="fade-up">

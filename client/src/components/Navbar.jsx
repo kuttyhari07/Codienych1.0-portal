@@ -6,12 +6,13 @@ const navItems = [
   { label: 'HOME', href: '#home' },
   { label: 'ABOUT', href: '#about' },
   { label: 'DATES', href: '#dates' },
-  { label: 'COUNTDOWN', href: '#countdown' },
+  { label: 'DOMAINS', href: '#problem-statement' },
   { label: 'PRIZES', href: '#prizes' },
   { label: 'FUN ZONE', href: '#entertainment' },
   { label: 'RULES', href: '#rules' },
   { label: 'TIMELINE', href: '#timeline' },
   { label: 'FAQ', href: '#faq' },
+  { label: 'MISSION ID', href: '#badge-gen' },
   { label: 'CONTACT', href: '#contact' },
 ];
 

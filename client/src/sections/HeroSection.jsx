@@ -1,14 +1,26 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Shield, ChevronDown, Terminal, Zap } from 'lucide-react';
+import { Shield, ChevronDown, Terminal, Zap, Crosshair, Radio } from 'lucide-react';
 import { EVENT_CONFIG } from '../utils/config';
 
 const HeroSection = () => {
   return (
     <section
       id="home"
-      className="relative min-h-screen flex flex-col items-center justify-center pt-24 pb-16 px-4 text-center z-10"
+      className="relative min-h-screen flex flex-col items-center justify-center pt-28 pb-16 px-4 text-center z-10 overflow-hidden"
     >
+      {/* HUD Telemetry Top Stream */}
+      <div className="flex items-center space-x-3 font-mono text-[10px] text-[#00ff66]/70 mb-3 select-none">
+        <span className="flex items-center space-x-1">
+          <Crosshair className="w-3 h-3 text-[#00ff66]" />
+          <span>SECTOR_ESEC // LAT:11.27 N</span>
+        </span>
+        <span>•</span>
+        <span className="text-gray-400">CIPHER: 0x7F4A9C82</span>
+        <span>•</span>
+        <span className="text-[#00ff66] animate-pulse">STATUS: MISSION_ARMED</span>
+      </div>
+
       {/* Central Hero Glow Badge */}
       <div className="inline-flex items-center space-x-2 bg-[#0f2416] border border-[#10b981]/60 px-3.5 py-1.5 sm:px-4 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-mono text-[#00ff66] mb-4 sm:mb-5 shadow-[0_0_20px_rgba(0,255,102,0.3)] animate-pulse max-w-[95%]">
         <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#00ff66] flex-shrink-0" />
@@ -31,9 +43,11 @@ const HeroSection = () => {
       </div>
 
       {/* Main Title */}
-      <h1 className="font-orbitron font-black text-3xl sm:text-5xl md:text-7xl xl:text-8xl tracking-wider text-white mb-3 sm:mb-4 neon-glow-green leading-tight">
-        {EVENT_CONFIG.EVENT_NAME}
-      </h1>
+      <div className="relative">
+        <h1 className="font-orbitron font-black text-3xl sm:text-5xl md:text-7xl xl:text-8xl tracking-wider text-white mb-3 sm:mb-4 neon-glow-green leading-tight">
+          {EVENT_CONFIG.EVENT_NAME}
+        </h1>
+      </div>
 
       {/* Event Type */}
       <h2 className="font-orbitron font-bold text-lg sm:text-2xl md:text-4xl text-[#00ff66] tracking-widest uppercase mb-4 sm:mb-6 drop-shadow-[0_0_15px_rgba(0,255,102,0.8)]">
@@ -74,7 +88,7 @@ const HeroSection = () => {
       </div>
 
       {/* Scroll Down Indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center opacity-70 hover:opacity-100 transition-opacity">
+      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex flex-col items-center opacity-70 hover:opacity-100 transition-opacity">
         <span className="font-mono text-[10px] text-[#10b981] tracking-widest uppercase mb-1">
           SCROLL TO MISSION
         </span>

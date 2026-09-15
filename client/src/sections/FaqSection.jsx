@@ -1,6 +1,29 @@
 import React, { useState } from 'react';
-import { HelpCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { HelpCircle, ChevronDown, ChevronUp, Radio, Sparkles, Terminal, Volume2 } from 'lucide-react';
 import { EVENT_CONFIG } from '../utils/config';
+
+const quickChips = [
+  {
+    chip: 'Registration Fee & Pricing',
+    answer: `Entry fee is strictly ₹${EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER} per participant (₹2,100 for 4 members, ₹2,625 for 5 members, ₹3,150 for 6 members). UPI Payment ID: ${EVENT_CONFIG.UPI_ID}.`,
+  },
+  {
+    chip: 'Team Size & Gender Rule',
+    answer: 'Squads must consist of exactly 4, 5, or 6 members. There is no gender restriction — any team combination is welcome to participate.',
+  },
+  {
+    chip: 'Who Is Eligible?',
+    answer: 'Undergraduate (UG) engineering and tech students from all recognized institutions (except host college ESEC students) are fully eligible.',
+  },
+  {
+    chip: 'Free Internship & Perks',
+    answer: 'Along with surprise cash prize bounties and trophies, top-performing teams receive direct Free Internship Opportunities for hands-on industry projects.',
+  },
+  {
+    chip: 'Late Night Chill & Games',
+    answer: 'A dedicated 24-HR Fun & Chill Zone is available with hot coffee, Chess boards, Carrom battles, and mini challenges with instant spot gifts for winners.',
+  },
+];
 
 const faqs = [
   {
@@ -83,6 +106,7 @@ const faqs = [
 
 const FaqSection = () => {
   const [openIndex, setOpenIndex] = useState(null);
+  const [activeChip, setActiveChip] = useState(quickChips[0]);
 
   const toggleFaq = (index) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -90,17 +114,84 @@ const FaqSection = () => {
 
   return (
     <section id="faq" className="relative py-24 px-4 z-10">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-16">
-          <div className="inline-block font-mono text-xs text-[#00ff66] tracking-widest uppercase mb-2">
-            // INTEL DISPATCH
+      <div className="max-w-5xl mx-auto">
+        {/* Section Header */}
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center space-x-2 font-mono text-xs text-[#00ff66] tracking-widest uppercase mb-3 bg-[#00ff66]/10 px-3.5 py-1 rounded-full border border-[#00ff66]/30">
+            <Radio className="w-3.5 h-3.5 text-[#00ff66] animate-pulse" />
+            <span>// DECLASSIFIED INTEL DISPATCH</span>
           </div>
-          <h2 className="font-orbitron font-extrabold text-3xl sm:text-4xl text-white tracking-wide">
-            FREQUENTLY ASKED <span className="text-[#00ff66]">QUESTIONS</span>
+          <h2 className="font-orbitron font-extrabold text-3xl sm:text-5xl text-white tracking-wide mb-4">
+            ASK <span className="text-[#00ff66]">CODIENYCH INTEL</span>
           </h2>
+          <p className="max-w-2xl mx-auto font-mono text-xs sm:text-sm text-gray-300">
+            Tap any tactical query chip below to initialize telemetry streams, or browse full intel archives.
+          </p>
         </div>
 
-        <div className="space-y-4">
+        {/* Interactive Query Matrix & Audio Waveform Box */}
+        <div className="bg-gradient-to-b from-[#0f2e1a] via-[#081a0e] to-[#040e08] border-2 border-[#00ff66] rounded-2xl p-6 sm:p-8 shadow-[0_0_40px_rgba(0,255,102,0.3)] mb-12 relative overflow-hidden hud-corner-box">
+          <div className="flex items-center justify-between border-b border-[#00ff66]/30 pb-3 mb-6">
+            <div className="flex items-center space-x-2 font-mono text-xs text-[#00ff66]">
+              <Volume2 className="w-4 h-4 text-[#00ff66]" />
+              <span className="font-bold uppercase tracking-wider">INTEL AUDIO STREAM // ACTIVE</span>
+            </div>
+
+            {/* Live Audio Waveform Bars */}
+            <div className="flex items-center space-x-1 h-5">
+              {[12, 24, 16, 28, 8, 20, 32, 14, 22, 10, 26, 18].map((h, i) => (
+                <div
+                  key={i}
+                  style={{
+                    height: `${(h * 0.7)}px`,
+                    animationDelay: `${i * 0.1}s`,
+                  }}
+                  className="w-1 bg-[#00ff66] rounded-full wave-bar"
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Quick Query Chips */}
+          <div className="flex flex-wrap gap-2.5 mb-6">
+            {quickChips.map((qc, i) => {
+              const isSelected = activeChip.chip === qc.chip;
+              return (
+                <button
+                  key={i}
+                  onClick={() => setActiveChip(qc)}
+                  className={`px-3.5 py-2 rounded-xl font-mono text-xs transition-all duration-200 flex items-center space-x-2 ${
+                    isSelected
+                      ? 'bg-[#00ff66] text-black font-bold shadow-[0_0_15px_#00ff66] scale-105'
+                      : 'bg-[#050b07] text-gray-300 border border-gray-800 hover:border-[#10b981] hover:text-white'
+                  }`}
+                >
+                  <span>{qc.chip}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Telemetry Output Screen */}
+          <div className="bg-[#050b07] border border-[#10b981]/50 rounded-xl p-5 font-mono text-xs sm:text-sm text-gray-200 leading-relaxed shadow-inner">
+            <div className="flex items-center space-x-2 text-[#00ff66] text-[11px] mb-2">
+              <Terminal className="w-3.5 h-3.5" />
+              <span className="font-bold tracking-wider">STREAMED TRANSMISSION:</span>
+            </div>
+            <p className="text-white font-sans text-sm sm:text-base">
+              {activeChip.answer}
+            </p>
+          </div>
+        </div>
+
+        {/* Full FAQ Accordion Archive */}
+        <div className="text-center mb-6">
+          <span className="font-mono text-xs text-gray-400 uppercase tracking-widest">
+            // COMPLETE DISPATCH ARCHIVES
+          </span>
+        </div>
+
+        <div className="space-y-3.5">
           {faqs.map((faq, idx) => {
             const isOpen = openIndex === idx;
             return (
@@ -113,7 +204,7 @@ const FaqSection = () => {
                   onClick={() => toggleFaq(idx)}
                   className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-[#0f2416] transition-colors"
                 >
-                  <span className="font-orbitron font-semibold text-base text-gray-200 pr-4">
+                  <span className="font-orbitron font-semibold text-sm sm:text-base text-gray-200 pr-4">
                     {faq.q}
                   </span>
                   {isOpen ? (
