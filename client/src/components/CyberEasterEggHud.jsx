@@ -1,54 +1,132 @@
-import React, { useState } from 'react';
-import { Terminal, Sparkles, X, Gift, Zap, Volume2, ShieldAlert } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Terminal, Sparkles, X, Gift, Zap, Volume2, VolumeX, ShieldAlert, Radio } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { toggleSound, isSoundEnabled, playLaserBlip, playChirp, playVictoryFanfare } from '../utils/cyberSound';
 
 const secretHacks = [
   '⚡ Pro-Tip 01: Pre-configure your GitHub repos with CI/CD actions for instant judging point bonuses!',
   '☕ Pro-Tip 02: Midnight coffee and board games in the Chill Arena refresh brain cognition by 40%!',
   '🏆 Pro-Tip 03: Judges love clean UI/UX and a working live demo more than slides!',
   '🎁 Pro-Tip 04: Spot prize winners in mini-games receive exclusive physical goodie kits on the spot!',
+  '🚀 Pro-Tip 05: The Treasure Vault holds Free Internship offers for top performer squads!',
 ];
+
+const MatrixRainCanvas = ({ onClose }) => {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const letters = 'CODIENYCH010101010101ABCDEF0123456789';
+    const fontSize = 14;
+    const columns = Math.floor(canvas.width / fontSize);
+    const drops = Array(columns).fill(1);
+
+    let animationId;
+    const draw = () => {
+      ctx.fillStyle = 'rgba(5, 11, 7, 0.1)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = '#00ff66';
+      ctx.font = `${fontSize}px monospace`;
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters.charAt(Math.floor(Math.random() * letters.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+      animationId = requestAnimationFrame(draw);
+    };
+
+    draw();
+
+    const timer = setTimeout(() => {
+      if (onClose) onClose();
+    }, 4500);
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      clearTimeout(timer);
+    };
+  }, [onClose]);
+
+  return (
+    <div className="fixed inset-0 z-50 pointer-events-none bg-black/60">
+      <canvas ref={canvasRef} className="w-full h-full" />
+      <div className="absolute top-8 left-1/2 -translate-x-1/2 font-orbitron font-black text-lg sm:text-2xl text-[#00ff66] bg-[#050b07]/90 px-6 py-2.5 rounded-full border border-[#00ff66] shadow-[0_0_40px_#00ff66] animate-pulse">
+        ⚡ CODIENYCH MATRIX STREAM ENGAGED ⚡
+      </div>
+    </div>
+  );
+};
 
 const CyberEasterEggHud = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeHack, setActiveHack] = useState(0);
-  const [matrixEffect, setMatrixEffect] = useState(false);
+  const [showMatrix, setShowMatrix] = useState(false);
+  const [soundOn, setSoundOn] = useState(true);
+
+  const handleToggleSound = () => {
+    const newState = toggleSound();
+    setSoundOn(newState);
+    if (newState) playLaserBlip();
+  };
 
   const triggerMatrix = () => {
-    setMatrixEffect(true);
-    setTimeout(() => setMatrixEffect(false), 3000);
+    setShowMatrix(true);
+    playVictoryFanfare();
   };
 
   return (
     <>
-      {/* Matrix Stream Screen Flash Effect */}
-      {matrixEffect && (
-        <div className="fixed inset-0 pointer-events-none z-50 bg-[#00ff66]/10 backdrop-blur-[1px] animate-pulse flex items-center justify-center">
-          <div className="font-mono text-sm sm:text-base text-[#00ff66] bg-[#050b07]/90 p-4 rounded-xl border border-[#00ff66] shadow-[0_0_40px_#00ff66] text-center">
-            <span className="block animate-bounce">⚡ CYBERNETIC OVERCLOCK ENGAGED ⚡</span>
-            <span className="text-xs text-gray-300">TELEMETRY_SYNC: 100% // CODIENYCH 1.0</span>
-          </div>
-        </div>
-      )}
+      {/* Matrix Digital Rain Animation Screen */}
+      {showMatrix && <MatrixRainCanvas onClose={() => setShowMatrix(false)} />}
 
       {/* Floating HUD Controller Button Bottom Left */}
-      <div className="fixed bottom-6 left-6 z-40 hidden sm:flex items-center space-x-2">
+      <div className="fixed bottom-6 left-6 z-40 hidden sm:flex items-center space-x-2 select-none">
         <button
-          onClick={() => setIsOpen(true)}
+          onClick={() => {
+            playChirp();
+            setIsOpen(true);
+          }}
           data-cursor-text="DECRYPT"
-          className="group flex items-center space-x-2 bg-[#0a1b10]/90 border border-[#00ff66]/60 hover:border-[#00ff66] px-3.5 py-2 rounded-xl text-xs font-mono text-[#00ff66] shadow-[0_0_20px_rgba(0,255,102,0.25)] hover:shadow-[0_0_30px_rgba(0,255,102,0.5)] transition-all duration-300 transform hover:-translate-y-1 backdrop-blur-md"
+          className="group flex items-center space-x-2 bg-[#0a1b10]/95 border border-[#00ff66]/60 hover:border-[#00ff66] px-3.5 py-2.5 rounded-xl text-xs font-mono text-[#00ff66] shadow-[0_0_20px_rgba(0,255,102,0.25)] hover:shadow-[0_0_35px_rgba(0,255,102,0.6)] transition-all duration-300 transform hover:-translate-y-1 backdrop-blur-md active:scale-95"
         >
           <Terminal className="w-4 h-4 text-[#00ff66] animate-pulse" />
           <span className="font-bold tracking-wider">[ DECRYPT HACKS ]</span>
           <span className="w-2 h-2 rounded-full bg-[#00ff66] animate-ping" />
         </button>
 
+        {/* Matrix Rain Button */}
         <button
           onClick={triggerMatrix}
-          title="Overclock UI Stream"
-          className="p-2 rounded-xl bg-[#0a1b10]/90 border border-gray-800 hover:border-[#00ff66] text-gray-400 hover:text-[#00ff66] transition-all shadow-md backdrop-blur-md"
+          title="Matrix Rain Stream"
+          data-cursor-text="MATRIX"
+          className="p-2.5 rounded-xl bg-[#0a1b10]/95 border border-gray-800 hover:border-[#00ff66] text-gray-400 hover:text-[#00ff66] transition-all shadow-md backdrop-blur-md active:scale-95"
         >
           <Zap className="w-4 h-4" />
+        </button>
+
+        {/* SFX Audio Synthesizer Toggle */}
+        <button
+          onClick={handleToggleSound}
+          title={soundOn ? 'Mute SFX Audio' : 'Unmute SFX Audio'}
+          className={`p-2.5 rounded-xl border backdrop-blur-md transition-all active:scale-95 ${
+            soundOn
+              ? 'bg-[#0a1b10]/95 border-[#00ff66]/40 text-[#00ff66] shadow-[0_0_15px_rgba(0,255,102,0.3)]'
+              : 'bg-[#050b07]/95 border-gray-800 text-gray-500'
+          }`}
+        >
+          {soundOn ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
         </button>
       </div>
 
@@ -73,15 +151,15 @@ const CyberEasterEggHud = () => {
 
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="p-1 rounded-lg bg-[#050b07] border border-gray-800 text-gray-400 hover:text-[#00ff66]"
+                  className="p-1.5 rounded-lg bg-[#050b07] border border-gray-800 text-gray-400 hover:text-[#00ff66]"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
-              <div className="mb-6 bg-[#050b07] border border-[#00ff66]/40 p-4 rounded-xl font-mono text-xs text-gray-200">
+              <div className="mb-6 bg-[#050b07] border border-[#00ff66]/40 p-4 rounded-xl font-mono text-xs text-gray-200 shadow-inner">
                 <div className="flex items-center space-x-2 text-[#00ff66] mb-2 font-bold">
-                  <Sparkles className="w-4 h-4" />
+                  <Sparkles className="w-4 h-4 text-[#00ff66] animate-pulse" />
                   <span>DECRYPTED TRANSMISSION #{activeHack + 1}:</span>
                 </div>
                 <p className="text-sm leading-relaxed text-white font-sans">
@@ -91,7 +169,10 @@ const CyberEasterEggHud = () => {
 
               <div className="flex items-center justify-between gap-3">
                 <button
-                  onClick={() => setActiveHack((prev) => (prev + 1) % secretHacks.length)}
+                  onClick={() => {
+                    playChirp();
+                    setActiveHack((prev) => (prev + 1) % secretHacks.length);
+                  }}
                   className="flex-1 py-2.5 rounded-xl font-mono text-xs uppercase bg-[#00ff66]/20 border border-[#00ff66] text-[#00ff66] hover:bg-[#00ff66] hover:text-black transition-all font-bold tracking-wider text-center"
                 >
                   NEXT CLASSIFIED INTEL →
@@ -102,9 +183,9 @@ const CyberEasterEggHud = () => {
                     triggerMatrix();
                     setIsOpen(false);
                   }}
-                  className="px-4 py-2.5 rounded-xl font-mono text-xs uppercase bg-[#00ff66] text-black hover:bg-[#10b981] hover:text-white transition-all font-bold tracking-wider"
+                  className="px-5 py-2.5 rounded-xl font-mono text-xs uppercase bg-[#00ff66] text-black hover:bg-[#10b981] hover:text-white transition-all font-bold tracking-wider shadow-[0_0_15px_#00ff66]"
                 >
-                  OVERCLOCK
+                  MATRIX RAIN
                 </button>
               </div>
             </motion.div>
