@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import LoadingScreen from '../components/LoadingScreen';
 import CinematicBackground from '../components/CinematicBackground';
 import InteractiveCursor from '../components/InteractiveCursor';
+import CyberEasterEggHud from '../components/CyberEasterEggHud';
 import Navbar from '../components/Navbar';
 import MissionHudIndex from '../components/MissionHudIndex';
 import HeroSection from '../sections/HeroSection';
@@ -34,6 +35,7 @@ const HomePage = () => {
 
         {/* Interactive Ambient Cursor Glow */}
         <InteractiveCursor />
+        <CyberEasterEggHud />
 
         {/* Sticky Cinematic Scroll Background */}
         <CinematicBackground />

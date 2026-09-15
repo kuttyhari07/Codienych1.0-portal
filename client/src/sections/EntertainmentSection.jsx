@@ -1,5 +1,6 @@
-import React from 'react';
-import { Gamepad2, Gift, Moon, Sparkles, Coffee, Trophy, Zap, Flame } from 'lucide-react';
+import React, { useState } from 'react';
+import { Gamepad2, Gift, Moon, Sparkles, Coffee, Trophy, Zap, Flame, Play, RotateCcw, CheckCircle2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const activities = [
   {
@@ -35,6 +36,34 @@ const activities = [
 ];
 
 const EntertainmentSection = () => {
+  // Playable Reflex Speed Mini Game State
+  const [gameState, setGameState] = useState('idle'); // 'idle' | 'waiting' | 'ready' | 'success' | 'too-early'
+  const [reactionTime, setReactionTime] = useState(null);
+  const [startTime, setStartTime] = useState(null);
+  const [timerId, setTimerId] = useState(null);
+
+  const startGame = () => {
+    setGameState('waiting');
+    setReactionTime(null);
+    const delay = Math.floor(Math.random() * 2000) + 1500;
+    const id = setTimeout(() => {
+      setGameState('ready');
+      setStartTime(Date.now());
+    }, delay);
+    setTimerId(id);
+  };
+
+  const handleClickTarget = () => {
+    if (gameState === 'waiting') {
+      clearTimeout(timerId);
+      setGameState('too-early');
+    } else if (gameState === 'ready') {
+      const elapsed = Date.now() - startTime;
+      setReactionTime(elapsed);
+      setGameState('success');
+    }
+  };
+
   return (
     <section id="entertainment" className="relative py-20 px-4 z-10">
       <div className="max-w-6xl mx-auto">
@@ -53,7 +82,7 @@ const EntertainmentSection = () => {
         </div>
 
         {/* Highlight Banner: Midnight Chill Note */}
-        <div className="mb-10 bg-gradient-to-r from-[#0f1e14] via-[#0a180f] to-[#0f1e14] border border-[#00ff66]/40 rounded-2xl p-6 sm:p-8 shadow-[0_0_25px_rgba(0,255,102,0.15)] relative overflow-hidden">
+        <div className="mb-10 bg-gradient-to-r from-[#0f1e14] via-[#0a180f] to-[#0f1e14] border border-[#00ff66]/40 rounded-2xl p-6 sm:p-8 shadow-[0_0_25px_rgba(0,255,102,0.15)] relative overflow-hidden hud-corner-box">
           <div className="absolute top-0 right-0 transform translate-x-8 -translate-y-8 w-40 h-40 bg-[#00ff66]/10 rounded-full blur-3xl pointer-events-none" />
           
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
@@ -87,13 +116,13 @@ const EntertainmentSection = () => {
         </div>
 
         {/* Feature Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
           {activities.map((act, index) => {
             const Icon = act.icon;
             return (
               <div
                 key={index}
-                className={`bg-[#0a140e]/90 bg-gradient-to-b ${act.color} border ${act.borderColor} rounded-2xl p-6 relative overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_0_25px_rgba(0,255,102,0.2)] flex flex-col justify-between`}
+                className={`bg-[#0a140e]/90 bg-gradient-to-b ${act.color} border ${act.borderColor} rounded-2xl p-6 relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(0,255,102,0.25)] flex flex-col justify-between hud-corner-box`}
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
@@ -124,6 +153,93 @@ const EntertainmentSection = () => {
               </div>
             );
           })}
+        </div>
+
+        {/* PLAYABLE INTERACTIVE MINI CHALLENGE SIMULATOR */}
+        <div className="bg-gradient-to-b from-[#092113] via-[#05140b] to-[#040e08] border-2 border-[#00ff66]/70 rounded-3xl p-6 sm:p-8 shadow-[0_0_40px_rgba(0,255,102,0.2)] text-center relative overflow-hidden hud-corner-box">
+          <div className="inline-flex items-center space-x-2 bg-[#00ff66]/15 border border-[#00ff66]/40 px-3.5 py-1 rounded-full text-xs font-mono text-[#00ff66] mb-4 uppercase tracking-widest font-bold">
+            <Gamepad2 className="w-4 h-4 text-[#00ff66]" />
+            <span>INTERACTIVE TEST ARENA: REFLEX OVERCLOCK</span>
+          </div>
+
+          <h3 className="font-orbitron font-extrabold text-xl sm:text-2xl text-white mb-2">
+            Try a 5-Second Reaction Challenge!
+          </h3>
+          <p className="font-mono text-xs sm:text-sm text-gray-300 max-w-lg mx-auto mb-6">
+            Test your quick reflexes right now! Tap Start, wait for the screen to turn GREEN, then tap instantly!
+          </p>
+
+          <div className="max-w-md mx-auto">
+            {gameState === 'idle' && (
+              <button
+                onClick={startGame}
+                data-cursor-text="PLAY"
+                className="w-full py-4 rounded-2xl bg-[#00ff66] hover:bg-[#10b981] text-black font-orbitron font-black text-sm uppercase tracking-wider shadow-[0_0_25px_#00ff66] hover:scale-105 transition-all flex items-center justify-center space-x-2"
+              >
+                <Play className="w-5 h-5 fill-current" />
+                <span>INITIALIZE MINI CHALLENGE</span>
+              </button>
+            )}
+
+            {gameState === 'waiting' && (
+              <div
+                onClick={handleClickTarget}
+                className="w-full py-8 rounded-2xl bg-[#1f1608] border-2 border-amber-500/60 cursor-pointer shadow-[0_0_20px_rgba(245,158,11,0.3)] animate-pulse"
+              >
+                <span className="font-orbitron font-bold text-base sm:text-lg text-amber-400 block mb-1">
+                  ⏳ WAIT FOR GREEN...
+                </span>
+                <span className="font-mono text-xs text-gray-400">Do not click yet!</span>
+              </div>
+            )}
+
+            {gameState === 'ready' && (
+              <div
+                onClick={handleClickTarget}
+                className="w-full py-8 rounded-2xl bg-[#00ff66] border-4 border-white cursor-pointer shadow-[0_0_50px_#00ff66] scale-105 animate-bounce"
+              >
+                <span className="font-orbitron font-black text-2xl sm:text-3xl text-black block">
+                  ⚡ TAP NOW! ⚡
+                </span>
+              </div>
+            )}
+
+            {gameState === 'success' && (
+              <div className="p-6 rounded-2xl bg-[#05180c] border-2 border-[#00ff66] shadow-[0_0_30px_rgba(0,255,102,0.4)]">
+                <div className="flex items-center justify-center space-x-2 text-[#00ff66] font-bold text-lg font-orbitron mb-1">
+                  <CheckCircle2 className="w-6 h-6" />
+                  <span>REFLEX TIME: {reactionTime} ms!</span>
+                </div>
+                <p className="font-mono text-xs text-gray-300 mb-4">
+                  🔥 Insane speed! Come to the Hackathon Chill Zone to win instant physical spot gifts and goodies!
+                </p>
+                <button
+                  onClick={startGame}
+                  className="inline-flex items-center space-x-1.5 px-5 py-2 rounded-xl bg-[#00ff66] text-black font-mono text-xs font-bold uppercase hover:bg-[#10b981] transition-all"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  <span>Play Again</span>
+                </button>
+              </div>
+            )}
+
+            {gameState === 'too-early' && (
+              <div className="p-6 rounded-2xl bg-[#1c0a0a] border-2 border-red-500/80 shadow-[0_0_20px_rgba(239,68,68,0.3)]">
+                <span className="font-orbitron font-bold text-red-400 block mb-1">
+                  ⚠️ Too Early!
+                </span>
+                <p className="font-mono text-xs text-gray-400 mb-4">
+                  Wait until the box turns bright green before tapping.
+                </p>
+                <button
+                  onClick={startGame}
+                  className="px-5 py-2 rounded-xl bg-red-500 text-white font-mono text-xs font-bold uppercase hover:bg-red-600 transition-all"
+                >
+                  Try Again
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </section>
