@@ -10,7 +10,6 @@ const teamRulesList = [
   'One team receives one Registration ID.',
   'College/University ID cards of all team members must be presented at the event.',
   'All team members must be present at the event venue during the hackathon.',
-  'Team must have one female member to be eligible for the event.',
   'This hackathon is only for other college students (Not for ESEC students).',
 ];
 
