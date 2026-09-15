@@ -1,6 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { Clock, Zap } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { EVENT_CONFIG } from '../utils/config';
+
+const AnimatedDigit = ({ value, label, isSeconds }) => {
+  return (
+    <div
+      className={`bg-[#0a140e]/90 border border-[#1b3524] hover:border-[#10b981] rounded-xl p-3 sm:p-5 md:p-6 shadow-lg transition-all duration-300 hover:-translate-y-1 ${
+        isSeconds ? 'border-b-2 border-b-[#00ff66]' : ''
+      }`}
+    >
+      <div className="font-orbitron font-black text-2xl sm:text-4xl md:text-6xl text-[#00ff66] neon-glow-green mb-1 h-8 sm:h-12 md:h-16 flex items-center justify-center overflow-hidden">
+        <AnimatePresence mode="popLayout">
+          <motion.span
+            key={value}
+            initial={{ y: -12, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 12, opacity: 0 }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
+            className={isSeconds ? 'text-white' : 'text-[#00ff66]'}
+          >
+            {value}
+          </motion.span>
+        </AnimatePresence>
+      </div>
+      <div
+        className={`font-mono text-[9px] sm:text-xs uppercase tracking-wider sm:tracking-widest ${
+          isSeconds ? 'text-[#10b981]' : 'text-gray-400'
+        }`}
+      >
+        {label}
+      </div>
+    </div>
+  );
+};
 
 const CountdownSection = () => {
   const [timeLeft, setTimeLeft] = useState({
@@ -57,45 +90,10 @@ const CountdownSection = () => {
           </div>
         ) : (
           <div className="grid grid-cols-4 gap-2 sm:gap-4 md:gap-6 max-w-3xl mx-auto px-2">
-            {/* Days */}
-            <div className="bg-[#0a140e]/90 border border-[#1b3524] rounded-xl p-3 sm:p-5 md:p-6 shadow-lg">
-              <div className="font-orbitron font-black text-2xl sm:text-4xl md:text-6xl text-[#00ff66] neon-glow-green mb-1">
-                {String(timeLeft.days).padStart(2, '0')}
-              </div>
-              <div className="font-mono text-[9px] sm:text-xs text-gray-400 uppercase tracking-wider sm:tracking-widest">
-                DAYS
-              </div>
-            </div>
-
-            {/* Hours */}
-            <div className="bg-[#0a140e]/90 border border-[#1b3524] rounded-xl p-3 sm:p-5 md:p-6 shadow-lg">
-              <div className="font-orbitron font-black text-2xl sm:text-4xl md:text-6xl text-[#00ff66] neon-glow-green mb-1">
-                {String(timeLeft.hours).padStart(2, '0')}
-              </div>
-              <div className="font-mono text-[9px] sm:text-xs text-gray-400 uppercase tracking-wider sm:tracking-widest">
-                HOURS
-              </div>
-            </div>
-
-            {/* Minutes */}
-            <div className="bg-[#0a140e]/90 border border-[#1b3524] rounded-xl p-3 sm:p-5 md:p-6 shadow-lg">
-              <div className="font-orbitron font-black text-2xl sm:text-4xl md:text-6xl text-[#00ff66] neon-glow-green mb-1">
-                {String(timeLeft.minutes).padStart(2, '0')}
-              </div>
-              <div className="font-mono text-[9px] sm:text-xs text-gray-400 uppercase tracking-wider sm:tracking-widest">
-                MINUTES
-              </div>
-            </div>
-
-            {/* Seconds */}
-            <div className="bg-[#0a140e]/90 border border-[#1b3524] rounded-xl p-3 sm:p-5 md:p-6 shadow-lg border-b-2 border-b-[#00ff66]">
-              <div className="font-orbitron font-black text-2xl sm:text-4xl md:text-6xl text-white mb-1">
-                {String(timeLeft.seconds).padStart(2, '0')}
-              </div>
-              <div className="font-mono text-[9px] sm:text-xs text-[#10b981] uppercase tracking-wider sm:tracking-widest">
-                SECONDS
-              </div>
-            </div>
+            <AnimatedDigit value={String(timeLeft.days).padStart(2, '0')} label="DAYS" />
+            <AnimatedDigit value={String(timeLeft.hours).padStart(2, '0')} label="HOURS" />
+            <AnimatedDigit value={String(timeLeft.minutes).padStart(2, '0')} label="MINUTES" />
+            <AnimatedDigit value={String(timeLeft.seconds).padStart(2, '0')} label="SECONDS" isSeconds />
           </div>
         )}
       </div>
