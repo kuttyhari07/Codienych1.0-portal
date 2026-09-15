@@ -105,3 +105,57 @@ export const playVictoryFanfare = () => {
     // Ignore
   }
 };
+
+// AI Cyber Voice Speech Synthesis for Intel Audio Stream
+export const stopIntelSpeech = () => {
+  if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+    try {
+      window.speechSynthesis.cancel();
+    } catch (e) {}
+  }
+};
+
+export const speakIntelTransmission = (text, onStart, onEnd) => {
+  if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+  try {
+    window.speechSynthesis.cancel();
+
+    // Clean up text for natural pronunciation
+    const cleanText = text
+      .replace(/₹/g, 'Rupees ')
+      .replace(/@CUB/gi, ' at C U B')
+      .replace(/UG/g, 'Undergraduate')
+      .replace(/ESEC/g, 'E S E C')
+      .replace(/24-HR/gi, '24 hour')
+      .replace(/\//g, ' and ');
+
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.rate = 1.0;
+    utterance.pitch = 1.05;
+    utterance.volume = 1.0;
+
+    const voices = window.speechSynthesis.getVoices();
+    // Prefer high quality English voices (Google, Natural, Samantha, Microsoft)
+    const naturalVoice = voices.find(
+      (v) =>
+        (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha') || v.name.includes('David')) &&
+        v.lang.startsWith('en')
+    ) || voices.find((v) => v.lang.startsWith('en'));
+
+    if (naturalVoice) {
+      utterance.voice = naturalVoice;
+    }
+
+    if (onStart) utterance.onstart = onStart;
+    if (onEnd) {
+      utterance.onend = onEnd;
+      utterance.onerror = onEnd;
+    }
+
+    window.speechSynthesis.speak(utterance);
+  } catch (e) {
+    console.warn('[Speech Synthesis Warning]', e);
+    if (onEnd) onEnd();
+  }
+};
+

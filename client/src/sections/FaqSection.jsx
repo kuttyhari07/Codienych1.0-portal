@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { HelpCircle, ChevronDown, ChevronUp, Radio, Sparkles, Terminal, Volume2, Search } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { HelpCircle, ChevronDown, ChevronUp, Radio, Sparkles, Terminal, Volume2, VolumeX, Play, Square, Search } from 'lucide-react';
 import { EVENT_CONFIG } from '../utils/config';
-import { playLaserBlip } from '../utils/cyberSound';
+import { playLaserBlip, speakIntelTransmission, stopIntelSpeech } from '../utils/cyberSound';
 
 const quickChips = [
   {
@@ -108,7 +108,41 @@ const faqs = [
 const FaqSection = () => {
   const [openIndex, setOpenIndex] = useState(null);
   const [activeChip, setActiveChip] = useState(quickChips[0]);
+  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Handle Play Voice Readout
+  const handlePlayVoice = (text) => {
+    if (isPlayingAudio) {
+      stopIntelSpeech();
+      setIsPlayingAudio(false);
+    } else {
+      playLaserBlip();
+      speakIntelTransmission(
+        text || activeChip.answer,
+        () => setIsPlayingAudio(true),
+        () => setIsPlayingAudio(false)
+      );
+    }
+  };
+
+  // Switch Chip & Trigger Voice
+  const handleSelectChip = (qc) => {
+    playLaserBlip();
+    setActiveChip(qc);
+    speakIntelTransmission(
+      qc.answer,
+      () => setIsPlayingAudio(true),
+      () => setIsPlayingAudio(false)
+    );
+  };
+
+  // Clean up speech when leaving component
+  useEffect(() => {
+    return () => {
+      stopIntelSpeech();
+    };
+  }, []);
 
   const toggleFaq = (index) => {
     playLaserBlip();
@@ -134,30 +168,58 @@ const FaqSection = () => {
             ASK <span className="text-[#00ff66]">CODIENYCH INTEL</span>
           </h2>
           <p className="max-w-2xl mx-auto font-mono text-xs sm:text-sm text-gray-300">
-            Tap any tactical query chip below to initialize telemetry streams, or search intel archives.
+            Tap any tactical query chip below to stream live AI voice intel, or search archives.
           </p>
         </div>
 
         {/* Interactive Query Matrix & Audio Waveform Box */}
         <div className="bg-gradient-to-b from-[#0f2e1a] via-[#081a0e] to-[#040e08] border-2 border-[#00ff66] rounded-2xl p-6 sm:p-8 shadow-[0_0_40px_rgba(0,255,102,0.3)] mb-12 relative overflow-hidden hud-corner-box">
-          <div className="flex items-center justify-between border-b border-[#00ff66]/30 pb-3 mb-6">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#00ff66]/30 pb-3 mb-6">
             <div className="flex items-center space-x-2 font-mono text-xs text-[#00ff66]">
-              <Volume2 className="w-4 h-4 text-[#00ff66]" />
-              <span className="font-bold uppercase tracking-wider">INTEL AUDIO STREAM // ACTIVE</span>
+              <Volume2 className={`w-4 h-4 text-[#00ff66] ${isPlayingAudio ? 'animate-bounce' : ''}`} />
+              <span className="font-bold uppercase tracking-wider">
+                {isPlayingAudio ? 'INTEL AI VOICE // TRANSMITTING' : 'INTEL AUDIO STREAM // READY'}
+              </span>
             </div>
 
-            {/* Live Audio Waveform Bars */}
-            <div className="flex items-center space-x-1 h-5">
-              {[12, 24, 16, 28, 8, 20, 32, 14, 22, 10, 26, 18].map((h, i) => (
-                <div
-                  key={i}
-                  style={{
-                    height: `${(h * 0.7)}px`,
-                    animationDelay: `${i * 0.1}s`,
-                  }}
-                  className="w-1 bg-[#00ff66] rounded-full wave-bar"
-                />
-              ))}
+            {/* Live Audio Waveform Bars + Play/Stop Button */}
+            <div className="flex items-center space-x-3">
+              <button
+                type="button"
+                onClick={() => handlePlayVoice(activeChip.answer)}
+                className={`flex items-center space-x-1.5 px-3 py-1 rounded-full font-mono text-xs font-bold transition-all cursor-pointer ${
+                  isPlayingAudio
+                    ? 'bg-red-500/20 text-red-400 border border-red-500 animate-pulse'
+                    : 'bg-[#00ff66]/20 text-[#00ff66] border border-[#00ff66] hover:bg-[#00ff66] hover:text-black'
+                }`}
+              >
+                {isPlayingAudio ? (
+                  <>
+                    <Square className="w-3 h-3 fill-current" />
+                    <span>STOP AUDIO</span>
+                  </>
+                ) : (
+                  <>
+                    <Play className="w-3 h-3 fill-current" />
+                    <span>LISTEN VOICE</span>
+                  </>
+                )}
+              </button>
+
+              <div className="flex items-center space-x-1 h-5">
+                {[12, 24, 16, 28, 8, 20, 32, 14, 22, 10, 26, 18].map((h, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      height: isPlayingAudio ? `${(h * 0.7)}px` : '4px',
+                      animationDelay: `${i * 0.08}s`,
+                    }}
+                    className={`w-1 rounded-full transition-all duration-200 ${
+                      isPlayingAudio ? 'bg-[#00ff66] wave-bar' : 'bg-[#00ff66]/30'
+                    }`}
+                  />
+                ))}
+              </div>
             </div>
           </div>
 
@@ -168,11 +230,8 @@ const FaqSection = () => {
               return (
                 <button
                   key={i}
-                  onClick={() => {
-                    playLaserBlip();
-                    setActiveChip(qc);
-                  }}
-                  className={`px-3.5 py-2 rounded-xl font-mono text-xs transition-all duration-200 flex items-center space-x-2 ${
+                  onClick={() => handleSelectChip(qc)}
+                  className={`px-3.5 py-2 rounded-xl font-mono text-xs transition-all duration-200 flex items-center space-x-2 cursor-pointer ${
                     isSelected
                       ? 'bg-[#00ff66] text-black font-bold shadow-[0_0_15px_#00ff66] scale-105'
                       : 'bg-[#050b07] text-gray-300 border border-gray-800 hover:border-[#10b981] hover:text-white'
@@ -186,9 +245,16 @@ const FaqSection = () => {
 
           {/* Telemetry Output Screen */}
           <div className="bg-[#050b07] border border-[#10b981]/50 rounded-xl p-5 font-mono text-xs sm:text-sm text-gray-200 leading-relaxed shadow-inner">
-            <div className="flex items-center space-x-2 text-[#00ff66] text-[11px] mb-2">
-              <Terminal className="w-3.5 h-3.5" />
-              <span className="font-bold tracking-wider">STREAMED TRANSMISSION:</span>
+            <div className="flex items-center justify-between text-[#00ff66] text-[11px] mb-2">
+              <div className="flex items-center space-x-2">
+                <Terminal className="w-3.5 h-3.5" />
+                <span className="font-bold tracking-wider">STREAMED TRANSMISSION:</span>
+              </div>
+              {isPlayingAudio && (
+                <span className="text-[10px] text-[#00ff66] animate-pulse">
+                  ● AUDIO PLAYING
+                </span>
+              )}
             </div>
             <p className="text-white font-sans text-sm sm:text-base">
               {activeChip.answer}
