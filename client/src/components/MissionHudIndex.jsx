@@ -8,7 +8,7 @@ const hudItems = [
   { id: 'countdown', label: '04 LAUNCH' },
   { id: 'prizes', label: '05 VAULT' },
   { id: 'entertainment', label: '06 CHILL ZONE' },
-  { id: 'problem-statement', label: '07 DOMAINS' },
+  { id: 'problem-statement', label: '07 PROBLEM' },
   { id: 'team-rules', label: '08 PROTOCOL' },
   { id: 'hackathon-rules', label: '09 RULES' },
   { id: 'timeline', label: '10 TIMELINE' },
