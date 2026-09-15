@@ -41,9 +41,18 @@ const HeroSection = () => {
       </h2>
 
       {/* Tagline */}
-      <p className="font-mono text-sm sm:text-base md:text-xl text-gray-300 max-w-2xl mx-auto mb-7 sm:mb-10 leading-relaxed px-2">
+      <p className="font-mono text-sm sm:text-base md:text-xl text-gray-300 max-w-2xl mx-auto mb-5 sm:mb-7 leading-relaxed px-2">
         “{EVENT_CONFIG.TAGLINE}”
       </p>
+
+      {/* Registration Fee Highlight Pill */}
+      <div className="inline-flex items-center space-x-2 bg-[#0a1f12] border-2 border-[#00ff66]/80 px-4 py-2 sm:px-5 sm:py-2.5 rounded-2xl text-xs sm:text-sm font-mono text-white mb-7 sm:mb-9 shadow-[0_0_25px_rgba(0,255,102,0.3)] hover:shadow-[0_0_35px_rgba(0,255,102,0.5)] transition-all">
+        <span className="text-[#00ff66] font-bold tracking-wider uppercase">ENTRY FEE:</span>
+        <span className="font-orbitron font-extrabold text-base sm:text-xl text-[#00ff66]">₹{EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER}</span>
+        <span className="text-gray-400 font-mono text-xs">/ MEMBER</span>
+        <span className="text-gray-500 hidden sm:inline">|</span>
+        <span className="text-gray-300 text-xs hidden sm:inline">(4 to 6 Members / Team)</span>
+      </div>
 
       {/* CTA Buttons */}
       <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-6 w-full max-w-sm sm:max-w-md mx-auto px-2">
