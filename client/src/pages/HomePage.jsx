@@ -3,7 +3,6 @@ import LoadingScreen from '../components/LoadingScreen';
 import CinematicBackground from '../components/CinematicBackground';
 import Navbar from '../components/Navbar';
 import MissionHudIndex from '../components/MissionHudIndex';
-import MissionIdBadgeGenerator from '../components/MissionIdBadgeGenerator';
 import HeroSection from '../sections/HeroSection';
 import AboutSection from '../sections/AboutSection';
 import DatesSection from '../sections/DatesSection';
@@ -77,10 +76,6 @@ const HomePage = () => {
 
           <ScrollReveal variant="fade-up">
             <FaqSection />
-          </ScrollReveal>
-
-          <ScrollReveal variant="scale-up">
-            <MissionIdBadgeGenerator />
           </ScrollReveal>
 
           <ScrollReveal variant="fade-up">

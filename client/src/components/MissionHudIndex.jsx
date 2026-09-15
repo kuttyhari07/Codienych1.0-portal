@@ -13,8 +13,7 @@ const hudItems = [
   { id: 'hackathon-rules', label: '09 RULES' },
   { id: 'timeline', label: '10 TIMELINE' },
   { id: 'faq', label: '11 INTEL AI' },
-  { id: 'badge-gen', label: '12 MISSION ID' },
-  { id: 'contact', label: '13 COMMS' },
+  { id: 'contact', label: '12 COMMS' },
 ];
 
 const MissionHudIndex = () => {

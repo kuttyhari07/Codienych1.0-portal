@@ -12,7 +12,6 @@ const navItems = [
   { label: 'RULES', href: '#rules' },
   { label: 'TIMELINE', href: '#timeline' },
   { label: 'FAQ', href: '#faq' },
-  { label: 'MISSION ID', href: '#badge-gen' },
   { label: 'CONTACT', href: '#contact' },
 ];
 
