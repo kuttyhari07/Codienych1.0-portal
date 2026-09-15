@@ -71,10 +71,10 @@ const EntertainmentSection = () => {
                   </span>
                 </div>
                 <h3 className="font-orbitron text-lg sm:text-xl font-bold text-white mb-1.5">
-                  Night-la Thookam Varudha? Boredom Strike Aacha?
+                  Feeling Sleepy or Need a Brain Break at Night?
                 </h3>
                 <p className="font-mono text-xs sm:text-sm text-gray-300">
-                  Grab a cup of coffee, walk over to the gaming arena, and play <strong className="text-[#00ff66]">Chess ♟️</strong> or <strong className="text-[#00ff66]">Carrom 🎯</strong> with friends and fellow builders to reboot your mind!
+                  Grab a fresh cup of coffee, head over to the gaming arena, and play <strong className="text-[#00ff66]">Chess ♟️</strong> or <strong className="text-[#00ff66]">Carrom 🎯</strong> with friends and fellow builders to reboot your mind!
                 </p>
               </div>
             </div>
