@@ -109,9 +109,7 @@ const HomePage = () => {
             <HackathonRulesSection />
           </ScrollReveal>
 
-          <ScrollReveal variant="fade-up">
-            <TimelineSection />
-          </ScrollReveal>
+          <TimelineSection />
 
           <ScrollReveal variant="fade-up">
             <FaqSection />
