@@ -69,7 +69,7 @@ const MatrixRainCanvas = ({ onClose }) => {
   );
 };
 
-const CyberEasterEggHud = () => {
+const CyberEasterEggHud = ({ onOpenCli }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeHack, setActiveHack] = useState(0);
   const [showMatrix, setShowMatrix] = useState(false);
@@ -93,17 +93,31 @@ const CyberEasterEggHud = () => {
 
       {/* Floating HUD Controller Button Bottom Left */}
       <div className="fixed bottom-6 left-6 z-40 hidden sm:flex items-center space-x-2 select-none">
+        {/* Interactive CLI Terminal Launcher */}
+        <button
+          onClick={() => {
+            playLaserBlip();
+            if (onOpenCli) onOpenCli();
+          }}
+          data-cursor-text="CLI"
+          title="Open Tactical Terminal CLI (`)"
+          className="group flex items-center space-x-1.5 bg-[#0a1b10]/95 border border-[#00ff66]/70 hover:border-[#00ff66] px-3 py-2.5 rounded-xl text-xs font-mono text-[#00ff66] shadow-[0_0_20px_rgba(0,255,102,0.3)] hover:shadow-[0_0_35px_rgba(0,255,102,0.7)] transition-all duration-300 transform hover:-translate-y-1 backdrop-blur-md active:scale-95"
+        >
+          <Terminal className="w-4 h-4 text-[#00ff66] animate-pulse" />
+          <span className="font-bold tracking-wider">[ &gt;_ CLI ]</span>
+        </button>
+
+        {/* Decrypt Hacks Modal Trigger */}
         <button
           onClick={() => {
             playChirp();
             setIsOpen(true);
           }}
           data-cursor-text="DECRYPT"
-          className="group flex items-center space-x-2 bg-[#0a1b10]/95 border border-[#00ff66]/60 hover:border-[#00ff66] px-3.5 py-2.5 rounded-xl text-xs font-mono text-[#00ff66] shadow-[0_0_20px_rgba(0,255,102,0.25)] hover:shadow-[0_0_35px_rgba(0,255,102,0.6)] transition-all duration-300 transform hover:-translate-y-1 backdrop-blur-md active:scale-95"
+          className="group flex items-center space-x-2 bg-[#0a1b10]/95 border border-gray-800 hover:border-[#00ff66] px-3 py-2.5 rounded-xl text-xs font-mono text-gray-300 hover:text-[#00ff66] transition-all duration-300 transform hover:-translate-y-1 backdrop-blur-md active:scale-95"
         >
-          <Terminal className="w-4 h-4 text-[#00ff66] animate-pulse" />
-          <span className="font-bold tracking-wider">[ DECRYPT HACKS ]</span>
-          <span className="w-2 h-2 rounded-full bg-[#00ff66] animate-ping" />
+          <Sparkles className="w-3.5 h-3.5 text-[#00ff66]" />
+          <span className="font-bold tracking-wider">[ INTEL ]</span>
         </button>
 
         {/* Matrix Rain Button */}

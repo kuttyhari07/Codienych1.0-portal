@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { HelpCircle, ChevronDown, ChevronUp, Radio, Sparkles, Terminal, Volume2 } from 'lucide-react';
+import { HelpCircle, ChevronDown, ChevronUp, Radio, Sparkles, Terminal, Volume2, Search } from 'lucide-react';
 import { EVENT_CONFIG } from '../utils/config';
+import { playLaserBlip } from '../utils/cyberSound';
 
 const quickChips = [
   {
@@ -107,10 +108,18 @@ const faqs = [
 const FaqSection = () => {
   const [openIndex, setOpenIndex] = useState(null);
   const [activeChip, setActiveChip] = useState(quickChips[0]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const toggleFaq = (index) => {
+    playLaserBlip();
     setOpenIndex(openIndex === index ? null : index);
   };
+
+  const filteredFaqs = faqs.filter(
+    (item) =>
+      item.q.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.a.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <section id="faq" className="relative py-24 px-4 z-10">
@@ -125,7 +134,7 @@ const FaqSection = () => {
             ASK <span className="text-[#00ff66]">CODIENYCH INTEL</span>
           </h2>
           <p className="max-w-2xl mx-auto font-mono text-xs sm:text-sm text-gray-300">
-            Tap any tactical query chip below to initialize telemetry streams, or browse full intel archives.
+            Tap any tactical query chip below to initialize telemetry streams, or search intel archives.
           </p>
         </div>
 
@@ -159,7 +168,10 @@ const FaqSection = () => {
               return (
                 <button
                   key={i}
-                  onClick={() => setActiveChip(qc)}
+                  onClick={() => {
+                    playLaserBlip();
+                    setActiveChip(qc);
+                  }}
                   className={`px-3.5 py-2 rounded-xl font-mono text-xs transition-all duration-200 flex items-center space-x-2 ${
                     isSelected
                       ? 'bg-[#00ff66] text-black font-bold shadow-[0_0_15px_#00ff66] scale-105'
@@ -184,46 +196,60 @@ const FaqSection = () => {
           </div>
         </div>
 
-        {/* Full FAQ Accordion Archive */}
-        <div className="text-center mb-6">
-          <span className="font-mono text-xs text-gray-400 uppercase tracking-widest">
-            // COMPLETE DISPATCH ARCHIVES
-          </span>
+        {/* Live Search Intel Filter Bar */}
+        <div className="mb-6 max-w-xl mx-auto relative">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search intel keywords (e.g. fees, team, ID card, rules)..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-[#0a140e]/95 border-2 border-[#1b3524] focus:border-[#00ff66] rounded-2xl pl-11 pr-4 py-3 font-mono text-xs sm:text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#00ff66] shadow-lg transition-all"
+            />
+            <Search className="w-5 h-5 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          </div>
         </div>
 
+        {/* Full FAQ Accordion Archive */}
         <div className="space-y-3.5">
-          {faqs.map((faq, idx) => {
-            const isOpen = openIndex === idx;
-            return (
-              <div
-                key={idx}
-                className="bg-[#0a140e]/90 border border-[#1b3524] hover:border-[#10b981] rounded-xl overflow-hidden transition-all shadow-md"
-              >
-                <button
-                  type="button"
-                  onClick={() => toggleFaq(idx)}
-                  className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-[#0f2416] transition-colors"
+          {filteredFaqs.length === 0 ? (
+            <div className="p-8 text-center font-mono text-sm text-gray-400 bg-[#0a140e]/80 border border-gray-800 rounded-xl">
+              No matching intel found for "{searchQuery}". Try a different keyword.
+            </div>
+          ) : (
+            filteredFaqs.map((faq, idx) => {
+              const isOpen = openIndex === idx;
+              return (
+                <div
+                  key={idx}
+                  className="bg-[#0a140e]/90 border border-[#1b3524] hover:border-[#10b981] rounded-xl overflow-hidden transition-all shadow-md"
                 >
-                  <span className="font-orbitron font-semibold text-sm sm:text-base text-gray-200 pr-4">
-                    {faq.q}
-                  </span>
-                  {isOpen ? (
-                    <ChevronUp className="w-5 h-5 text-[#00ff66] flex-shrink-0" />
-                  ) : (
-                    <ChevronDown className="w-5 h-5 text-gray-500 flex-shrink-0" />
-                  )}
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => toggleFaq(idx)}
+                    className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-[#0f2416] transition-colors"
+                  >
+                    <span className="font-orbitron font-semibold text-sm sm:text-base text-gray-200 pr-4">
+                      {faq.q}
+                    </span>
+                    {isOpen ? (
+                      <ChevronUp className="w-5 h-5 text-[#00ff66] flex-shrink-0" />
+                    ) : (
+                      <ChevronDown className="w-5 h-5 text-gray-500 flex-shrink-0" />
+                    )}
+                  </button>
 
-                {isOpen && (
-                  <div className="px-6 pb-5 pt-1 border-t border-[#1b3524]/60 bg-[#040e08]">
-                    <p className="font-sans text-gray-300 text-sm leading-relaxed">
-                      {faq.a}
-                    </p>
-                  </div>
-                )}
-              </div>
-            );
-          })}
+                  {isOpen && (
+                    <div className="px-6 pb-5 pt-1 border-t border-[#1b3524]/60 bg-[#040e08]">
+                      <p className="font-sans text-gray-300 text-sm leading-relaxed">
+                        {faq.a}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              );
+            })
+          )}
         </div>
       </div>
     </section>

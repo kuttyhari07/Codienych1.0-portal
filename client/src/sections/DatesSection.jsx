@@ -3,6 +3,7 @@ import { Calendar, Clock, AlertTriangle, CreditCard } from 'lucide-react';
 import { EVENT_CONFIG } from '../utils/config';
 import SpotlightCard from '../components/SpotlightCard';
 import DecipherText from '../components/DecipherText';
+import TeamFeeCalculator from '../components/TeamFeeCalculator';
 
 const DatesSection = () => {
   return (
@@ -70,6 +71,9 @@ const DatesSection = () => {
             </p>
           </SpotlightCard>
         </div>
+
+        {/* Interactive Squad Fee Live Simulator */}
+        <TeamFeeCalculator />
       </div>
     </section>
   );

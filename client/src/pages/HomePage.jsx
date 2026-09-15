@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import LoadingScreen from '../components/LoadingScreen';
 import CinematicBackground from '../components/CinematicBackground';
 import InteractiveCursor from '../components/InteractiveCursor';
 import CyberEasterEggHud from '../components/CyberEasterEggHud';
+import CyberTerminalCli from '../components/CyberTerminalCli';
 import Navbar from '../components/Navbar';
 import MissionHudIndex from '../components/MissionHudIndex';
 import HeroSection from '../sections/HeroSection';
@@ -24,6 +25,19 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const HomePage = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [isCliOpen, setIsCliOpen] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Toggle CLI with backtick (`) or Ctrl+K
+      if (e.key === '`' && !['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
+        e.preventDefault();
+        setIsCliOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   return (
     <SmoothScrollProvider>
@@ -33,9 +47,15 @@ const HomePage = () => {
           {isLoading && <LoadingScreen onFinish={() => setIsLoading(false)} />}
         </AnimatePresence>
 
-        {/* Interactive Ambient Cursor Glow */}
+        {/* Interactive Ambient Cursor Glow & Easter Eggs HUD */}
         <InteractiveCursor />
-        <CyberEasterEggHud />
+        <CyberEasterEggHud onOpenCli={() => setIsCliOpen(true)} />
+
+        {/* Tactical CLI Terminal Shell */}
+        <CyberTerminalCli
+          isOpen={isCliOpen}
+          onClose={() => setIsCliOpen(false)}
+        />
 
         {/* Sticky Cinematic Scroll Background */}
         <CinematicBackground />
