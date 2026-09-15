@@ -7,10 +7,10 @@ const navItems = [
   { label: 'ABOUT', href: '#about' },
   { label: 'DATES', href: '#dates' },
   { label: 'COUNTDOWN', href: '#countdown' },
-  { label: 'TREASURE', href: '#treasure' },
+  { label: 'PRIZES', href: '#prizes' },
+  { label: 'FUN ZONE', href: '#entertainment' },
   { label: 'RULES', href: '#rules' },
   { label: 'TIMELINE', href: '#timeline' },
-  { label: 'PRIZES', href: '#prizes' },
   { label: 'FAQ', href: '#faq' },
   { label: 'CONTACT', href: '#contact' },
 ];

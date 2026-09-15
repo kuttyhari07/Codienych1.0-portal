@@ -11,6 +11,7 @@ import TeamRulesSection from '../sections/TeamRulesSection';
 import HackathonRulesSection from '../sections/HackathonRulesSection';
 import TimelineSection from '../sections/TimelineSection';
 import PrizesSection from '../sections/PrizesSection';
+import EntertainmentSection from '../sections/EntertainmentSection';
 import FaqSection from '../sections/FaqSection';
 import ContactSection from '../sections/ContactSection';
 import Footer from '../sections/Footer';
@@ -49,6 +50,10 @@ const HomePage = () => {
 
           <ScrollReveal variant="fade-up">
             <PrizesSection />
+          </ScrollReveal>
+
+          <ScrollReveal variant="fade-up">
+            <EntertainmentSection />
           </ScrollReveal>
 
           <ScrollReveal variant="scale-up">

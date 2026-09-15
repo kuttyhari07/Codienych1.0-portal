@@ -68,6 +68,14 @@ const faqs = [
     a: 'Laptops, chargers, valid college physical ID cards, extension cords, and personal gear. [PLACEHOLDER].',
   },
   {
+    q: 'What are the perks and rewards besides the prize pool?',
+    a: 'Along with surprise cash bounties and trophies, top winning teams will receive Free Internship Opportunities to work on real-world projects and build industry credentials!',
+  },
+  {
+    q: 'Are there entertainment activities during the 24-hour hackathon?',
+    a: 'Yes! We have an interactive Fun & Entertainment Zone featuring late-night Chess and Carrom board games to fight sleep/boredom, along with quick mini-games and trivia that reward winners with instant surprise gifts and goodies!',
+  },
+  {
     q: 'How will projects be evaluated?',
     a: 'Based on Innovation, Technical Complexity, Working Demo, Code Quality, UI/UX, and Pitch Presentation.',
   },
