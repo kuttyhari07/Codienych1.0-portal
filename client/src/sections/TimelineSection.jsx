@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { 
   ClipboardCheck, 
   UserCheck, 
@@ -14,11 +14,10 @@ import {
   ChevronLeft,
   ChevronRight,
   Activity,
-  Layers
+  ArrowDown
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
 import { playLaserBlip } from '../utils/cyberSound';
-import SpotlightCard from '../components/SpotlightCard';
 import DecipherText from '../components/DecipherText';
 
 const timelineSteps = [
@@ -182,6 +181,24 @@ const timelineSteps = [
 
 const TimelineSection = () => {
   const [activePhaseIndex, setActivePhaseIndex] = useState(0);
+  const containerRef = useRef(null);
+
+  // Track scroll position inside this section
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end end'],
+  });
+
+  useMotionValueEvent(scrollYProgress, 'change', (latest) => {
+    // Map scroll progress (0 to 1) dynamically across all timeline steps
+    const index = Math.min(
+      timelineSteps.length - 1,
+      Math.max(0, Math.floor(latest * timelineSteps.length))
+    );
+    if (index !== activePhaseIndex) {
+      setActivePhaseIndex(index);
+    }
+  });
 
   const current = timelineSteps[activePhaseIndex];
   const CurrentIcon = current.icon;
@@ -189,6 +206,14 @@ const TimelineSection = () => {
   const handleManualSelect = (idx) => {
     playLaserBlip();
     setActivePhaseIndex(idx);
+
+    // Smoothly scroll the container to the corresponding section offset
+    if (containerRef.current) {
+      const containerTop = containerRef.current.offsetTop;
+      const containerHeight = containerRef.current.offsetHeight - window.innerHeight;
+      const targetScroll = containerTop + (idx / (timelineSteps.length - 1)) * containerHeight;
+      window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+    }
   };
 
   const handleNext = () => {
@@ -204,181 +229,192 @@ const TimelineSection = () => {
   };
 
   return (
-    <section id="timeline" className="relative py-20 px-4 z-10 select-none overflow-hidden">
-      {/* Dynamic Background Atmosphere */}
-      <div
-        className={`absolute inset-0 bg-gradient-to-b ${current.bgGradient} transition-colors duration-700 ease-out`}
-      />
+    <section
+      id="timeline"
+      ref={containerRef}
+      className="relative select-none"
+      style={{ height: `${timelineSteps.length * 75}vh` }}
+    >
+      {/* Sticky Fullscreen HUD Viewport */}
+      <div className="sticky top-0 h-screen w-full flex flex-col justify-between py-6 sm:py-10 px-4 z-10 overflow-hidden">
+        {/* Dynamic Background Atmosphere */}
+        <div
+          className={`absolute inset-0 bg-gradient-to-b ${current.bgGradient} transition-colors duration-700 ease-out`}
+        />
 
-      {/* Ambient 3D Neon Radial Light Flare */}
-      <div
-        className="absolute inset-0 transition-all duration-700 pointer-events-none"
-        style={{
-          background: `radial-gradient(circle at 50% 50%, ${current.accentGlow} 0%, rgba(5, 11, 7, 0.95) 75%)`,
-        }}
-      />
+        {/* Ambient 3D Neon Radial Light Flare */}
+        <div
+          className="absolute inset-0 transition-all duration-700 pointer-events-none"
+          style={{
+            background: `radial-gradient(circle at 50% 50%, ${current.accentGlow} 0%, rgba(5, 11, 7, 0.95) 75%)`,
+          }}
+        />
 
-      {/* Floating Hologram Cyber Backdrop SVG */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none transition-transform duration-700">
-        <div className="w-[500px] h-[500px] sm:w-[700px] sm:h-[700px] transition-all duration-700 transform scale-110">
-          {current.bgSvg}
-        </div>
-      </div>
-
-      <div className="max-w-6xl mx-auto relative z-20">
-        {/* Section Header */}
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center space-x-2 font-mono text-xs text-[#00ff66] tracking-widest uppercase mb-1">
-            <Activity className="w-3.5 h-3.5 text-[#00ff66] animate-pulse" />
-            <span>// 3D DYNAMIC MISSION FLIGHTPATH</span>
-          </div>
-          <h2 className="font-orbitron font-extrabold text-3xl sm:text-5xl text-white tracking-wide">
-            EVENT <span className="text-[#00ff66] neon-glow-green">TIMELINE</span>
-          </h2>
-          <p className="font-mono text-xs sm:text-sm text-gray-300 mt-2">
-            Click across phases or use arrows to travel through the 24-hour hackathon journey.
-          </p>
-        </div>
-
-        {/* Top Horizontal Phase Stepper Rail */}
-        <div className="w-full max-w-4xl mx-auto mb-10">
-          {/* Progress Bar Line */}
-          <div className="h-1.5 w-full bg-[#081a0e] rounded-full overflow-hidden mb-3 border border-[#1b3524]">
-            <div
-              className="h-full bg-gradient-to-r from-[#00ff66] via-[#10b981] to-[#00ff66] transition-all duration-300 shadow-[0_0_12px_#00ff66]"
-              style={{
-                width: `${((activePhaseIndex + 1) / timelineSteps.length) * 100}%`,
-              }}
-            />
-          </div>
-
-          {/* Stepper Buttons (All 9 phases) */}
-          <div className="grid grid-cols-9 gap-1.5 sm:gap-2.5">
-            {timelineSteps.map((item, idx) => {
-              const isActive = activePhaseIndex === idx;
-              const isPassed = activePhaseIndex > idx;
-
-              return (
-                <button
-                  key={item.step}
-                  type="button"
-                  onClick={() => handleManualSelect(idx)}
-                  className={`py-2.5 rounded-xl font-mono text-[10px] sm:text-xs font-bold transition-all flex flex-col items-center justify-center border ${
-                    isActive
-                      ? 'bg-[#00ff66] text-black border-white shadow-[0_0_20px_#00ff66] scale-105 sm:scale-110'
-                      : isPassed
-                      ? 'bg-[#062010] text-[#00ff66] border-[#00ff66]/50'
-                      : 'bg-[#030d06]/80 text-gray-400 border-gray-800 hover:border-[#10b981] hover:text-white'
-                  }`}
-                >
-                  <span className="font-orbitron">{item.step}</span>
-                </button>
-              );
-            })}
+        {/* Floating Hologram Cyber Backdrop SVG */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none transition-transform duration-700">
+          <div className="w-[500px] h-[500px] sm:w-[700px] sm:h-[700px] transition-all duration-700 transform scale-110">
+            {current.bgSvg}
           </div>
         </div>
 
-        {/* Center 3D Holographic Stage Card */}
-        <div className="w-full max-w-4xl mx-auto">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={current.step}
-              initial={{ opacity: 0, scale: 0.94, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 1.04, y: -20 }}
-              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <div className="p-6 sm:p-10 border-2 border-[#00ff66] bg-[#040e08]/95 backdrop-blur-xl rounded-3xl shadow-[0_0_60px_rgba(0,255,102,0.4)] relative overflow-hidden hud-corner-box">
-                {/* Watermark */}
-                <div className="absolute top-2 right-6 font-orbitron font-black text-6xl sm:text-9xl text-white/5 select-none pointer-events-none">
-                  {current.step}
-                </div>
+        {/* HUD Content Container */}
+        <div className="max-w-6xl w-full mx-auto relative z-20 my-auto flex flex-col justify-center">
+          {/* Section Header */}
+          <div className="text-center mb-6 sm:mb-8">
+            <div className="inline-flex items-center space-x-2 font-mono text-[11px] sm:text-xs text-[#00ff66] tracking-widest uppercase mb-1">
+              <Activity className="w-3.5 h-3.5 text-[#00ff66] animate-pulse" />
+              <span>// SCROLL-DRIVEN MISSION FLIGHTPATH</span>
+            </div>
+            <h2 className="font-orbitron font-extrabold text-2xl sm:text-4xl md:text-5xl text-white tracking-wide">
+              EVENT <span className="text-[#00ff66] neon-glow-green">TIMELINE</span>
+            </h2>
+            <div className="inline-flex items-center space-x-2 bg-[#00ff66]/10 border border-[#00ff66]/30 px-3 py-1 rounded-full font-mono text-[11px] sm:text-xs text-[#00ff66] mt-2">
+              <ArrowDown className="w-3.5 h-3.5 animate-bounce text-[#00ff66]" />
+              <span>Scroll down smoothly to advance through phases</span>
+            </div>
+          </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 items-center relative z-10">
-                  {/* Left 3D Milestone Avatar */}
-                  <div className="md:col-span-4 flex flex-col items-center justify-center p-6 bg-gradient-to-b from-[#092212] to-[#030d06] border-2 border-[#00ff66]/70 rounded-3xl shadow-[0_0_35px_rgba(0,255,102,0.3)] text-center relative group">
-                    <motion.div
-                      animate={{
-                        rotateY: [0, 15, -15, 0],
-                        y: [0, -6, 0],
-                      }}
-                      transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                      className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-tr from-[#00ff66] to-[#10b981] text-black flex items-center justify-center shadow-[0_0_40px_#00ff66] mb-3"
-                    >
-                      <CurrentIcon className="w-10 h-10 sm:w-12 sm:h-12" />
-                    </motion.div>
+          {/* Top Horizontal Phase Stepper Rail */}
+          <div className="w-full max-w-4xl mx-auto mb-6 sm:mb-8">
+            {/* Progress Bar Line */}
+            <div className="h-2 w-full bg-[#081a0e] rounded-full overflow-hidden mb-3 border border-[#1b3524] shadow-inner">
+              <motion.div
+                className="h-full bg-gradient-to-r from-[#00ff66] via-[#10b981] to-[#00ff66] shadow-[0_0_15px_#00ff66]"
+                style={{
+                  width: `${((activePhaseIndex + 1) / timelineSteps.length) * 100}%`,
+                }}
+                transition={{ duration: 0.2 }}
+              />
+            </div>
 
-                    <span className="font-orbitron font-black text-2xl text-white">
-                      PHASE {current.step}
-                    </span>
-                    <span className="font-mono text-[10px] text-[#00ff66] tracking-widest uppercase mt-0.5">
-                      {current.phase}
-                    </span>
+            {/* Stepper Buttons (All 9 phases) */}
+            <div className="grid grid-cols-9 gap-1 sm:gap-2.5">
+              {timelineSteps.map((item, idx) => {
+                const isActive = activePhaseIndex === idx;
+                const isPassed = activePhaseIndex > idx;
+
+                return (
+                  <button
+                    key={item.step}
+                    type="button"
+                    onClick={() => handleManualSelect(idx)}
+                    className={`py-2 sm:py-2.5 rounded-xl font-mono text-[10px] sm:text-xs font-bold transition-all flex flex-col items-center justify-center border cursor-pointer ${
+                      isActive
+                        ? 'bg-[#00ff66] text-black border-white shadow-[0_0_20px_#00ff66] scale-105 sm:scale-110 z-10'
+                        : isPassed
+                        ? 'bg-[#062010] text-[#00ff66] border-[#00ff66]/50'
+                        : 'bg-[#030d06]/80 text-gray-400 border-gray-800 hover:border-[#10b981] hover:text-white'
+                    }`}
+                  >
+                    <span className="font-orbitron">{item.step}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Center 3D Holographic Stage Card */}
+          <div className="w-full max-w-4xl mx-auto">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={current.step}
+                initial={{ opacity: 0, scale: 0.94, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 1.04, y: -20 }}
+                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <div className="p-5 sm:p-8 md:p-10 border-2 border-[#00ff66] bg-[#040e08]/95 backdrop-blur-xl rounded-3xl shadow-[0_0_60px_rgba(0,255,102,0.35)] relative overflow-hidden hud-corner-box">
+                  {/* Background Step Number Watermark */}
+                  <div className="absolute top-2 right-4 sm:right-6 font-orbitron font-black text-6xl sm:text-8xl md:text-9xl text-white/5 select-none pointer-events-none">
+                    {current.step}
                   </div>
 
-                  {/* Right Milestone Details */}
-                  <div className="md:col-span-8 space-y-3.5 text-left">
-                    <div className="flex flex-wrap items-center gap-2.5">
-                      <span className="inline-flex items-center space-x-1.5 font-mono text-xs text-black bg-[#00ff66] px-3.5 py-1 rounded-full font-bold shadow-[0_0_15px_#00ff66]">
-                        <Clock className="w-3.5 h-3.5" />
-                        <span>{current.time}</span>
-                      </span>
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-5 sm:gap-8 items-center relative z-10">
+                    {/* Left 3D Milestone Avatar */}
+                    <div className="md:col-span-4 flex flex-col items-center justify-center p-5 sm:p-6 bg-gradient-to-b from-[#092212] to-[#030d06] border-2 border-[#00ff66]/70 rounded-3xl shadow-[0_0_35px_rgba(0,255,102,0.25)] text-center relative group">
+                      <motion.div
+                        animate={{
+                          rotateY: [0, 15, -15, 0],
+                          y: [0, -6, 0],
+                        }}
+                        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                        className="w-16 h-16 sm:w-22 sm:h-22 md:w-24 md:h-24 rounded-2xl bg-gradient-to-tr from-[#00ff66] to-[#10b981] text-black flex items-center justify-center shadow-[0_0_35px_#00ff66] mb-3"
+                      >
+                        <CurrentIcon className="w-8 h-8 sm:w-11 sm:h-11 md:w-12 md:h-12" />
+                      </motion.div>
 
-                      <span className="font-mono text-xs text-[#10b981] bg-[#00ff66]/10 border border-[#00ff66]/40 px-3 py-1 rounded-full uppercase tracking-wider">
-                        {current.tag}
+                      <span className="font-orbitron font-black text-xl sm:text-2xl text-white">
+                        PHASE {current.step}
+                      </span>
+                      <span className="font-mono text-[9px] sm:text-[10px] text-[#00ff66] tracking-widest uppercase mt-0.5">
+                        {current.phase}
                       </span>
                     </div>
 
-                    <h3 className="font-orbitron font-black text-2xl sm:text-4xl text-white tracking-wide">
-                      <DecipherText text={current.title} />
-                    </h3>
+                    {/* Right Milestone Details */}
+                    <div className="md:col-span-8 space-y-3 sm:space-y-3.5 text-left">
+                      <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+                        <span className="inline-flex items-center space-x-1.5 font-mono text-xs text-black bg-[#00ff66] px-3.5 py-1 rounded-full font-bold shadow-[0_0_15px_#00ff66]">
+                          <Clock className="w-3.5 h-3.5" />
+                          <span>{current.time}</span>
+                        </span>
 
-                    <p className="font-mono text-xs sm:text-sm text-gray-200 leading-relaxed border-l-4 border-[#00ff66] pl-4 py-1">
-                      {current.subtitle}
-                    </p>
+                        <span className="font-mono text-xs text-[#10b981] bg-[#00ff66]/10 border border-[#00ff66]/40 px-3 py-1 rounded-full uppercase tracking-wider">
+                          {current.tag}
+                        </span>
+                      </div>
 
-                    <div className="pt-3 border-t border-[#1b3524] flex items-center justify-between font-mono text-xs text-gray-400">
-                      <span className="flex items-center space-x-1.5 text-[#00ff66]">
-                        <Sparkles className="w-3.5 h-3.5 text-[#00ff66]" />
-                        <span>Milestone {activePhaseIndex + 1} of {timelineSteps.length}</span>
-                      </span>
+                      <h3 className="font-orbitron font-black text-xl sm:text-3xl md:text-4xl text-white tracking-wide">
+                        <DecipherText text={current.title} />
+                      </h3>
 
-                      {/* Previous & Next Control Buttons */}
-                      <div className="flex items-center space-x-2">
-                        <button
-                          type="button"
-                          disabled={activePhaseIndex === 0}
-                          onClick={handlePrev}
-                          className={`px-3 py-1.5 rounded-lg border text-xs font-mono transition-all flex items-center space-x-1 ${
-                            activePhaseIndex === 0
-                              ? 'opacity-30 cursor-not-allowed border-gray-800 text-gray-600'
-                              : 'bg-[#05140b] border-[#10b981] text-[#00ff66] hover:bg-[#00ff66] hover:text-black active:scale-95'
-                          }`}
-                        >
-                          <ChevronLeft className="w-3.5 h-3.5" />
-                          <span>PREV</span>
-                        </button>
+                      <p className="font-mono text-xs sm:text-sm text-gray-200 leading-relaxed border-l-4 border-[#00ff66] pl-3.5 sm:pl-4 py-1">
+                        {current.subtitle}
+                      </p>
 
-                        <button
-                          type="button"
-                          disabled={activePhaseIndex === timelineSteps.length - 1}
-                          onClick={handleNext}
-                          className={`px-3 py-1.5 rounded-lg border text-xs font-mono transition-all flex items-center space-x-1 ${
-                            activePhaseIndex === timelineSteps.length - 1
-                              ? 'opacity-30 cursor-not-allowed border-gray-800 text-gray-600'
-                              : 'bg-[#05140b] border-[#10b981] text-[#00ff66] hover:bg-[#00ff66] hover:text-black active:scale-95'
-                          }`}
-                        >
-                          <span>NEXT</span>
-                          <ChevronRight className="w-3.5 h-3.5" />
-                        </button>
+                      <div className="pt-3 border-t border-[#1b3524] flex items-center justify-between font-mono text-xs text-gray-400">
+                        <span className="flex items-center space-x-1.5 text-[#00ff66]">
+                          <Sparkles className="w-3.5 h-3.5 text-[#00ff66]" />
+                          <span>Milestone {activePhaseIndex + 1} of {timelineSteps.length}</span>
+                        </span>
+
+                        {/* Previous & Next Control Buttons */}
+                        <div className="flex items-center space-x-2">
+                          <button
+                            type="button"
+                            disabled={activePhaseIndex === 0}
+                            onClick={handlePrev}
+                            className={`px-3 py-1.5 rounded-lg border text-xs font-mono transition-all flex items-center space-x-1 cursor-pointer ${
+                              activePhaseIndex === 0
+                                ? 'opacity-30 cursor-not-allowed border-gray-800 text-gray-600'
+                                : 'bg-[#05140b] border-[#10b981] text-[#00ff66] hover:bg-[#00ff66] hover:text-black active:scale-95'
+                            }`}
+                          >
+                            <ChevronLeft className="w-3.5 h-3.5" />
+                            <span>PREV</span>
+                          </button>
+
+                          <button
+                            type="button"
+                            disabled={activePhaseIndex === timelineSteps.length - 1}
+                            onClick={handleNext}
+                            className={`px-3 py-1.5 rounded-lg border text-xs font-mono transition-all flex items-center space-x-1 cursor-pointer ${
+                              activePhaseIndex === timelineSteps.length - 1
+                                ? 'opacity-30 cursor-not-allowed border-gray-800 text-gray-600'
+                                : 'bg-[#05140b] border-[#10b981] text-[#00ff66] hover:bg-[#00ff66] hover:text-black active:scale-95'
+                            }`}
+                          >
+                            <span>NEXT</span>
+                            <ChevronRight className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </motion.div>
-          </AnimatePresence>
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </div>
       </div>
     </section>
