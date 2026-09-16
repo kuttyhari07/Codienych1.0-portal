@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Shield, Sparkles, Zap, Terminal } from 'lucide-react';
+import { Compass, Sparkles, Zap, Anchor } from 'lucide-react';
 import { playLaserBlip } from '../utils/cyberSound';
 
 const CyberEnergyMatrixCanvas = () => {
@@ -29,11 +29,11 @@ const CyberEnergyMatrixCanvas = () => {
 
       time += pulseSpeed === 'boost' ? 0.08 : 0.035;
 
-      // Draw Multi-Layered Neon Sinusoidal Energy Waves
+      // Draw Multi-Layered Aztec Gold & Caribbean Ocean Sinusoidal Waves
       const waves = [
-        { freq: 0.015, amp: 28, speed: 1.0, color: '#00ff66', width: 2.5, alpha: 0.8 },
-        { freq: 0.025, amp: 18, speed: -1.3, color: '#10b981', width: 1.8, alpha: 0.5 },
-        { freq: 0.008, amp: 38, speed: 0.7, color: '#ffffff', width: 1.0, alpha: 0.3 },
+        { freq: 0.015, amp: 28, speed: 1.0, color: '#ffd700', width: 2.5, alpha: 0.85 },
+        { freq: 0.025, amp: 18, speed: -1.3, color: '#00e5ff', width: 1.8, alpha: 0.65 },
+        { freq: 0.008, amp: 38, speed: 0.7, color: '#f4e6c3', width: 1.0, alpha: 0.4 },
       ];
 
       waves.forEach((w) => {
@@ -54,13 +54,13 @@ const CyberEnergyMatrixCanvas = () => {
         ctx.restore();
       });
 
-      // Draw Floating Quantum Sparks on the wave crest
+      // Draw Floating Gold Sparks on the wave crest
       for (let i = 0; i < 8; i++) {
         const sparkX = ((time * 40 + i * (width / 8)) % width);
         const sparkY = cy + Math.sin(sparkX * 0.015 + time) * 28 * Math.sin((sparkX / width) * Math.PI);
 
-        ctx.fillStyle = '#ffffff';
-        ctx.shadowColor = '#00ff66';
+        ctx.fillStyle = '#ffd700';
+        ctx.shadowColor = '#ffd700';
         ctx.shadowBlur = 15;
         ctx.beginPath();
         ctx.arc(sparkX, sparkY, 3, 0, Math.PI * 2);
@@ -74,16 +74,16 @@ const CyberEnergyMatrixCanvas = () => {
 
     return () => {
       window.removeEventListener('resize', resize);
-      cancelAnimationFrame(animationId);
+      cancelAnimationFrame(animationFrameId);
     };
   }, [pulseSpeed]);
 
   return (
-    <div className="relative mt-8 max-w-3xl mx-auto rounded-2xl bg-[#040e08] border border-[#10b981]/40 p-4 shadow-[0_0_30px_rgba(0,255,102,0.15)] overflow-hidden">
-      <div className="flex items-center justify-between text-xs font-mono text-gray-400 mb-2 border-b border-[#1b3524] pb-2">
-        <div className="flex items-center space-x-2 text-[#00ff66]">
-          <Zap className="w-4 h-4 text-[#00ff66] animate-pulse" />
-          <span className="font-bold">QUANTUM CHRONO FLUX HARMONIZER</span>
+    <div className="relative mt-8 max-w-3xl mx-auto rounded-2xl bg-[#04090f] border border-[#ffd700]/40 p-4 shadow-[0_0_30px_rgba(255,215,0,0.15)] overflow-hidden">
+      <div className="flex items-center justify-between text-xs font-cinzel text-gray-400 mb-2 border-b border-[#3a2e1d] pb-2">
+        <div className="flex items-center space-x-2 text-[#ffd700]">
+          <Zap className="w-4 h-4 text-[#ffd700] animate-pulse" />
+          <span className="font-bold">HIGH SEAS CHRONO FLUX HARMONIZER</span>
         </div>
 
         <button
@@ -91,9 +91,9 @@ const CyberEnergyMatrixCanvas = () => {
             playLaserBlip();
             setPulseSpeed((prev) => (prev === 'normal' ? 'boost' : 'normal'));
           }}
-          className="text-[10px] bg-[#00ff66]/10 border border-[#00ff66]/40 px-2.5 py-0.5 rounded text-[#00ff66] hover:bg-[#00ff66] hover:text-black transition-colors"
+          className="text-[10px] bg-[#0c1e2d] border border-[#ffd700]/50 px-2.5 py-0.5 rounded text-[#ffd700] hover:bg-[#ffd700] hover:text-black transition-colors font-cinzel cursor-pointer"
         >
-          {pulseSpeed === 'boost' ? '⚡ TURBO FLUX' : 'STANDARD FLUX'}
+          {pulseSpeed === 'boost' ? '⚡ TURBO TIDE' : 'STANDARD TIDE'}
         </button>
       </div>
 

@@ -134,19 +134,19 @@ const CyberTerminalCli = ({ isOpen, onClose, onTriggerMatrix }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-lg select-none">
-      <div className="w-full max-w-2xl bg-[#040e08] border-2 border-[#00ff66] rounded-2xl shadow-[0_0_60px_rgba(0,255,102,0.5)] overflow-hidden flex flex-col h-[480px] max-h-[85vh] hud-corner-box">
+      <div className="w-full max-w-2xl bg-[#04090f] border-2 border-[#ffd700] rounded-2xl shadow-[0_0_60px_rgba(255,215,0,0.4)] overflow-hidden flex flex-col h-[480px] max-h-[85vh] pirate-corner-box">
         {/* Terminal Title Bar */}
-        <div className="bg-[#0a1b10] border-b border-[#00ff66]/40 px-4 py-2.5 flex items-center justify-between text-xs font-mono">
+        <div className="bg-[#0c1e2d] border-b border-[#ffd700]/40 px-4 py-2.5 flex items-center justify-between text-xs font-mono">
           <div className="flex items-center space-x-2">
-            <Terminal className="w-4 h-4 text-[#00ff66]" />
-            <span className="text-[#00ff66] font-bold">CODIENYCH_CLI // ROOT_SESSION</span>
+            <Terminal className="w-4 h-4 text-[#ffd700]" />
+            <span className="text-[#ffd700] font-bold">CODIENYCH_CLI // PIRATE_SESSION</span>
           </div>
 
           <div className="flex items-center space-x-2">
-            <span className="w-2 h-2 rounded-full bg-[#00ff66] animate-ping" />
+            <span className="w-2 h-2 rounded-full bg-[#ffd700] animate-ping" />
             <button
               onClick={onClose}
-              className="p-1 rounded bg-[#050b07] text-gray-400 hover:text-[#00ff66] border border-gray-800"
+              className="p-1 rounded bg-[#03070b] text-gray-400 hover:text-[#ffd700] border border-[#3a2e1d]"
             >
               <X className="w-4 h-4" />
             </button>
@@ -162,11 +162,11 @@ const CyberTerminalCli = ({ isOpen, onClose, onTriggerMatrix }) => {
                 line.type === 'user'
                   ? 'text-white font-bold'
                   : line.type === 'highlight'
-                  ? 'text-[#00ff66] font-bold'
+                  ? 'text-[#ffd700] font-bold'
                   : line.type === 'error'
                   ? 'text-red-400'
                   : line.type === 'system'
-                  ? 'text-emerald-400'
+                  ? 'text-[#00e5ff]'
                   : 'text-gray-300'
               }`}
             >
@@ -177,8 +177,8 @@ const CyberTerminalCli = ({ isOpen, onClose, onTriggerMatrix }) => {
         </div>
 
         {/* Command Line Input */}
-        <div className="bg-[#06140b] border-t border-[#1b3524] p-3 flex items-center space-x-2 font-mono text-xs">
-          <span className="text-[#00ff66] font-bold">guest@codienych:~$</span>
+        <div className="bg-[#08121a] border-t border-[#3a2e1d] p-3 flex items-center space-x-2 font-mono text-xs">
+          <span className="text-[#ffd700] font-bold">pirate@codienych:~$</span>
           <input
             ref={inputRef}
             type="text"
@@ -186,7 +186,7 @@ const CyberTerminalCli = ({ isOpen, onClose, onTriggerMatrix }) => {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleCommand}
             placeholder="Type 'help'..."
-            className="flex-1 bg-transparent text-white outline-none font-mono placeholder-gray-600 caret-[#00ff66]"
+            className="flex-1 bg-transparent text-white outline-none font-mono placeholder-gray-600 caret-[#ffd700]"
           />
           <CornerDownLeft className="w-3.5 h-3.5 text-gray-500" />
         </div>
