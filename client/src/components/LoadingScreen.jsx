@@ -39,22 +39,20 @@ const LoadingScreen = ({ onFinish }) => {
       <div className="absolute inset-0 bg-radial from-[#1c150c]/40 via-[#0a1824]/20 to-transparent blur-3xl" />
 
       <div className="relative z-10 text-center px-4 max-w-lg">
-        {/* Ornate Glowing Pirate Skull & Cutlasses Emblem */}
-        <div className="mx-auto w-24 h-24 sm:w-28 sm:h-28 mb-6 relative flex items-center justify-center">
-          <div className="absolute inset-0 rounded-full border border-[#ffd700]/30 animate-ping" />
-          <div className="absolute -inset-2 rounded-full border border-[#e5c158]/20 animate-pulse" />
-          <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#140e06] border-2 border-[#ffd700] p-3 flex items-center justify-center shadow-[0_0_35px_rgba(255,215,0,0.6)] backdrop-blur-md overflow-hidden">
-            <svg viewBox="0 0 100 100" className="w-full h-full filter drop-shadow-[0_0_8px_#ffd700]">
-              <path d="M20 75 L80 25 M80 75 L20 25" stroke="#ffd700" strokeWidth="4" strokeLinecap="round" />
-              <circle cx="50" cy="45" r="24" fill="#f4e6c3" stroke="#ffd700" strokeWidth="2" />
-              <circle cx="42" cy="42" r="5" fill="#03070b" />
-              <circle cx="58" cy="42" r="5" fill="#03070b" />
-              <polygon points="50,48 46,55 54,55" fill="#03070b" />
-              <rect x="42" y="60" width="16" height="6" rx="2" fill="#ffd700" />
-              <line x1="46" y1="60" x2="46" y2="66" stroke="#03070b" strokeWidth="1.5" />
-              <line x1="50" y1="60" x2="50" y2="66" stroke="#03070b" strokeWidth="1.5" />
-              <line x1="54" y1="60" x2="54" y2="66" stroke="#03070b" strokeWidth="1.5" />
-            </svg>
+        {/* Official Codienych 1.0 Round Pirate Medallion */}
+        <div className="mx-auto w-36 h-36 sm:w-44 sm:h-44 mb-6 relative flex items-center justify-center">
+          {/* Subtle slow rotating antique compass/astrolabe ring */}
+          <div className="absolute -inset-4 rounded-full border border-[#ffd700]/30 border-dashed animate-[spin_20s_linear_infinite]" />
+          <div className="absolute -inset-2 rounded-full border border-[#00e5ff]/25 animate-pulse" />
+          <div className="absolute inset-0 rounded-full bg-radial from-[#ffd700]/30 via-transparent to-transparent blur-xl" />
+          
+          {/* High-res Round Logo Medallion */}
+          <div className="relative w-32 h-32 sm:w-40 sm:h-40 rounded-full p-1 flex items-center justify-center filter drop-shadow-[0_0_30px_rgba(255,215,0,0.6)]">
+            <img
+              src="/codienych-logo-round.png"
+              alt="CODIENYCH 1.0"
+              className="w-full h-full object-contain rounded-full select-none pointer-events-none"
+            />
           </div>
         </div>
 

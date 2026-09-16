@@ -76,8 +76,12 @@ const Navbar = () => {
           to="/"
           className="flex items-center space-x-2 sm:space-x-3 group cursor-pointer flex-shrink-0"
         >
-          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#140e06] border border-[#e5c158] flex items-center justify-center group-hover:shadow-[0_0_15px_#ffd700] transition-all flex-shrink-0">
-            <Skull className="w-4 h-4 sm:w-6 sm:h-6 text-[#ffd700] group-hover:rotate-12 transition-transform" />
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#140e06] border border-[#ffd700]/70 flex items-center justify-center group-hover:shadow-[0_0_15px_#ffd700] transition-all flex-shrink-0 overflow-hidden p-0.5 shadow-md">
+            <img
+              src="/codienych-logo-round.png"
+              alt="CODIENYCH 1.0 Logo"
+              className="w-full h-full object-cover rounded-full group-hover:scale-110 transition-transform duration-300"
+            />
           </div>
           <div>
             <span className="font-pirate text-lg sm:text-2xl text-[#ffd700] tracking-wider group-hover:text-white transition-colors whitespace-nowrap block leading-none">
