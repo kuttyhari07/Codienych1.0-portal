@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { ChevronDown, ChevronUp, Check, Skull, Scroll } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import DecipherText from '../components/DecipherText';
+import { Scroll, Check, Compass, Shield, Skull, Anchor, ChevronRight } from 'lucide-react';
+import AncientParchmentScroll from '../components/AncientParchmentScroll';
 import { playLaserBlip } from '../utils/cyberSound';
 
 const rulesCategories = [
   {
     id: 'guidelines',
-    title: 'Registration & Manifest Verification Guidelines',
+    numeral: 'I',
+    title: 'Registration & Manifest Verification',
     content: [
       'After completing registration, all pirate crews must track their approval/rejection status via the Voyage Status Tracker using their Registration ID.',
       'Port admirals will review payment proof and individual student ID cards before approving the registration.',
@@ -17,6 +17,7 @@ const rulesCategories = [
   },
   {
     id: 'eligibility',
+    numeral: 'II',
     title: 'Eligibility & Crew Enlistment Rules',
     content: [
       'Open strictly to Undergraduate (UG) students from other recognized engineering colleges/universities.',
@@ -26,6 +27,7 @@ const rulesCategories = [
   },
   {
     id: 'formation',
+    numeral: 'III',
     title: 'Crew Formation & Size Rules',
     content: [
       'Crews must consist of exactly 4, 5, or 6 pirate members.',
@@ -35,6 +37,7 @@ const rulesCategories = [
   },
   {
     id: 'development',
+    numeral: 'IV',
     title: 'Voyage Code Development Rules',
     content: [
       'All code, design, and solution building must occur strictly within the 24-hour hackathon window.',
@@ -44,6 +47,7 @@ const rulesCategories = [
   },
   {
     id: 'submission',
+    numeral: 'V',
     title: 'Submission & Plagiarism Rules',
     content: [
       'Final code repository link (e.g., GitHub) and demonstration video/slides must be submitted before the deadline.',
@@ -53,6 +57,7 @@ const rulesCategories = [
   },
   {
     id: 'judging',
+    numeral: 'VI',
     title: 'Judging Criteria & Code of Conduct',
     content: [
       'Evaluation based on Innovation, Technical Complexity, Real-World Impact, UI/UX, and Final Presentation.',
@@ -63,159 +68,107 @@ const rulesCategories = [
 ];
 
 const HackathonRulesSection = () => {
-  const [isScrollOpen, setIsScrollOpen] = useState(false);
-  const [openCategory, setOpenCategory] = useState('guidelines');
+  const [activeCategory, setActiveCategory] = useState('guidelines');
 
-  const handleToggleScroll = () => {
+  const handleCategorySelect = (id) => {
     playLaserBlip();
-    setIsScrollOpen(prev => !prev);
+    setActiveCategory(id);
   };
 
-  const toggleCategory = (id) => {
-    playLaserBlip();
-    setOpenCategory(openCategory === id ? null : id);
-  };
+  const selectedCategory = rulesCategories.find((c) => c.id === activeCategory) || rulesCategories[0];
 
   return (
-    <section id="rules" className="relative py-16 sm:py-24 px-4 z-10">
-      <div className="max-w-4xl mx-auto">
-        {/* Interactive Pirate Scroll Header / Banner (Click to toggle open/close) */}
-        <div
-          role="button"
-          tabIndex={0}
-          aria-expanded={isScrollOpen}
-          onClick={handleToggleScroll}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              handleToggleScroll();
-            }
-          }}
-          className="group relative cursor-pointer select-none rounded-2xl p-6 sm:p-8 bg-gradient-to-b from-[#141e28]/95 via-[#0b141d]/95 to-[#08121a]/95 border-2 border-[#544023] hover:border-[#ffd700] transition-all duration-300 shadow-[0_10px_35px_rgba(0,0,0,0.6)] hover:shadow-[0_0_35px_rgba(255,215,0,0.25)] text-center"
-        >
-          {/* Top Vintage Scroll Rod / Finial Ornaments */}
-          <div className="flex items-center justify-between mb-4 px-2 opacity-80 group-hover:opacity-100 transition-opacity">
-            <div className="flex items-center space-x-1.5">
-              <div className="w-3.5 h-3.5 rounded-full bg-gradient-to-br from-[#ffd700] to-[#8c6d23] shadow-[0_0_8px_#ffd700]" />
-              <div className="w-12 sm:w-20 h-1.5 rounded-full bg-gradient-to-r from-[#ffd700] to-transparent" />
+    <section id="rules" className="relative z-10">
+      <AncientParchmentScroll
+        id="hackathon-rules-scroll"
+        subtitle="// THE CARIBBEAN CODE OF CONDUCT"
+        title="PIRATE CODE"
+        goldTitle="& VOYAGE RULES"
+        description="Official 24-hour voyage guidelines, eligibility terms, and maritime bylaws."
+        badge="6 CATEGORIES"
+        defaultOpen={false}
+      >
+        {/* Direct Text on Ancient Scroll Map */}
+        <div className="space-y-6">
+          <div className="text-center">
+            <h3 className="font-pirate text-2xl sm:text-3xl text-[#3b1f09] tracking-wider drop-shadow-sm uppercase">
+              ~ The Caribbean Code & Voyage Decrees ~
+            </h3>
+            <p className="font-cinzel text-xs text-[#5c3514] font-semibold mt-1">
+              Select an edict below to reveal its clauses on the charter map
+            </p>
+            <div className="w-24 h-0.5 bg-[#6b421a]/40 mx-auto mt-2" />
+          </div>
+
+          {/* Interactive Edict Bookmark Tabs on Parchment */}
+          <div className="flex flex-wrap justify-center gap-2">
+            {rulesCategories.map((cat) => {
+              const isActive = cat.id === activeCategory;
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => handleCategorySelect(cat.id)}
+                  className={`px-3 py-1.5 rounded-lg font-cinzel text-xs font-bold transition-all flex items-center space-x-1.5 ${
+                    isActive
+                      ? 'bg-gradient-to-r from-[#6e1e1e] to-[#450d0d] text-[#ffe57f] border-2 border-[#d4af37] shadow-md scale-105'
+                      : 'bg-[#3b200b]/10 hover:bg-[#3b200b]/20 text-[#3a1f0a] border border-[#5c3514]/30'
+                  }`}
+                >
+                  <span className="font-extrabold">{cat.numeral}.</span>
+                  <span>{cat.title.split(' ')[0]}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Active Edict Display Inscribed Directly on Parchment */}
+          <div className="p-5 sm:p-6 rounded-2xl bg-[#2e190b]/[0.06] border-2 border-[#5c3514]/30 shadow-inner">
+            <div className="flex items-center space-x-3 mb-4 pb-3 border-b border-[#5c3514]/25">
+              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#8a1c1c] via-[#5c0e0e] to-[#360505] border border-[#d4af37] flex items-center justify-center text-[#ffe57f] font-cinzel font-bold text-sm shadow-md">
+                {selectedCategory.numeral}
+              </div>
+              <div>
+                <span className="font-cinzel text-[11px] font-extrabold text-[#703d16] uppercase tracking-wider block">
+                  VOYAGE EDICT {selectedCategory.numeral}
+                </span>
+                <h4 className="font-pirate text-xl sm:text-2xl text-[#2b1709] tracking-wide">
+                  {selectedCategory.title}
+                </h4>
+              </div>
             </div>
-            <div className="flex items-center space-x-2 text-[11px] sm:text-xs font-cinzel tracking-widest text-[#ffd700] uppercase font-bold">
-              <Scroll className="w-4 h-4 text-[#ffd700]" />
-              <span>PIRATE SCROLL // VOYAGE RULES</span>
-            </div>
-            <div className="flex items-center space-x-1.5">
-              <div className="w-12 sm:w-20 h-1.5 rounded-full bg-gradient-to-l from-[#ffd700] to-transparent" />
-              <div className="w-3.5 h-3.5 rounded-full bg-gradient-to-bl from-[#ffd700] to-[#8c6d23] shadow-[0_0_8px_#ffd700]" />
+
+            {/* Clauses List printed directly on the parchment */}
+            <div className="space-y-3">
+              {selectedCategory.content.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-start space-x-3 p-3 rounded-xl bg-white/30 border border-[#5c3514]/15 hover:bg-white/50 transition-colors"
+                >
+                  <div className="w-5 h-5 rounded-full bg-[#4a280e]/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Check className="w-3.5 h-3.5 text-[#5e220a]" />
+                  </div>
+                  <p className="font-cinzel text-sm font-semibold text-[#241205] leading-relaxed drop-shadow-[0_1px_0_rgba(255,255,255,0.4)]">
+                    {item}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
 
-          <div className="inline-block font-cinzel font-bold text-xs text-[#ffd700] tracking-widest uppercase mb-2">
-            // THE CARIBBEAN CODE OF CONDUCT
-          </div>
-          <h2 className="font-pirate text-3xl sm:text-5xl md:text-6xl text-white tracking-wide">
-            PIRATE CODE <span className="text-[#ffd700] pirate-gold-title"><DecipherText text="& VOYAGE RULES" /></span>
-          </h2>
-
-          <p className="font-cinzel text-xs sm:text-sm text-gray-300 mt-2 max-w-xl mx-auto">
-            Official 24-hour voyage guidelines, eligibility terms, and maritime bylaws.
-          </p>
-
-          {/* Interactive Click Indicator Pill */}
-          <div className="mt-5 inline-flex items-center space-x-2 px-5 py-2.5 rounded-full bg-[#1c150c] border border-[#ffd700]/70 group-hover:border-[#ffd700] group-hover:bg-[#281e10] shadow-[0_0_15px_rgba(255,215,0,0.25)] transition-all">
-            <Scroll className="w-4 h-4 text-[#ffd700]" />
-            <span className="font-cinzel font-bold text-xs sm:text-sm text-[#ffd700] tracking-wider uppercase">
-              {isScrollOpen ? 'Click to Roll Up Scroll' : 'Click to Unroll Voyage Rules (6 Categories)'}
-            </span>
-            {isScrollOpen ? (
-              <ChevronUp className="w-4 h-4 text-[#ffd700] transition-transform group-hover:-translate-y-0.5" />
-            ) : (
-              <ChevronDown className="w-4 h-4 text-[#ffd700] transition-transform group-hover:translate-y-0.5 animate-bounce" />
-            )}
+          {/* Brethren Court Seal of Authenticity */}
+          <div className="pt-3 border-t border-[#6b421a]/30 flex items-center justify-between flex-wrap gap-3 text-[11px] font-cinzel text-[#4e2b10] font-bold px-2">
+            <div className="flex items-center space-x-2">
+              <Compass className="w-4 h-4 text-[#75441b]" />
+              <span>MARITIME LAWS ENFORCED ACROSS ALL 24 HOURS OF THE VOYAGE</span>
+            </div>
+            <div className="flex items-center space-x-1.5 text-[#8a1c1c]">
+              <Skull className="w-4 h-4" />
+              <span>DISQUALIFICATION APPLIES TO INFRACTIONS</span>
+            </div>
           </div>
         </div>
-
-        {/* Parchment Scroll Unrolling Body (From closed to open, and open to closed) */}
-        <AnimatePresence>
-          {isScrollOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0, scaleY: 0.95 }}
-              animate={{ opacity: 1, height: 'auto', scaleY: 1 }}
-              exit={{ opacity: 0, height: 0, scaleY: 0.95 }}
-              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-              style={{ transformOrigin: 'top center' }}
-              className="overflow-hidden"
-            >
-              <div className="mt-6 p-4 sm:p-8 rounded-2xl bg-[#08121a]/95 border-2 border-[#d4af37]/40 shadow-[0_20px_50px_rgba(0,0,0,0.7)] backdrop-blur-md relative">
-                {/* Scroll Watermark */}
-                <div className="absolute top-4 right-4 pointer-events-none opacity-10">
-                  <Skull className="w-32 h-32 text-[#ffd700]" />
-                </div>
-
-                <div className="space-y-4 relative z-10">
-                  {rulesCategories.map((cat) => {
-                    const isOpen = openCategory === cat.id;
-                    return (
-                      <div
-                        key={cat.id}
-                        className="bg-[#0b1622]/95 border border-[#4a381e] hover:border-[#ffd700]/60 rounded-2xl overflow-hidden transition-all shadow-md"
-                      >
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleCategory(cat.id);
-                          }}
-                          className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-[#161208] transition-colors"
-                        >
-                          <div className="flex items-center space-x-3">
-                            <Scroll className="w-5 h-5 text-[#ffd700]" />
-                            <span className="font-cinzel font-bold text-base sm:text-lg text-white">
-                              {cat.title}
-                            </span>
-                          </div>
-                          {isOpen ? (
-                            <ChevronUp className="w-5 h-5 text-[#ffd700]" />
-                          ) : (
-                            <ChevronDown className="w-5 h-5 text-[#cfb07a]" />
-                          )}
-                        </button>
-
-                        {isOpen && (
-                          <div className="px-6 pb-6 pt-2 border-t border-[#3a2c1a] bg-[#04080e] space-y-3">
-                            {cat.content.map((item, idx) => (
-                              <div key={idx} className="flex items-start space-x-3">
-                                <Check className="w-4 h-4 text-[#ffd700] flex-shrink-0 mt-1" />
-                                <p className="font-cinzel text-gray-300 text-sm leading-relaxed">
-                                  {item}
-                                </p>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* Bottom Roll Up Button */}
-                <div className="mt-8 text-center pt-4 border-t border-[#3a2c1a] relative z-10">
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleToggleScroll();
-                    }}
-                    className="inline-flex items-center space-x-2 px-6 py-2.5 rounded-full bg-[#1c150c] hover:bg-[#281e10] border border-[#ffd700]/60 hover:border-[#ffd700] text-xs font-cinzel font-bold text-[#ffd700] tracking-wider uppercase transition-all shadow-[0_0_15px_rgba(255,215,0,0.2)]"
-                  >
-                    <ChevronUp className="w-4 h-4 text-[#ffd700]" />
-                    <span>Roll Up Voyage Rules Scroll</span>
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+      </AncientParchmentScroll>
     </section>
   );
 };
