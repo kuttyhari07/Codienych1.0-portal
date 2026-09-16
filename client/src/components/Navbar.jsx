@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, Compass, Skull, Swords, Anchor, Scroll } from 'lucide-react';
+import { Menu, X, Compass, Skull, Swords, Anchor, Scroll, MapPin } from 'lucide-react';
 
 const navItems = [
-  { label: 'HOME', href: '#home' },
+  { label: 'CAMPUS', href: '/' },
   { label: 'ABOUT', href: '#about' },
   { label: 'DATES', href: '#dates' },
   { label: 'BOUNTIES', href: '#prizes' },
@@ -18,7 +18,7 @@ const navItems = [
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('home');
+  const [activeSection, setActiveSection] = useState('about');
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -27,7 +27,10 @@ const Navbar = () => {
       setScrolled(window.scrollY > 40);
 
       // Section scrollspy
-      const sections = navItems.map((item) => item.href.substring(1));
+      const sections = navItems
+        .filter((item) => item.href.startsWith('#'))
+        .map((item) => item.href.substring(1));
+
       const scrollPosition = window.scrollY + 200;
 
       for (let i = sections.length - 1; i >= 0; i--) {
@@ -45,8 +48,13 @@ const Navbar = () => {
 
   const handleNavClick = (href) => {
     setMobileMenuOpen(false);
-    if (location.pathname !== '/') {
-      navigate('/' + href);
+    if (href === '/') {
+      navigate('/');
+      return;
+    }
+
+    if (location.pathname !== '/portal') {
+      navigate('/portal' + href);
     } else {
       const element = document.querySelector(href);
       if (element) {
@@ -59,8 +67,8 @@ const Navbar = () => {
     <header
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
         scrolled
-          ? 'bg-[#03070b]/92 backdrop-blur-md border-b border-[#8a6d1b]/40 py-2.5 shadow-[0_4px_25px_rgba(0,0,0,0.8)]'
-          : 'bg-transparent py-4'
+          ? 'bg-[#03070b]/95 backdrop-blur-md border-b border-[#8a6d1b]/40 py-2.5 shadow-[0_4px_25px_rgba(0,0,0,0.8)]'
+          : 'bg-[#03070b]/80 backdrop-blur-sm border-b border-[#3a2e1d]/60 py-3.5'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
@@ -85,14 +93,17 @@ const Navbar = () => {
         {/* Desktop Nav Items */}
         <nav className="hidden lg:flex items-center space-x-1 xl:space-x-2">
           {navItems.map((item) => {
-            const sectionId = item.href.substring(1);
-            const isActive = location.pathname === '/' && activeSection === sectionId;
+            const isHome = item.href === '/';
+            const sectionId = isHome ? '' : item.href.substring(1);
+            const isActive = !isHome && activeSection === sectionId;
             return (
               <button
                 key={item.label}
                 onClick={() => handleNavClick(item.href)}
-                className={`px-2.5 py-1.5 rounded text-xs font-cinzel font-semibold tracking-wider transition-all ${
-                  isActive
+                className={`px-2.5 py-1.5 rounded text-xs font-cinzel font-semibold tracking-wider transition-all cursor-pointer ${
+                  isHome
+                    ? 'text-[#00e5ff] hover:text-[#ffd700] hover:bg-[#0c1e2d] border border-[#00e5ff]/30'
+                    : isActive
                     ? 'text-[#ffd700] bg-[#1a140b] border border-[#e5c158]/70 shadow-[0_0_12px_rgba(229,193,88,0.35)] font-bold'
                     : 'text-gray-300 hover:text-[#ffd700] hover:bg-[#120e07]/60'
                 }`}
@@ -146,7 +157,7 @@ const Navbar = () => {
             <button
               key={item.label}
               onClick={() => handleNavClick(item.href)}
-              className="block w-full text-left px-4 py-2.5 rounded text-sm font-cinzel text-gray-200 hover:text-[#ffd700] hover:bg-[#1a140b] transition-colors"
+              className="block w-full text-left px-4 py-2.5 rounded text-sm font-cinzel text-gray-200 hover:text-[#ffd700] hover:bg-[#1a140b] transition-colors cursor-pointer"
             >
               {item.label}
             </button>

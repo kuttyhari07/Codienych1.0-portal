@@ -1,120 +1,120 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import LoadingScreen from '../components/LoadingScreen';
 import CinematicBackground from '../components/CinematicBackground';
 import InteractiveCursor from '../components/InteractiveCursor';
-import CyberBotAssistant from '../components/CyberBotAssistant';
-import Navbar from '../components/Navbar';
-import MissionHudIndex from '../components/MissionHudIndex';
-import HeroSection from '../sections/HeroSection';
-import AboutSection from '../sections/AboutSection';
-import DatesSection from '../sections/DatesSection';
-import CountdownSection from '../sections/CountdownSection';
-import ProblemStatementSection from '../sections/ProblemStatementSection';
-import TeamRulesSection from '../sections/TeamRulesSection';
-import HackathonRulesSection from '../sections/HackathonRulesSection';
-import TimelineSection from '../sections/TimelineSection';
-import PrizesSection from '../sections/PrizesSection';
-import EntertainmentSection from '../sections/EntertainmentSection';
-import FaqSection from '../sections/FaqSection';
-import ContactSection from '../sections/ContactSection';
-import Footer from '../sections/Footer';
-import { SmoothScrollProvider } from '../components/SmoothScrollProvider';
-import { ScrollReveal } from '../components/ScrollReveal';
+import Campus3dCanvas from '../components/Campus3dCanvas';
+import { EVENT_CONFIG } from '../utils/config';
+import { Compass, Sparkles, Swords, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const HomePage = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [isCliOpen, setIsCliOpen] = useState(false);
-
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      // Toggle CLI with backtick (`) or Ctrl+K
-      if (e.key === '`' && !['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
-        e.preventDefault();
-        setIsCliOpen((prev) => !prev);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  const navigate = useNavigate();
 
   return (
-    <SmoothScrollProvider>
-      <div className="relative min-h-screen bg-[#020508] text-[#f4e6c3] overflow-x-hidden selection:bg-[#ffd700] selection:text-black">
-        {/* Loading Screen Overlay */}
-        <AnimatePresence>
-          {isLoading && <LoadingScreen onFinish={() => setIsLoading(false)} />}
-        </AnimatePresence>
+    <div className="relative min-h-screen bg-[#020508] text-[#f4e6c3] overflow-x-hidden selection:bg-[#ffd700] selection:text-black flex flex-col justify-between">
+      {/* Loading Screen Overlay */}
+      <AnimatePresence>
+        {isLoading && <LoadingScreen onFinish={() => setIsLoading(false)} />}
+      </AnimatePresence>
 
-        {/* Interactive Ambient Cursor */}
-        <InteractiveCursor />
+      {/* Interactive Ambient Cursor */}
+      <InteractiveCursor />
 
-        {/* Interactive Cartoon Cyber Bot Companion Mascot */}
-        <CyberBotAssistant />
+      {/* Sticky Cinematic Scroll Background */}
+      <CinematicBackground />
 
-        {/* Sticky Cinematic Scroll Background */}
-        <CinematicBackground />
+      {/* Main Landing Gateway (No Navbar as requested) */}
+      <motion.main
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className="relative z-10 flex flex-col items-center justify-center pt-8 sm:pt-12 pb-8 px-4 text-center max-w-6xl mx-auto w-full"
+      >
+        {/* Top Telemetry Tag */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="flex items-center space-x-2 sm:space-x-3 font-mono text-[10px] sm:text-xs text-[#e5c158]/80 mb-3 select-none"
+        >
+          <span className="flex items-center space-x-1 text-[#00e5ff]">
+            <Compass className="w-3.5 h-3.5 text-[#00e5ff] animate-spin" style={{ animationDuration: '16s' }} />
+            <span>PORT: ESEC // LAT: 11.27° N, 77.58° E</span>
+          </span>
+          <span>•</span>
+          <span className="text-[#ffd700] font-bold animate-pulse">EXPEDITION 2026 ⚔️</span>
+        </motion.div>
 
-        {/* Navigation & Desktop HUD Sidebar Index */}
-        <Navbar />
-        <MissionHudIndex />
-
-        {/* Main Content Sections with Smooth Landing Entrance */}
-        <motion.main
+        {/* Institution / College Name & Department Presents */}
+        <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="relative z-10"
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="mb-3 max-w-3xl mx-auto space-y-1.5"
         >
-          <HeroSection />
+          <h2 className="font-cinzel font-black text-base sm:text-xl md:text-3xl text-white uppercase tracking-wider sm:tracking-[0.18em] leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]">
+            {EVENT_CONFIG.COLLEGE_NAME}
+          </h2>
+          <div className="flex flex-col items-center justify-center font-cinzel font-bold text-xs sm:text-base md:text-lg text-[#ffd700] tracking-wider sm:tracking-[0.22em] uppercase leading-relaxed">
+            <span className="text-[#ffd700] pirate-gold-glow">
+              {EVENT_CONFIG.DEPARTMENT}
+            </span>
+            <span className="text-gray-300 font-serif text-[10px] sm:text-xs md:text-sm tracking-[0.35em] mt-0.5">
+              PROUDLY PRESENTS
+            </span>
+          </div>
+        </motion.div>
 
-          <ScrollReveal variant="fade-up">
-            <AboutSection />
-          </ScrollReveal>
+        {/* Event Name Title */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.92 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.35 }}
+          className="relative my-1 sm:my-2"
+        >
+          <h1 className="font-pirate text-6xl sm:text-8xl md:text-9xl tracking-wider text-[#ffd700] leading-none pirate-gold-title">
+            {EVENT_CONFIG.EVENT_NAME}
+          </h1>
+        </motion.div>
 
-          <ScrollReveal variant="fade-up">
-            <DatesSection />
-          </ScrollReveal>
+        {/* Subtitle / Event Type */}
+        <motion.h3
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.45 }}
+          className="font-caribbean font-black text-lg sm:text-2xl md:text-3xl text-[#00e5ff] tracking-widest uppercase mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.7)]"
+        >
+          {EVENT_CONFIG.EVENT_TYPE}
+        </motion.h3>
 
-          <ScrollReveal variant="scale-up">
-            <CountdownSection />
-          </ScrollReveal>
+        {/* Tagline */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.55 }}
+          className="font-medieval text-xs sm:text-base text-[#f4e6c3] max-w-xl mx-auto mb-4 italic opacity-90"
+        >
+          “{EVENT_CONFIG.TAGLINE}”
+        </motion.p>
 
-          <ScrollReveal variant="fade-up">
-            <PrizesSection />
-          </ScrollReveal>
+        {/* 3D Interactive ESEC Campus Model (Replaces 3D Round Shape) */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.65 }}
+          className="w-full my-2"
+        >
+          <Campus3dCanvas />
+        </motion.div>
+      </motion.main>
 
-          <ScrollReveal variant="fade-up">
-            <EntertainmentSection />
-          </ScrollReveal>
-
-          <ScrollReveal variant="scale-up">
-            <ProblemStatementSection />
-          </ScrollReveal>
-
-          <ScrollReveal variant="fade-up">
-            <TeamRulesSection />
-          </ScrollReveal>
-
-          <ScrollReveal variant="fade-up">
-            <HackathonRulesSection />
-          </ScrollReveal>
-
-          <TimelineSection />
-
-          <ScrollReveal variant="fade-up">
-            <FaqSection />
-          </ScrollReveal>
-
-          <ScrollReveal variant="fade-up">
-            <ContactSection />
-          </ScrollReveal>
-        </motion.main>
-
-        {/* Footer */}
-        <Footer />
-      </div>
-    </SmoothScrollProvider>
+      {/* Minimal Footer Signature on Landing */}
+      <footer className="relative z-10 py-4 text-center font-cinzel text-[11px] text-gray-400 border-t border-[#3a2e1d]/40">
+        <span>© 2026 {EVENT_CONFIG.DEPARTMENT} • {EVENT_CONFIG.COLLEGE_NAME}</span>
+      </footer>
+    </div>
   );
 };
 
