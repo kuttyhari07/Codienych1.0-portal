@@ -3,7 +3,6 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, Compass, Skull, Swords, Anchor, Scroll, MapPin } from 'lucide-react';
 
 const navItems = [
-  { label: 'CAMPUS', href: '/' },
   { label: 'ABOUT', href: '#about' },
   { label: 'DATES', href: '#dates' },
   { label: 'BOUNTIES', href: '#prizes' },
