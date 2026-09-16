@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, Zap } from 'lucide-react';
+import { Compass, Sparkles, Zap, Anchor } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { EVENT_CONFIG } from '../utils/config';
 import CyberEnergyMatrixCanvas from '../components/CyberEnergyMatrixCanvas';
@@ -7,27 +7,27 @@ import CyberEnergyMatrixCanvas from '../components/CyberEnergyMatrixCanvas';
 const AnimatedDigit = ({ value, label, isSeconds }) => {
   return (
     <div
-      className={`bg-[#0a140e]/90 border border-[#1b3524] hover:border-[#10b981] rounded-xl p-3 sm:p-5 md:p-6 shadow-lg transition-all duration-300 hover:-translate-y-1 ${
-        isSeconds ? 'border-b-2 border-b-[#00ff66]' : ''
+      className={`bg-[#08121a]/92 border border-[#4a381e] hover:border-[#ffd700] rounded-2xl p-3 sm:p-5 md:p-6 shadow-xl transition-all duration-300 hover:-translate-y-1 ${
+        isSeconds ? 'border-b-2 border-b-[#ffd700]' : ''
       }`}
     >
-      <div className="font-orbitron font-black text-2xl sm:text-4xl md:text-6xl text-[#00ff66] neon-glow-green mb-1 h-8 sm:h-12 md:h-16 flex items-center justify-center overflow-hidden">
+      <div className="font-pirate text-3xl sm:text-5xl md:text-7xl text-[#ffd700] pirate-gold-title mb-1 h-10 sm:h-14 md:h-20 flex items-center justify-center overflow-hidden">
         <AnimatePresence mode="popLayout">
           <motion.span
             key={value}
-            initial={{ y: -12, opacity: 0 }}
+            initial={{ y: -14, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 12, opacity: 0 }}
+            exit={{ y: 14, opacity: 0 }}
             transition={{ duration: 0.35, ease: 'easeOut' }}
-            className={isSeconds ? 'text-white' : 'text-[#00ff66]'}
+            className={isSeconds ? 'text-[#00e5ff]' : 'text-[#ffd700]'}
           >
             {value}
           </motion.span>
         </AnimatePresence>
       </div>
       <div
-        className={`font-mono text-[9px] sm:text-xs uppercase tracking-wider sm:tracking-widest ${
-          isSeconds ? 'text-[#10b981]' : 'text-gray-400'
+        className={`font-cinzel font-bold text-[9px] sm:text-xs uppercase tracking-wider sm:tracking-widest ${
+          isSeconds ? 'text-[#00e5ff]' : 'text-[#cfb07a]'
         }`}
       >
         {label}
@@ -72,21 +72,22 @@ const CountdownSection = () => {
   return (
     <section id="countdown" className="relative py-20 px-4 z-10">
       <div className="max-w-4xl mx-auto text-center">
-        <div className="inline-block font-mono text-xs text-[#00ff66] tracking-widest uppercase mb-2">
-          // CHRONOMETER
+        <div className="inline-flex items-center space-x-2 font-cinzel font-bold text-xs text-[#ffd700] tracking-widest uppercase mb-2 bg-[#ffd700]/10 px-3 py-1 rounded-full border border-[#ffd700]/30">
+          <Compass className="w-3.5 h-3.5 text-[#ffd700]" />
+          <span>// NAUTICAL SHIP CHRONOMETER</span>
         </div>
-        <h2 className="font-orbitron font-extrabold text-2xl sm:text-3xl md:text-4xl text-white mb-6 sm:mb-8 tracking-wide">
-          COUNTDOWN TO <span className="text-[#00ff66]">MISSION START</span>
+        <h2 className="font-pirate text-3xl sm:text-5xl md:text-6xl text-white mb-6 sm:mb-8 tracking-wide">
+          COUNTDOWN TO <span className="text-[#ffd700] pirate-gold-title">EXPEDITION EMBARKATION</span>
         </h2>
 
         {timeLeft.isLive ? (
-          <div className="bg-[#0f2e1a] border-4 border-[#00ff66] rounded-2xl p-6 sm:p-10 max-w-xl mx-auto shadow-[0_0_50px_#00ff66] animate-pulse">
-            <Zap className="w-12 h-12 sm:w-16 sm:h-16 text-[#00ff66] mx-auto mb-4 animate-bounce" />
-            <h3 className="font-orbitron font-black text-2xl sm:text-4xl md:text-5xl text-[#00ff66] neon-glow-green uppercase">
-              HACKATHON IS LIVE!
+          <div className="bg-[#1c150c] border-4 border-[#ffd700] rounded-3xl p-6 sm:p-10 max-w-xl mx-auto shadow-[0_0_50px_#ffd700] animate-pulse">
+            <Anchor className="w-12 h-12 sm:w-16 sm:h-16 text-[#ffd700] mx-auto mb-4 animate-bounce" />
+            <h3 className="font-pirate text-3xl sm:text-5xl text-[#ffd700] uppercase">
+              THE VOYAGE IS LIVE!
             </h3>
-            <p className="font-mono text-xs sm:text-sm text-gray-300 mt-4">
-              The 24-hour innovation countdown has officially commenced!
+            <p className="font-cinzel text-xs sm:text-sm text-[#f4e6c3] mt-4">
+              The 24-hour high seas coding expedition has officially commenced!
             </p>
           </div>
         ) : (
@@ -98,7 +99,7 @@ const CountdownSection = () => {
           </div>
         )}
 
-        {/* Real-time Quantum Chrono Waveform */}
+        {/* Real-time Waveform Canvas */}
         <CyberEnergyMatrixCanvas />
       </div>
     </section>

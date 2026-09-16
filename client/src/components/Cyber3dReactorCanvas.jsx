@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Shield, Sparkles, Orbit, Radio, Zap } from 'lucide-react';
-import { playLaserBlip, playChirp } from '../utils/cyberSound';
+import { Compass, Sparkles, Zap, Anchor, Skull } from 'lucide-react';
+import { playLaserBlip } from '../utils/cyberSound';
 
 const Cyber3dReactorCanvas = () => {
   const canvasRef = useRef(null);
-  const [mode, setMode] = useState('hologram'); // 'hologram' | 'core' | 'matrix'
   const [rotationSpeed, setRotationSpeed] = useState(1);
   const mouseRef = useRef({ x: 0, y: 0, isHover: false });
 
@@ -14,48 +13,36 @@ const Cyber3dReactorCanvas = () => {
     const ctx = canvas.getContext('2d');
 
     let animationId;
-    let angleX = 0;
+    let angleX = 0.2;
     let angleY = 0;
     let angleZ = 0;
 
-    // Generate 3D point cloud of an advanced Cybernetic Icosahedron Reactor + Orbital Rings
-    const nodes = [];
-    const phi = (1 + Math.sqrt(5)) / 2;
+    // Outer and inner rings of Jack Sparrow's Astrolabe
     const radius = 105;
 
-    // Base icosahedron vertices
-    const icosaVertices = [
-      [-1, phi, 0], [1, phi, 0], [-1, -phi, 0], [1, -phi, 0],
-      [0, -1, phi], [0, 1, phi], [0, -1, -phi], [0, 1, -phi],
-      [phi, 0, -1], [phi, 0, 1], [-phi, 0, -1], [-phi, 0, 1]
-    ].map(([x, y, z]) => {
-      const len = Math.sqrt(x * x + y * y + z * z);
-      return { x: (x / len) * radius, y: (y / len) * radius, z: (z / len) * radius };
-    });
-
-    // Particle nodes floating on rings
+    // Astrolabe ring particles
     const ringParticles = [];
-    const numRingParticles = 48;
+    const numRingParticles = 40;
     for (let i = 0; i < numRingParticles; i++) {
       const theta = (i / numRingParticles) * Math.PI * 2;
       ringParticles.push({
         theta,
-        r: radius * 1.5,
-        tilt: 0.6,
+        r: radius * 1.35,
+        tilt: 0.45,
         size: Math.random() * 2 + 1,
-        speed: (Math.random() * 0.01 + 0.01),
+        speed: Math.random() * 0.01 + 0.01,
       });
     }
 
     const ringParticles2 = [];
-    for (let i = 0; i < 36; i++) {
-      const theta = (i / 36) * Math.PI * 2;
+    for (let i = 0; i < 32; i++) {
+      const theta = (i / 32) * Math.PI * 2;
       ringParticles2.push({
         theta,
-        r: radius * 1.85,
-        tilt: -0.7,
-        size: Math.random() * 2 + 1,
-        speed: (Math.random() * 0.008 + 0.008),
+        r: radius * 1.65,
+        tilt: -0.55,
+        size: Math.random() * 2.2 + 1,
+        speed: Math.random() * 0.008 + 0.008,
       });
     }
 
@@ -82,12 +69,12 @@ const Cyber3dReactorCanvas = () => {
       ctx.clearRect(0, 0, width, height);
 
       // Smooth rotate with mouse velocity influence
-      const targetSpeedX = mouseRef.current.isHover ? mouseRef.current.y * 0.04 : 0.008 * rotationSpeed;
+      const targetSpeedX = mouseRef.current.isHover ? mouseRef.current.y * 0.04 : 0.006 * rotationSpeed;
       const targetSpeedY = mouseRef.current.isHover ? mouseRef.current.x * 0.04 : 0.012 * rotationSpeed;
 
       angleX += targetSpeedX;
       angleY += targetSpeedY;
-      angleZ += 0.004;
+      angleZ += 0.003;
 
       const cosX = Math.cos(angleX);
       const sinX = Math.sin(angleX);
@@ -98,22 +85,19 @@ const Cyber3dReactorCanvas = () => {
 
       // Project 3D to 2D
       const project = (point) => {
-        // Rotation Y
         let x1 = point.x * cosY + point.z * sinY;
         let y1 = point.y;
         let z1 = -point.x * sinY + point.z * cosY;
 
-        // Rotation X
         let x2 = x1;
         let y2 = y1 * cosX - z1 * sinX;
         let z2 = y1 * sinX + z1 * cosX;
 
-        // Rotation Z
         let x3 = x2 * cosZ - y2 * sinZ;
         let y3 = x2 * sinZ + y2 * cosZ;
         let z3 = z2;
 
-        const distance = 400;
+        const distance = 420;
         const scale = distance / (distance + z3);
         const px = cx + x3 * scale;
         const py = cy + y3 * scale;
@@ -121,60 +105,79 @@ const Cyber3dReactorCanvas = () => {
         return { px, py, scale, z: z3 };
       };
 
-      const projectedVertices = icosaVertices.map(project);
-
-      // Draw Glowing Center Core Orb
-      const coreGrad = ctx.createRadialGradient(cx, cy, 5, cx, cy, 50);
+      // Draw Glowing Aztec Gold Core
+      const coreGrad = ctx.createRadialGradient(cx, cy, 6, cx, cy, 55);
       coreGrad.addColorStop(0, '#ffffff');
-      coreGrad.addColorStop(0.3, '#00ff66');
-      coreGrad.addColorStop(0.7, 'rgba(16, 185, 129, 0.4)');
-      coreGrad.addColorStop(1, 'rgba(5, 11, 7, 0)');
+      coreGrad.addColorStop(0.25, '#ffd700');
+      coreGrad.addColorStop(0.65, '#b8860b');
+      coreGrad.addColorStop(1, 'rgba(6, 20, 32, 0)');
       ctx.fillStyle = coreGrad;
       ctx.beginPath();
-      ctx.arc(cx, cy, 50, 0, Math.PI * 2);
+      ctx.arc(cx, cy, 55, 0, Math.PI * 2);
       ctx.fill();
 
-      // Connect 3D Wireframe Edges
-      ctx.strokeStyle = '#00ff66';
-      ctx.lineWidth = 1.4;
-      for (let i = 0; i < projectedVertices.length; i++) {
-        for (let j = i + 1; j < projectedVertices.length; j++) {
-          const v1 = icosaVertices[i];
-          const v2 = icosaVertices[j];
-          const dist = Math.hypot(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);
-
-          // Connect neighboring vertices only
-          if (dist < radius * 1.2) {
-            const p1 = projectedVertices[i];
-            const p2 = projectedVertices[j];
-            const avgScale = (p1.scale + p2.scale) / 2;
-
-            ctx.beginPath();
-            ctx.moveTo(p1.px, p1.py);
-            ctx.lineTo(p2.px, p2.py);
-            ctx.globalAlpha = Math.max(0.15, (p1.scale + p2.scale) * 0.4 - 0.2);
-            ctx.stroke();
-          }
-        }
+      // Draw 3D Brass Astrolabe Rings
+      const numSegments = 36;
+      ctx.strokeStyle = '#e5c158';
+      ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      for (let i = 0; i <= numSegments; i++) {
+        const theta = (i / numSegments) * Math.PI * 2;
+        const pt = project({ x: Math.cos(theta) * radius, y: 0, z: Math.sin(theta) * radius });
+        if (i === 0) ctx.moveTo(pt.px, pt.py);
+        else ctx.lineTo(pt.px, pt.py);
       }
+      ctx.stroke();
 
-      // Draw Vertices Nodes with Neon Halos
-      projectedVertices.forEach((p) => {
-        ctx.globalAlpha = Math.max(0.3, p.scale);
-        ctx.fillStyle = '#00ff66';
-        ctx.beginPath();
-        ctx.arc(p.px, p.py, 3.5 * p.scale, 0, Math.PI * 2);
-        ctx.fill();
+      // Vertical Ring
+      ctx.strokeStyle = '#00e5ff';
+      ctx.lineWidth = 1.6;
+      ctx.beginPath();
+      for (let i = 0; i <= numSegments; i++) {
+        const theta = (i / numSegments) * Math.PI * 2;
+        const pt = project({ x: 0, y: Math.cos(theta) * radius, z: Math.sin(theta) * radius });
+        if (i === 0) ctx.moveTo(pt.px, pt.py);
+        else ctx.lineTo(pt.px, pt.py);
+      }
+      ctx.stroke();
 
-        // Outer Vertex Ping Ring
-        ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.arc(p.px, p.py, 6 * p.scale, 0, Math.PI * 2);
-        ctx.stroke();
+      // Compass Needle in 3D (Pointing towards mouse/north)
+      const needleAngle = mouseRef.current.isHover
+        ? Math.atan2(mouseRef.current.y, mouseRef.current.x)
+        : angleY * 2;
+
+      const nTip = project({
+        x: Math.cos(needleAngle) * radius * 0.9,
+        y: Math.sin(needleAngle) * radius * 0.9,
+        z: 0,
+      });
+      const sTip = project({
+        x: -Math.cos(needleAngle) * radius * 0.9,
+        y: -Math.sin(needleAngle) * radius * 0.9,
+        z: 0,
       });
 
-      // Render Orbital Particles Rings (Ring 1)
+      // North Needle (Crimson / Ruby)
+      ctx.fillStyle = '#dc2626';
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(nTip.px - 6 * nTip.scale, nTip.py);
+      ctx.lineTo(nTip.px, nTip.py);
+      ctx.lineTo(nTip.px + 6 * nTip.scale, nTip.py);
+      ctx.closePath();
+      ctx.fill();
+
+      // South Needle (Gold / Brass)
+      ctx.fillStyle = '#e5c158';
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(sTip.px - 6 * sTip.scale, sTip.py);
+      ctx.lineTo(sTip.px, sTip.py);
+      ctx.lineTo(sTip.px + 6 * sTip.scale, sTip.py);
+      ctx.closePath();
+      ctx.fill();
+
+      // Render Orbital Gold Particles (Ring 1)
       ringParticles.forEach((rp) => {
         rp.theta += rp.speed;
         const x = Math.cos(rp.theta) * rp.r;
@@ -183,13 +186,13 @@ const Cyber3dReactorCanvas = () => {
 
         const p = project({ x, y, z });
         ctx.globalAlpha = Math.max(0.2, (p.z + 200) / 400);
-        ctx.fillStyle = '#00ff66';
+        ctx.fillStyle = '#ffd700';
         ctx.beginPath();
         ctx.arc(p.px, p.py, rp.size * p.scale, 0, Math.PI * 2);
         ctx.fill();
       });
 
-      // Render Orbital Particles Rings (Ring 2)
+      // Render Orbital Cyan Mist Particles (Ring 2)
       ringParticles2.forEach((rp) => {
         rp.theta -= rp.speed;
         const x = Math.cos(rp.theta) * rp.r;
@@ -198,7 +201,7 @@ const Cyber3dReactorCanvas = () => {
 
         const p = project({ x, y, z });
         ctx.globalAlpha = Math.max(0.2, (p.z + 200) / 400);
-        ctx.fillStyle = '#10b981';
+        ctx.fillStyle = '#00e5ff';
         ctx.beginPath();
         ctx.arc(p.px, p.py, rp.size * p.scale, 0, Math.PI * 2);
         ctx.fill();
@@ -224,20 +227,20 @@ const Cyber3dReactorCanvas = () => {
 
   return (
     <div className="relative my-6 max-w-xl mx-auto flex flex-col items-center select-none">
-      {/* 3D Canvas Container with Cyber Frame */}
-      <div className="relative w-[300px] h-[300px] sm:w-[380px] sm:h-[380px] rounded-full border-2 border-[#00ff66]/60 bg-gradient-to-b from-[#06180d] via-[#040e07] to-[#020704] flex items-center justify-center shadow-[0_0_50px_rgba(0,255,102,0.35)] group transition-all duration-300">
+      {/* 3D Canvas Container with Ornate Pirate Gold Dial */}
+      <div className="relative w-[300px] h-[300px] sm:w-[380px] sm:h-[380px] rounded-full border-2 border-[#e5c158]/70 bg-gradient-to-b from-[#161208] via-[#09151f] to-[#03070b] flex items-center justify-center shadow-[0_0_50px_rgba(229,193,88,0.35)] group transition-all duration-300">
         
-        {/* Outer Rotating HUD SVG Ring */}
-        <div className="absolute inset-0 pointer-events-none animate-spin" style={{ animationDuration: '24s' }}>
+        {/* Outer Rotating Antique Compass Rose Ring */}
+        <div className="absolute inset-0 pointer-events-none animate-spin" style={{ animationDuration: '28s' }}>
           <svg viewBox="0 0 400 400" className="w-full h-full opacity-60">
-            <circle cx="200" cy="200" r="188" stroke="#00ff66" strokeWidth="1.5" strokeDasharray="10, 15, 30, 15" fill="none" />
-            <circle cx="200" cy="200" r="176" stroke="#10b981" strokeWidth="1" strokeDasharray="4, 12" fill="none" />
+            <circle cx="200" cy="200" r="188" stroke="#e5c158" strokeWidth="1.5" strokeDasharray="8, 16, 24, 16" fill="none" />
+            <circle cx="200" cy="200" r="176" stroke="#00e5ff" strokeWidth="1" strokeDasharray="4, 12" fill="none" />
           </svg>
         </div>
 
-        <div className="absolute inset-0 pointer-events-none animate-spin" style={{ animationDuration: '36s', animationDirection: 'reverse' }}>
+        <div className="absolute inset-0 pointer-events-none animate-spin" style={{ animationDuration: '40s', animationDirection: 'reverse' }}>
           <svg viewBox="0 0 400 400" className="w-full h-full opacity-40">
-            <circle cx="200" cy="200" r="160" stroke="#00ff66" strokeWidth="2" strokeDasharray="60, 40" fill="none" />
+            <circle cx="200" cy="200" r="162" stroke="#e5c158" strokeWidth="2" strokeDasharray="45, 30" fill="none" />
           </svg>
         </div>
 
@@ -250,9 +253,9 @@ const Cyber3dReactorCanvas = () => {
         />
 
         {/* Center Live Telemetry Badge */}
-        <div className="absolute -bottom-3 bg-[#06180e] border border-[#00ff66] px-4 py-1 rounded-full text-[10px] font-mono text-[#00ff66] shadow-[0_0_15px_#00ff66] flex items-center space-x-1.5 z-20">
-          <span className="w-2 h-2 rounded-full bg-[#00ff66] animate-ping" />
-          <span className="font-bold tracking-widest uppercase">3D QUANTUM CORE // INTERACTIVE</span>
+        <div className="absolute -bottom-3 bg-[#0a1722] border border-[#e5c158] px-4 py-1 rounded-full text-[10px] font-mono text-[#e5c158] shadow-[0_0_15px_rgba(229,193,88,0.5)] flex items-center space-x-1.5 z-20">
+          <span className="w-2 h-2 rounded-full bg-[#e5c158] animate-ping" />
+          <span className="font-bold tracking-widest uppercase font-cinzel">JACK'S CURSED COMPASS // 3D</span>
         </div>
       </div>
 
@@ -261,14 +264,14 @@ const Cyber3dReactorCanvas = () => {
         <button
           onClick={handleSpeedBoost}
           data-cursor-text="SPEED"
-          className="px-3.5 py-1.5 rounded-xl font-mono text-xs bg-[#092212] border border-[#00ff66]/50 hover:border-[#00ff66] text-[#00ff66] transition-all active:scale-95 flex items-center space-x-1.5 shadow-md"
+          className="px-3.5 py-1.5 rounded-xl font-mono text-xs bg-[#1a140b] border border-[#e5c158]/60 hover:border-[#ffd700] text-[#e5c158] transition-all active:scale-95 flex items-center space-x-1.5 shadow-md hover:shadow-[0_0_15px_rgba(229,193,88,0.4)]"
         >
-          <Zap className="w-3.5 h-3.5 text-[#00ff66]" />
-          <span>VELOCITY: {rotationSpeed}X</span>
+          <Compass className="w-3.5 h-3.5 text-[#e5c158]" />
+          <span>DIAL VELOCITY: {rotationSpeed}X</span>
         </button>
 
-        <span className="font-mono text-[11px] text-gray-400 hidden sm:inline">
-          (Hover & drag mouse to rotate 3D hologram in real-time)
+        <span className="font-cinzel text-[11px] text-gray-400 hidden sm:inline">
+          (Hover & drag mouse to rotate Jack's magical compass in 3D)
         </span>
       </div>
     </div>

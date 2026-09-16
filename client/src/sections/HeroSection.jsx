@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Shield, ChevronDown, Terminal, Zap, Crosshair } from 'lucide-react';
+import { ChevronDown, Compass, Skull, Anchor, Sparkles, Swords } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { EVENT_CONFIG } from '../utils/config';
 import Cyber3dReactorCanvas from '../components/Cyber3dReactorCanvas';
@@ -26,78 +26,92 @@ const HeroSection = () => {
       id="home"
       className="relative min-h-screen flex flex-col items-center justify-center pt-28 pb-16 px-4 text-center z-10 overflow-hidden"
     >
-      {/* HUD Telemetry Top Stream */}
+      {/* Top Pirates Banner Scroll Image */}
       <motion.div
-        initial={{ opacity: 0, y: -15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.1 }}
-        className="flex items-center space-x-3 font-mono text-[10px] text-[#00ff66]/70 mb-3 select-none"
+        initial={{ opacity: 0, y: -20, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.8 }}
+        className="max-w-md sm:max-w-xl md:max-w-2xl mx-auto mb-4 px-2"
       >
-        <span className="flex items-center space-x-1">
-          <Crosshair className="w-3 h-3 text-[#00ff66]" />
-          <span>SECTOR_ESEC // LAT:11.27 N</span>
-        </span>
-        <span>•</span>
-        <span className="text-gray-400">CIPHER: 0x7F4A9C82</span>
-        <span>•</span>
-        <span className="text-[#00ff66] animate-pulse">STATUS: MISSION_ARMED</span>
+        <img
+          src="/pirates-banner.png"
+          alt="Pirates of the Caribbean Scroll Banner"
+          className="w-full h-auto drop-shadow-[0_0_25px_rgba(229,193,88,0.5)] select-none pointer-events-none"
+        />
       </motion.div>
 
-      {/* Central Hero Glow Badge */}
+      {/* Nautical Telemetry Coordinates Stream */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="flex items-center space-x-3 font-mono text-[10px] sm:text-xs text-[#e5c158]/80 mb-3 select-none"
+      >
+        <span className="flex items-center space-x-1 text-[#00e5ff]">
+          <Compass className="w-3.5 h-3.5 text-[#00e5ff] animate-spin" style={{ animationDuration: '16s' }} />
+          <span>PORT: ESEC // LAT: 11.27° N, 77.58° E</span>
+        </span>
+        <span>•</span>
+        <span className="text-gray-400">EXPEDITION: 24-HOUR HIGH SEAS</span>
+        <span>•</span>
+        <span className="text-[#e5c158] font-bold animate-pulse">SAILS HOISTED ⚔️</span>
+      </motion.div>
+
+      {/* Central Motto Badge */}
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        className="inline-flex items-center space-x-2 bg-[#0f2416] border border-[#10b981]/60 px-3.5 py-1.5 sm:px-4 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-mono text-[#00ff66] mb-4 sm:mb-5 shadow-[0_0_20px_rgba(0,255,102,0.3)] animate-pulse max-w-[95%]"
+        transition={{ duration: 0.6, delay: 0.3 }}
+        className="inline-flex items-center space-x-2 bg-[#161208]/90 border border-[#e5c158]/70 px-4 py-1.5 rounded-full text-[11px] sm:text-xs font-cinzel text-[#ffd700] mb-4 sm:mb-5 shadow-[0_0_20px_rgba(229,193,88,0.35)] animate-pulse max-w-[95%]"
       >
-        <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#00ff66] flex-shrink-0" />
-        <span className="tracking-wider sm:tracking-widest uppercase truncate">{EVENT_CONFIG.MISSION_MOTTO}</span>
+        <Sparkles className="w-3.5 h-3.5 text-[#ffd700] flex-shrink-0" />
+        <span className="tracking-widest uppercase font-bold truncate">{EVENT_CONFIG.MISSION_MOTTO}</span>
       </motion.div>
 
-      {/* Presenter / Institution Header with Subtle Parallax */}
+      {/* Presenter / Institution Header with Parallax */}
       <motion.div
         style={{
           transform: `translate3d(${mouseOffset.x * 0.4}px, ${mouseOffset.y * 0.4}px, 0)`,
         }}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.3 }}
-        className="mb-5 sm:mb-8 max-w-3xl mx-auto px-3 space-y-2 sm:space-y-3 transition-transform duration-200 ease-out"
+        transition={{ duration: 0.7, delay: 0.35 }}
+        className="mb-4 sm:mb-6 max-w-3xl mx-auto px-3 space-y-1.5 sm:space-y-2 transition-transform duration-200 ease-out"
       >
-        <h3 className="font-orbitron font-extrabold text-sm sm:text-lg md:text-2xl text-white uppercase tracking-wider sm:tracking-[0.2em] leading-relaxed neon-glow-green">
+        <h3 className="font-cinzel font-black text-sm sm:text-lg md:text-2xl text-white uppercase tracking-wider sm:tracking-[0.18em] leading-relaxed drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]">
           {EVENT_CONFIG.COLLEGE_NAME}
         </h3>
-        <div className="flex flex-col items-center justify-center font-orbitron font-extrabold text-xs sm:text-base md:text-lg text-[#00ff66] tracking-wider sm:tracking-[0.25em] uppercase leading-relaxed">
-          <span className="text-[#00ff66] neon-glow-green drop-shadow-[0_0_15px_rgba(0,255,102,0.8)]">
+        <div className="flex flex-col items-center justify-center font-cinzel font-bold text-xs sm:text-base md:text-lg text-[#e5c158] tracking-wider sm:tracking-[0.22em] uppercase leading-relaxed">
+          <span className="text-[#e5c158] pirate-gold-glow">
             {EVENT_CONFIG.DEPARTMENT}
           </span>
-          <span className="text-gray-300 font-semibold text-[11px] sm:text-xs md:text-sm tracking-[0.35em] mt-1 sm:mt-1.5 drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]">
-            PRESENTS
+          <span className="text-gray-300 font-serif text-[10px] sm:text-xs md:text-sm tracking-[0.35em] mt-0.5 drop-shadow-[0_0_8px_rgba(229,193,88,0.4)]">
+            PROUDLY PRESENTS
           </span>
         </div>
       </motion.div>
 
-      {/* Main Title */}
+      {/* Main Event Title in Authentic Pirates of the Caribbean Gothic Typography */}
       <motion.div
         style={{
           transform: `translate3d(${mouseOffset.x * 0.7}px, ${mouseOffset.y * 0.7}px, 0)`,
         }}
-        initial={{ opacity: 0, scale: 0.94 }}
+        initial={{ opacity: 0, scale: 0.92 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        className="relative transition-transform duration-200 ease-out"
+        transition={{ duration: 0.8, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+        className="relative transition-transform duration-200 ease-out my-1"
       >
-        <h1 className="font-orbitron font-black text-3xl sm:text-5xl md:text-7xl xl:text-8xl tracking-wider text-white mb-3 sm:mb-4 neon-glow-green leading-tight">
+        <h1 className="font-pirate text-5xl sm:text-7xl md:text-8xl lg:text-9xl tracking-wider text-[#ffd700] mb-2 leading-none pirate-gold-title">
           {EVENT_CONFIG.EVENT_NAME}
         </h1>
       </motion.div>
 
-      {/* Event Type */}
+      {/* Event Type & Pirates Tag */}
       <motion.h2
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.5 }}
-        className="font-orbitron font-bold text-lg sm:text-2xl md:text-4xl text-[#00ff66] tracking-widest uppercase mb-4 sm:mb-6 drop-shadow-[0_0_15px_rgba(0,255,102,0.8)]"
+        transition={{ duration: 0.7, delay: 0.55 }}
+        className="font-caribbean font-black text-lg sm:text-2xl md:text-4xl text-[#00e5ff] tracking-widest uppercase mb-3 sm:mb-4 drop-shadow-[0_0_20px_rgba(0,229,255,0.7)]"
       >
         {EVENT_CONFIG.EVENT_TYPE}
       </motion.h2>
@@ -107,14 +121,14 @@ const HeroSection = () => {
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.6 }}
-        className="font-mono text-sm sm:text-base md:text-xl text-gray-300 max-w-2xl mx-auto mb-2 leading-relaxed px-2"
+        className="font-medieval text-sm sm:text-base md:text-xl text-[#f4e6c3] max-w-2xl mx-auto mb-2 leading-relaxed px-2 italic drop-shadow-md"
       >
         “{EVENT_CONFIG.TAGLINE}”
       </motion.p>
 
-      {/* 3D Interactive Cybernetic Hologram Core */}
+      {/* 3D Interactive Jack Sparrow Cursed Aztec Compass */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.85 }}
+        initial={{ opacity: 0, scale: 0.88 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8, delay: 0.65 }}
         className="my-2"
@@ -128,13 +142,14 @@ const HeroSection = () => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.7, delay: 0.7 }}
         whileHover={{ scale: 1.03 }}
-        className="inline-flex items-center space-x-2 bg-[#0a1f12] border-2 border-[#00ff66]/80 px-4 py-2 sm:px-5 sm:py-2.5 rounded-2xl text-xs sm:text-sm font-mono text-white mb-7 sm:mb-9 shadow-[0_0_25px_rgba(0,255,102,0.3)] hover:shadow-[0_0_35px_rgba(0,255,102,0.5)] transition-all cursor-default"
+        className="inline-flex items-center space-x-2 bg-gradient-to-r from-[#1c150c] via-[#2a1e12] to-[#1c150c] border-2 border-[#e5c158] px-4 py-2 sm:px-6 sm:py-2.5 rounded-2xl text-xs sm:text-sm font-cinzel text-white mb-7 sm:mb-9 shadow-[0_0_30px_rgba(229,193,88,0.35)] hover:shadow-[0_0_45px_rgba(229,193,88,0.6)] transition-all cursor-default"
       >
-        <span className="text-[#00ff66] font-bold tracking-wider uppercase">ENTRY FEE:</span>
-        <span className="font-orbitron font-extrabold text-base sm:text-xl text-[#00ff66]">₹{EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER}</span>
-        <span className="text-gray-400 font-mono text-xs">/ MEMBER</span>
-        <span className="text-gray-500 hidden sm:inline">|</span>
-        <span className="text-gray-300 text-xs hidden sm:inline">(4 to 6 Members / Team)</span>
+        <CoinsIcon />
+        <span className="text-[#ffd700] font-bold tracking-wider uppercase">CREW BOUNTY FEE:</span>
+        <span className="font-pirate text-xl sm:text-2xl text-[#ffd700]">₹{EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER}</span>
+        <span className="text-gray-300 font-mono text-xs">/ CREW MEMBER</span>
+        <span className="text-[#e5c158] hidden sm:inline">|</span>
+        <span className="text-[#f4e6c3] text-xs hidden sm:inline">(4 to 6 Pirates / Crew)</span>
       </motion.div>
 
       {/* CTA Buttons */}
@@ -142,41 +157,45 @@ const HeroSection = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.8 }}
-        className="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-6 w-full max-w-sm sm:max-w-md mx-auto px-2"
+        className="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-6 w-full max-w-sm sm:max-w-lg mx-auto px-2"
       >
         <Link
           to="/register"
-          className="w-full sm:w-auto px-6 py-3.5 sm:px-8 sm:py-4 rounded-xl font-orbitron font-extrabold text-sm sm:text-base text-black bg-[#00ff66] hover:bg-[#10b981] hover:text-white transition-all duration-300 shadow-[0_0_20px_rgba(0,255,102,0.5)] hover:shadow-[0_0_35px_rgba(0,255,102,0.8)] transform hover:-translate-y-1 active:scale-95 flex items-center justify-center space-x-2.5"
+          className="w-full sm:w-auto px-7 py-3.5 sm:px-9 sm:py-4 rounded-xl font-pirate text-xl sm:text-2xl text-black bg-gradient-to-r from-[#ffd700] via-[#e5c158] to-[#b8860b] hover:from-[#fff2a3] hover:to-[#ffd700] transition-all duration-300 shadow-[0_0_25px_rgba(229,193,88,0.6)] hover:shadow-[0_0_40px_rgba(255,215,0,0.9)] transform hover:-translate-y-1 active:scale-95 flex items-center justify-center space-x-2.5 font-bold"
         >
-          <Shield className="w-4 h-4 sm:w-5 sm:h-5" />
-          <span>REGISTER NOW</span>
+          <Swords className="w-5 h-5 text-black" />
+          <span>JOIN THE CREW (REGISTER)</span>
         </Link>
 
         <a
           href="#about"
-          className="w-full sm:w-auto px-6 py-3.5 sm:px-8 sm:py-4 rounded-xl font-orbitron font-bold text-sm sm:text-base text-gray-200 bg-[#0f1e14]/80 border border-[#10b981]/50 hover:border-[#00ff66] hover:text-[#00ff66] transition-all duration-300 transform hover:-translate-y-1 active:scale-95 flex items-center justify-center space-x-2.5"
+          className="w-full sm:w-auto px-6 py-3.5 sm:px-8 sm:py-4 rounded-xl font-cinzel font-bold text-xs sm:text-sm text-[#f4e6c3] bg-[#091522]/85 border border-[#e5c158]/60 hover:border-[#ffd700] hover:text-[#ffd700] transition-all duration-300 transform hover:-translate-y-1 active:scale-95 flex items-center justify-center space-x-2.5 shadow-lg"
         >
-          <Terminal className="w-4 h-4 sm:w-5 sm:h-5 text-[#10b981]" />
-          <span>EXPLORE THE EVENT</span>
+          <Anchor className="w-4 h-4 text-[#00e5ff]" />
+          <span>EXPLORE THE HIGH SEAS</span>
         </a>
       </motion.div>
 
       {/* Scroll Down Indicator */}
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.75 }}
+        animate={{ opacity: 0.85 }}
         transition={{ delay: 1.2, duration: 0.8 }}
-        className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex flex-col items-center hover:opacity-100 transition-opacity"
+        className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex flex-col items-center hover:opacity-100 transition-opacity select-none"
       >
-        <span className="font-mono text-[10px] text-[#10b981] tracking-widest uppercase mb-1">
-          SCROLL TO MISSION
+        <span className="font-cinzel text-[10px] text-[#e5c158] tracking-widest uppercase mb-1">
+          SCROLL TO EXPEDITION
         </span>
         <a href="#about" aria-label="Scroll down">
-          <ChevronDown className="w-6 h-6 text-[#00ff66] animate-bounce" />
+          <ChevronDown className="w-6 h-6 text-[#ffd700] animate-bounce" />
         </a>
       </motion.div>
     </section>
   );
 };
+
+const CoinsIcon = () => (
+  <span className="text-base animate-pulse">🪙</span>
+);
 
 export default HeroSection;

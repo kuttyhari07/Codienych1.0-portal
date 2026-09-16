@@ -1,31 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Zap, MessageSquare, Terminal, Heart, Trophy, Flame } from 'lucide-react';
-import { playLaserBlip, playChirp, playVictoryFanfare } from '../utils/cyberSound';
+import { Sparkles, Zap, MessageSquare, Terminal, Heart, Trophy, Flame, Skull, Compass } from 'lucide-react';
+import { playLaserBlip, playVictoryFanfare } from '../utils/cyberSound';
 
 const dialogues = [
-  "⚡ HEY HACKER! Ready to claim the ₹₹ Cash Bounty?",
-  "☕ Midnight coffee & Chill lounge waiting for you!",
-  "🚀 Don't forget: Free Internship up for grabs!",
-  "🔥 24 Hours of non-stop code power incoming!",
-  "💡 Tip: Click on me to charge up my laser battery!",
-  "🏆 Top performers qualify for spot goodie kits!",
-  "🎮 Check out the 5-Sec reflex mini-game in Fun Zone!",
+  "🏴‍☠️ AHOY MATEY! Ready to plunder the ₹₹ Cash Bounty?",
+  "☕ Midnight grog & tavern lounge waiting on deck!",
+  "💎 Shiver me timbers! Free Internship in the treasure vault!",
+  "🔥 24 Hours of high-seas coding power incoming!",
+  "🧭 Tip: Click on me to spin Jack's magical compass!",
+  "🏆 Top pirate crews qualify for grand booty & awards!",
+  "🎮 Check out the quick reflex duel in the Pirates Tavern!",
 ];
 
 const CyberBotAssistant = () => {
   const [dialogueIndex, setDialogueIndex] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
-  const [energyLevel, setEnergyLevel] = useState(100);
   const [isSparking, setIsSparking] = useState(false);
-  const [botMood, setBotMood] = useState('happy'); // 'happy' | 'super' | 'chill'
 
   // Periodic speech bubble popup
   useEffect(() => {
     const interval = setInterval(() => {
       setDialogueIndex((prev) => (prev + 1) % dialogues.length);
       setIsOpen(true);
-      const timer = setTimeout(() => setIsOpen(false), 5000);
+      const timer = setTimeout(() => setIsOpen(false), 5500);
       return () => clearTimeout(timer);
     }, 14000);
 
@@ -37,12 +35,6 @@ const CyberBotAssistant = () => {
     setIsSparking(true);
     setDialogueIndex((prev) => (prev + 1) % dialogues.length);
     setIsOpen(true);
-    setEnergyLevel((prev) => Math.min(prev + 15, 150));
-
-    if (energyLevel > 130) {
-      playVictoryFanfare();
-      setBotMood('super');
-    }
 
     setTimeout(() => setIsSparking(false), 600);
   };
@@ -57,22 +49,22 @@ const CyberBotAssistant = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.85 }}
             transition={{ duration: 0.3 }}
-            className="mb-3 max-w-[220px] sm:max-w-xs bg-[#06180e]/95 border-2 border-[#00ff66] p-3 sm:p-3.5 rounded-2xl rounded-br-none text-xs font-mono text-white shadow-[0_0_25px_rgba(0,255,102,0.4)] backdrop-blur-md relative hud-corner-box"
+            className="mb-3 max-w-[220px] sm:max-w-xs bg-[#08121a]/98 border-2 border-[#ffd700] p-3 sm:p-3.5 rounded-2xl rounded-br-none text-xs font-cinzel text-white shadow-[0_0_25px_rgba(229,193,88,0.5)] backdrop-blur-md relative hud-corner-box"
           >
-            <div className="flex items-center space-x-1.5 text-[#00ff66] font-bold text-[10px] uppercase mb-1">
-              <Sparkles className="w-3 h-3 text-[#00ff66] animate-pulse" />
-              <span>N.E.O. // AI COMPANION</span>
+            <div className="flex items-center space-x-1.5 text-[#ffd700] font-bold text-[10px] uppercase mb-1">
+              <Skull className="w-3.5 h-3.5 text-[#ffd700] animate-pulse" />
+              <span>CAPTAIN JACK // COMPANION</span>
             </div>
-            <p className="font-sans text-xs text-gray-200 leading-snug">
+            <p className="font-cinzel text-xs text-[#f4e6c3] leading-snug">
               {dialogues[dialogueIndex]}
             </p>
             {/* Triangular Speech Pointer */}
-            <div className="absolute -bottom-2 right-4 w-0 h-0 border-l-[8px] border-l-transparent border-t-[8px] border-t-[#00ff66] border-r-[8px] border-r-transparent" />
+            <div className="absolute -bottom-2 right-4 w-0 h-0 border-l-[8px] border-l-transparent border-t-[8px] border-t-[#ffd700] border-r-[8px] border-r-transparent" />
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Interactive Cartoon Robot Character Body */}
+      {/* Interactive Pirate Mascot */}
       <motion.div
         animate={{
           y: [0, -8, 0],
@@ -83,61 +75,45 @@ const CyberBotAssistant = () => {
           rotate: { duration: isSparking ? 0.5 : 4, repeat: isSparking ? 1 : Infinity },
         }}
         onClick={handleBotClick}
-        data-cursor-text="TAP BOT"
+        data-cursor-text="TAP JACK"
         className="relative cursor-pointer group"
       >
         {/* Hover Energy Aura */}
-        <div className="absolute -inset-2 bg-[#00ff66]/20 rounded-full blur-xl group-hover:bg-[#00ff66]/40 transition-all duration-300 pointer-events-none" />
+        <div className="absolute -inset-2 bg-[#ffd700]/20 rounded-full blur-xl group-hover:bg-[#ffd700]/40 transition-all duration-300 pointer-events-none" />
 
-        {/* Animated Cyber Mascot SVG */}
-        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-b from-[#0e331b] via-[#092212] to-[#040f08] border-2 border-[#00ff66] p-2 flex items-center justify-center shadow-[0_0_20px_rgba(0,255,102,0.5)] group-hover:shadow-[0_0_35px_#00ff66] group-hover:scale-110 active:scale-95 transition-all">
+        {/* Animated Pirate Mascot SVG */}
+        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-b from-[#241a0e] via-[#140e06] to-[#04080e] border-2 border-[#ffd700] p-2 flex items-center justify-center shadow-[0_0_20px_rgba(229,193,88,0.5)] group-hover:shadow-[0_0_35px_#ffd700] group-hover:scale-110 active:scale-95 transition-all">
           <svg viewBox="0 0 100 100" className="w-full h-full">
-            {/* Robot Head Antenna */}
-            <line x1="50" y1="20" x2="50" y2="8" stroke="#00ff66" strokeWidth="3" strokeLinecap="round" />
-            <circle cx="50" cy="7" r="4" fill="#00ff66" className="animate-ping" />
-            <circle cx="50" cy="7" r="3" fill="#ffffff" />
+            {/* Pirate Tricorn Hat */}
+            <path d="M15 35 Q50 15 85 35 Q50 25 15 35 Z" fill="#140e06" stroke="#ffd700" strokeWidth="2" />
+            <polygon points="50,15 20,35 80,35" fill="#1c150c" stroke="#ffd700" strokeWidth="2" />
+            <circle cx="50" cy="27" r="4" fill="#ffd700" />
 
-            {/* Head Helmet */}
-            <rect x="20" y="20" width="60" height="50" rx="16" fill="#061f10" stroke="#00ff66" strokeWidth="3" />
+            {/* Pirate Skull Head */}
+            <circle cx="50" cy="50" r="18" fill="#f4e6c3" stroke="#8a6d1b" strokeWidth="2" />
+            {/* Eye Patch on Left Eye */}
+            <circle cx="43" cy="48" r="5" fill="#04080e" stroke="#000" strokeWidth="1" />
+            <line x1="30" y1="38" x2="56" y2="58" stroke="#04080e" strokeWidth="1.5" />
+            {/* Right Glowing Eye */}
+            <circle cx="57" cy="48" r="4" fill="#00e5ff" className="animate-pulse" />
+            <circle cx="57" cy="48" r="2" fill="#ffffff" />
+            
+            {/* Crimson Pirate Bandana */}
+            <path d="M32 40 Q50 36 68 40 L68 44 Q50 40 32 44 Z" fill="#dc2626" />
 
-            {/* Visor Screen */}
-            <rect x="28" y="32" width="44" height="24" rx="8" fill="#020a05" stroke="#10b981" strokeWidth="1.5" />
+            {/* Pirate Smirk */}
+            <path d="M44 58 Q50 62 56 57" stroke="#3b2b19" strokeWidth="2" strokeLinecap="round" fill="none" />
+            {/* Gold Tooth */}
+            <rect x="49" y="58" width="3" height="3" fill="#ffd700" />
 
-            {/* Animated Cyber Expressive Eyes */}
-            {botMood === 'super' ? (
-              <>
-                <path d="M35 44 L43 40 L35 48 Z" fill="#00ff66" />
-                <path d="M65 44 L57 40 L65 48 Z" fill="#00ff66" />
-              </>
-            ) : isSparking ? (
-              <>
-                <path d="M34 44 L44 44" stroke="#00ff66" strokeWidth="3" strokeLinecap="round" />
-                <path d="M56 44 L66 44" stroke="#00ff66" strokeWidth="3" strokeLinecap="round" />
-              </>
-            ) : (
-              <>
-                <circle cx="38" cy="44" r="4.5" fill="#00ff66" className="animate-pulse" />
-                <circle cx="62" cy="44" r="4.5" fill="#00ff66" className="animate-pulse" />
-                <circle cx="39.5" cy="42.5" r="1.5" fill="#ffffff" />
-                <circle cx="63.5" cy="42.5" r="1.5" fill="#ffffff" />
-              </>
-            )}
-
-            {/* Cute Mouth */}
-            <path d="M44 60 Q50 64 56 60" stroke="#00ff66" strokeWidth="2" strokeLinecap="round" fill="none" />
-
-            {/* Ear audio receptors */}
-            <rect x="14" y="38" width="6" height="14" rx="3" fill="#00ff66" />
-            <rect x="80" y="38" width="6" height="14" rx="3" fill="#00ff66" />
-
-            {/* Body base */}
-            <path d="M30 70 L25 88 L75 88 L70 70 Z" fill="#082915" stroke="#00ff66" strokeWidth="2.5" />
-            <circle cx="50" cy="79" r="3" fill="#00ff66" />
+            {/* Crossed Cutlasses Base */}
+            <line x1="25" y1="75" x2="75" y2="85" stroke="#ffd700" strokeWidth="2.5" strokeLinecap="round" />
+            <line x1="75" y1="75" x2="25" y2="85" stroke="#ffd700" strokeWidth="2.5" strokeLinecap="round" />
           </svg>
         </div>
 
         {/* Small Status Badge */}
-        <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-[#00ff66] border-2 border-[#050b07] shadow-[0_0_8px_#00ff66]" />
+        <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-[#ffd700] border-2 border-[#020508] shadow-[0_0_8px_#ffd700]" />
       </motion.div>
     </div>
   );

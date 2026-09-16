@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, Shield, Terminal } from 'lucide-react';
+import { Menu, X, Compass, Skull, Swords, Anchor, Scroll } from 'lucide-react';
 
 const navItems = [
   { label: 'HOME', href: '#home' },
   { label: 'ABOUT', href: '#about' },
   { label: 'DATES', href: '#dates' },
-  { label: 'PRIZES', href: '#prizes' },
-  { label: 'FUN ZONE', href: '#entertainment' },
-  { label: 'PROBLEM', href: '#problem-statement' },
-  { label: 'RULES', href: '#rules' },
-  { label: 'TIMELINE', href: '#timeline' },
+  { label: 'BOUNTIES', href: '#prizes' },
+  { label: 'TAVERN', href: '#entertainment' },
+  { label: 'RIDDLE', href: '#problem-statement' },
+  { label: 'PIRATE CODE', href: '#rules' },
+  { label: 'VOYAGE MAP', href: '#timeline' },
   { label: 'FAQ', href: '#faq' },
-  { label: 'CONTACT', href: '#contact' },
+  { label: 'ADMIRALTY', href: '#contact' },
 ];
 
 const Navbar = () => {
@@ -59,25 +59,25 @@ const Navbar = () => {
     <header
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
         scrolled
-          ? 'bg-[#050b07]/90 backdrop-blur-md border-b border-[#10b981]/30 py-3 shadow-[0_4px_20px_rgba(0,255,102,0.1)]'
-          : 'bg-transparent py-5'
+          ? 'bg-[#03070b]/92 backdrop-blur-md border-b border-[#8a6d1b]/40 py-2.5 shadow-[0_4px_25px_rgba(0,0,0,0.8)]'
+          : 'bg-transparent py-4'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         {/* Logo */}
         <Link
           to="/"
-          className="flex items-center space-x-1.5 sm:space-x-3 group cursor-pointer flex-shrink-0"
+          className="flex items-center space-x-2 sm:space-x-3 group cursor-pointer flex-shrink-0"
         >
-          <div className="w-7 h-7 sm:w-10 sm:h-10 rounded-lg bg-[#0f1e14] border border-[#10b981] flex items-center justify-center group-hover:shadow-[0_0_15px_#00ff66] transition-all flex-shrink-0">
-            <Shield className="w-3.5 h-3.5 sm:w-6 sm:h-6 text-[#00ff66]" />
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#140e06] border border-[#e5c158] flex items-center justify-center group-hover:shadow-[0_0_15px_#ffd700] transition-all flex-shrink-0">
+            <Skull className="w-4 h-4 sm:w-6 sm:h-6 text-[#ffd700] group-hover:rotate-12 transition-transform" />
           </div>
           <div>
-            <span className="font-orbitron font-extrabold text-xs sm:text-lg lg:text-xl text-white tracking-wide group-hover:text-[#00ff66] transition-colors whitespace-nowrap block">
-              CODIENYCH<span className="text-[#00ff66]"> 1.0</span>
+            <span className="font-pirate text-lg sm:text-2xl text-[#ffd700] tracking-wider group-hover:text-white transition-colors whitespace-nowrap block leading-none">
+              CODIENYCH<span className="text-[#00e5ff]"> 1.0</span>
             </span>
-            <span className="block text-[8px] sm:text-[10px] font-mono text-[#10b981] tracking-widest leading-none">
-              24-HR HACKATHON
+            <span className="block text-[8px] sm:text-[10px] font-cinzel text-[#cfb07a] tracking-widest leading-none mt-0.5">
+              24-HR CARIBBEAN HACKATHON
             </span>
           </div>
         </Link>
@@ -91,10 +91,10 @@ const Navbar = () => {
               <button
                 key={item.label}
                 onClick={() => handleNavClick(item.href)}
-                className={`px-3 py-1.5 rounded text-xs font-mono tracking-wider transition-all ${
+                className={`px-2.5 py-1.5 rounded text-xs font-cinzel font-semibold tracking-wider transition-all ${
                   isActive
-                    ? 'text-[#00ff66] bg-[#0f1e14] border border-[#10b981]/50 shadow-[0_0_10px_rgba(0,255,102,0.2)]'
-                    : 'text-gray-300 hover:text-[#00ff66] hover:bg-[#0f1e14]/50'
+                    ? 'text-[#ffd700] bg-[#1a140b] border border-[#e5c158]/70 shadow-[0_0_12px_rgba(229,193,88,0.35)] font-bold'
+                    : 'text-gray-300 hover:text-[#ffd700] hover:bg-[#120e07]/60'
                 }`}
               >
                 {item.label}
@@ -107,16 +107,17 @@ const Navbar = () => {
         <div className="hidden sm:flex items-center space-x-3">
           <Link
             to="/status"
-            className="px-3 py-2 text-xs font-mono text-gray-300 hover:text-white border border-[#1b3524] rounded hover:border-[#10b981] transition-all flex items-center space-x-1"
+            className="px-3.5 py-2 text-xs font-cinzel text-gray-300 hover:text-[#ffd700] border border-[#3b2b19] rounded-lg hover:border-[#e5c158] transition-all flex items-center space-x-1.5 bg-[#091522]/60"
           >
-            <Terminal className="w-3.5 h-3.5 text-[#10b981]" />
-            <span>STATUS</span>
+            <Compass className="w-3.5 h-3.5 text-[#00e5ff]" />
+            <span>VOYAGE STATUS</span>
           </Link>
           <Link
             to="/register"
-            className="relative px-5 py-2 rounded text-xs font-orbitron font-bold text-black bg-[#00ff66] hover:bg-[#10b981] hover:text-white transition-all shadow-[0_0_15px_rgba(0,255,102,0.4)] hover:shadow-[0_0_25px_rgba(0,255,102,0.7)] transform hover:-translate-y-0.5 active:translate-y-0"
+            className="relative px-5 py-2 rounded-lg text-xs font-pirate text-base text-black bg-gradient-to-r from-[#ffd700] to-[#e5c158] hover:from-[#fff2a3] hover:to-[#ffd700] transition-all shadow-[0_0_15px_rgba(229,193,88,0.5)] hover:shadow-[0_0_25px_rgba(255,215,0,0.8)] transform hover:-translate-y-0.5 active:translate-y-0 font-bold flex items-center space-x-1.5"
           >
-            REGISTER NOW
+            <Swords className="w-4 h-4 text-black" />
+            <span>JOIN THE CREW</span>
           </Link>
         </div>
 
@@ -124,13 +125,13 @@ const Navbar = () => {
         <div className="lg:hidden flex items-center space-x-1.5 sm:space-x-2 flex-shrink-0">
           <Link
             to="/register"
-            className="px-2.5 py-1.5 rounded text-[10px] sm:text-xs font-orbitron font-bold text-black bg-[#00ff66] shadow-[0_0_10px_#00ff66] uppercase"
+            className="px-3 py-1.5 rounded text-xs font-pirate text-sm font-bold text-black bg-[#ffd700] shadow-[0_0_10px_#ffd700] uppercase"
           >
-            REGISTER
+            JOIN CREW
           </Link>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-1.5 sm:p-2 rounded-lg bg-[#0f1e14] border border-[#10b981]/40 text-gray-200 hover:text-[#00ff66]"
+            className="p-1.5 sm:p-2 rounded-lg bg-[#140e06] border border-[#8a6d1b]/60 text-[#f4e6c3] hover:text-[#ffd700]"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -140,23 +141,23 @@ const Navbar = () => {
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-[#050b07]/95 backdrop-blur-xl border-b border-[#10b981]/40 px-4 pt-4 pb-6 mt-3 space-y-2 animate-fadeIn">
+        <div className="lg:hidden bg-[#03070b]/98 backdrop-blur-xl border-b border-[#8a6d1b]/60 px-4 pt-4 pb-6 mt-2 space-y-1.5 animate-fadeIn">
           {navItems.map((item) => (
             <button
               key={item.label}
               onClick={() => handleNavClick(item.href)}
-              className="block w-full text-left px-4 py-2.5 rounded text-sm font-mono text-gray-300 hover:text-[#00ff66] hover:bg-[#0f1e14] transition-colors"
+              className="block w-full text-left px-4 py-2.5 rounded text-sm font-cinzel text-gray-200 hover:text-[#ffd700] hover:bg-[#1a140b] transition-colors"
             >
               {item.label}
             </button>
           ))}
-          <div className="pt-3 border-t border-[#1b3524] flex flex-col space-y-2">
+          <div className="pt-3 border-t border-[#3b2b19] flex flex-col space-y-2">
             <Link
               to="/status"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full text-center py-2 text-xs font-mono text-gray-300 border border-[#1b3524] rounded"
+              className="w-full text-center py-2.5 text-xs font-cinzel text-[#e5c158] border border-[#8a6d1b]/60 rounded-lg bg-[#0e1722]"
             >
-              CHECK REGISTRATION STATUS
+              CHECK CREW MANIFEST STATUS
             </Link>
           </div>
         </div>

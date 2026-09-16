@@ -1,140 +1,110 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-// Procedural SVG character & scene overlays for each section
+// Procedural SVG pirate artwork for each section
 const sceneArtwork = {
   home: {
-    title: 'MYSTERIOUS HERO SILHOUETTE',
+    title: 'CAPTAIN JACK SPARROW & THE BLACK PEARL',
     svg: (
-      <svg className="w-full h-full opacity-45" viewBox="0 0 1000 1000" fill="none">
+      <svg className="w-full h-full opacity-40 pointer-events-none" viewBox="0 0 1000 1000" fill="none">
         <defs>
           <radialGradient id="homeGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#00ff66" stopOpacity="0.5" />
-            <stop offset="100%" stopColor="#050b07" stopOpacity="0" />
+            <stop offset="0%" stopColor="#e5c158" stopOpacity="0.45" />
+            <stop offset="60%" stopColor="#00e5ff" stopOpacity="0.15" />
+            <stop offset="100%" stopColor="#03070b" stopOpacity="0" />
           </radialGradient>
         </defs>
-        <circle cx="500" cy="400" r="320" fill="url(#homeGlow)" />
-        {/* Superhero Cape & Pose Silhouette */}
-        <path d="M500 220 L450 320 L380 500 L440 850 L560 850 L620 500 L550 320 Z" fill="#030805" stroke="#10b981" strokeWidth="2.5" />
-        <circle cx="500" cy="200" r="45" fill="#05140b" stroke="#00ff66" strokeWidth="3.5" />
-        <path d="M470 200 L530 200" stroke="#00ff66" strokeWidth="4" />
-        {/* Energy Aura Rays */}
-        <path d="M500 150 L500 50 M350 200 L250 120 M650 200 L750 120" stroke="#00ff66" strokeWidth="2" strokeDasharray="5,5" opacity="0.7" />
+        <circle cx="500" cy="400" r="340" fill="url(#homeGlow)" />
+        {/* Ancient Compass Rose Watermark */}
+        <circle cx="500" cy="400" r="280" stroke="#e5c158" strokeWidth="1.5" strokeDasharray="12,8" opacity="0.5" />
+        <circle cx="500" cy="400" r="210" stroke="#00e5ff" strokeWidth="1" strokeDasharray="4,8" opacity="0.4" />
+        <polygon points="500,160 520,380 500,400 480,380" fill="#e5c158" opacity="0.6" />
+        <polygon points="500,640 520,420 500,400 480,420" fill="#b8860b" opacity="0.6" />
+        <polygon points="740,400 520,420 500,400 520,380" fill="#e5c158" opacity="0.6" />
+        <polygon points="260,400 480,420 500,400 480,380" fill="#b8860b" opacity="0.6" />
+        {/* Compass Cardinal Points */}
+        <text x="500" y="145" fill="#e5c158" fontSize="28" fontFamily="'Cinzel Decorative', serif" textAnchor="middle" fontWeight="bold">N</text>
+        <text x="500" y="680" fill="#e5c158" fontSize="28" fontFamily="'Cinzel Decorative', serif" textAnchor="middle" fontWeight="bold">S</text>
+        <text x="770" y="408" fill="#e5c158" fontSize="28" fontFamily="'Cinzel Decorative', serif" textAnchor="middle" fontWeight="bold">E</text>
+        <text x="230" y="408" fill="#e5c158" fontSize="28" fontFamily="'Cinzel Decorative', serif" textAnchor="middle" fontWeight="bold">W</text>
       </svg>
     ),
   },
   about: {
-    title: 'FUTURISTIC HERO SHIELD',
+    title: 'PIRATES CAPTAIN HELM & CUTLASSES',
     svg: (
-      <svg className="w-full h-full opacity-40" viewBox="0 0 1000 1000" fill="none">
-        <polygon points="500,150 750,300 700,750 500,900 300,750 250,300" fill="#06160c" stroke="#00ff66" strokeWidth="4" />
-        <polygon points="500,220 680,330 640,690 500,800 360,690 320,330" fill="#040c07" stroke="#10b981" strokeWidth="2" />
-        <circle cx="500" cy="510" r="120" fill="#0a2013" stroke="#00ff66" strokeWidth="3" />
-        <path d="M440 510 L560 510 M500 450 L500 570" stroke="#00ff66" strokeWidth="6" strokeLinecap="round" />
+      <svg className="w-full h-full opacity-35" viewBox="0 0 1000 1000" fill="none">
+        {/* Ship Helm */}
+        <circle cx="500" cy="500" r="220" stroke="#e5c158" strokeWidth="8" />
+        <circle cx="500" cy="500" r="140" stroke="#d4af37" strokeWidth="4" />
+        <circle cx="500" cy="500" r="50" fill="#e5c158" />
+        {/* Helm Spokes */}
+        {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
+          <line
+            key={deg}
+            x1="500"
+            y1="500"
+            x2={500 + 290 * Math.cos((deg * Math.PI) / 180)}
+            y2={500 + 290 * Math.sin((deg * Math.PI) / 180)}
+            stroke="#e5c158"
+            strokeWidth="8"
+            strokeLinecap="round"
+          />
+        ))}
       </svg>
     ),
   },
   dates: {
-    title: 'CHRONO GUARDIAN SILHOUETTE',
+    title: 'NAUTICAL CHRONOMETER & ANCHOR',
     svg: (
-      <svg className="w-full h-full opacity-40" viewBox="0 0 1000 1000" fill="none">
-        <circle cx="500" cy="500" r="350" stroke="#00ff66" strokeWidth="2" strokeDasharray="15,10" opacity="0.6" />
-        <circle cx="500" cy="500" r="260" stroke="#10b981" strokeWidth="1.5" />
-        <path d="M500 240 L500 500 L680 500" stroke="#00ff66" strokeWidth="5" strokeLinecap="round" />
-        <path d="M500 350 L300 480 L180 320 L280 650 L460 580 Z" fill="#05140b" stroke="#10b981" />
-        <path d="M500 350 L700 480 L820 320 L720 650 L540 580 Z" fill="#05140b" stroke="#10b981" />
+      <svg className="w-full h-full opacity-35" viewBox="0 0 1000 1000" fill="none">
+        <circle cx="500" cy="500" r="300" stroke="#e5c158" strokeWidth="3" strokeDasharray="15,10" />
+        <circle cx="500" cy="500" r="220" stroke="#00e5ff" strokeWidth="1.5" />
+        {/* Pirate Anchor */}
+        <circle cx="500" cy="300" r="35" stroke="#e5c158" strokeWidth="8" />
+        <line x1="500" y1="335" x2="500" y2="720" stroke="#e5c158" strokeWidth="12" strokeLinecap="round" />
+        <line x1="400" y1="420" x2="600" y2="420" stroke="#e5c158" strokeWidth="10" strokeLinecap="round" />
+        <path d="M320 620 Q500 820 680 620" stroke="#e5c158" strokeWidth="16" fill="none" strokeLinecap="round" />
+        <polygon points="320,620 300,570 360,600" fill="#e5c158" />
+        <polygon points="680,620 700,570 640,600" fill="#e5c158" />
       </svg>
     ),
   },
   countdown: {
-    title: 'LIGHTNING & STORM HERO',
-    svg: (
-      <svg className="w-full h-full opacity-45" viewBox="0 0 1000 1000" fill="none">
-        <path d="M500 50 L420 380 L520 400 L380 900" stroke="#00ff66" strokeWidth="8" strokeLinecap="round" />
-        <path d="M600 120 L540 320 L620 340 L480 750" stroke="#10b981" strokeWidth="4" strokeLinecap="round" opacity="0.7" />
-        <circle cx="500" cy="400" r="180" fill="#00ff66" fillOpacity="0.12" />
-      </svg>
-    ),
-  },
-  treasure: {
-    title: 'VAULT GUARDIAN CHARACTER',
+    title: 'CARIBBEAN LIGHTNING & STORM SEAS',
     svg: (
       <svg className="w-full h-full opacity-40" viewBox="0 0 1000 1000" fill="none">
-        <rect x="250" y="250" width="500" height="500" rx="40" fill="#05160c" stroke="#00ff66" strokeWidth="4" />
-        <circle cx="500" cy="500" r="160" fill="#082213" stroke="#10b981" strokeWidth="3" />
-        <path d="M500 340 L500 660 M340 500 L660 500 M380 380 L620 620 M620 380 L380 620" stroke="#00ff66" strokeWidth="2" strokeDasharray="8,8" />
-      </svg>
-    ),
-  },
-  'prize-reveal': {
-    title: 'SUPERHERO TEAM SCENE',
-    svg: (
-      <svg className="w-full h-full opacity-45" viewBox="0 0 1000 1000" fill="none">
-        <path d="M500 300 L430 450 L420 850 L580 850 L570 450 Z" fill="#061a0e" stroke="#00ff66" strokeWidth="3" />
-        <path d="M300 400 L250 520 L240 850 L360 850 L350 520 Z" fill="#041009" stroke="#10b981" strokeWidth="2" />
-        <path d="M700 400 L650 520 L640 850 L760 850 L750 520 Z" fill="#041009" stroke="#10b981" strokeWidth="2" />
-        <circle cx="500" cy="270" r="35" fill="#051a0e" stroke="#00ff66" strokeWidth="3" />
-        <circle cx="300" cy="370" r="28" fill="#051a0e" stroke="#10b981" strokeWidth="2" />
-        <circle cx="700" cy="370" r="28" fill="#051a0e" stroke="#10b981" strokeWidth="2" />
-      </svg>
-    ),
-  },
-  'problem-statement': {
-    title: 'DARK THREAT SCENE',
-    svg: (
-      <svg className="w-full h-full opacity-40" viewBox="0 0 1000 1000" fill="none">
-        <polygon points="500,100 850,300 850,700 500,900 150,700 150,300" fill="#040b06" stroke="#00ff66" strokeWidth="2" strokeDasharray="12,6" />
-        <circle cx="500" cy="500" r="220" fill="#0a1a0f" stroke="#ff3333" strokeWidth="2" opacity="0.6" />
-        <path d="M350 500 L650 500 M500 350 L500 650" stroke="#00ff66" strokeWidth="4" />
-      </svg>
-    ),
-  },
-  'team-rules': {
-    title: 'BATTLE-READY HERO',
-    svg: (
-      <svg className="w-full h-full opacity-40" viewBox="0 0 1000 1000" fill="none">
-        <path d="M500 200 L650 350 L600 850 L400 850 L350 350 Z" fill="#05160c" stroke="#10b981" strokeWidth="3" />
-        <circle cx="500" cy="180" r="40" fill="#092414" stroke="#00ff66" strokeWidth="3" />
-        <path d="M320 280 L420 500 M680 280 L580 500" stroke="#00ff66" strokeWidth="5" strokeLinecap="round" />
-      </svg>
-    ),
-  },
-  'hackathon-rules': {
-    title: 'TECHNOLOGY-FOCUSED HERO',
-    svg: (
-      <svg className="w-full h-full opacity-40" viewBox="0 0 1000 1000" fill="none">
-        <rect x="200" y="200" width="600" height="600" rx="30" fill="#041209" stroke="#10b981" strokeWidth="2" />
-        <path d="M200 400 L800 400 M200 600 L800 600 M400 200 L400 800 M600 200 L600 800" stroke="#00ff66" strokeWidth="1" opacity="0.3" />
-        <circle cx="500" cy="500" r="140" fill="#0a2414" stroke="#00ff66" strokeWidth="3" />
-      </svg>
-    ),
-  },
-  timeline: {
-    title: 'TEAM ASSEMBLING COMMAND CENTER',
-    svg: (
-      <svg className="w-full h-full opacity-40" viewBox="0 0 1000 1000" fill="none">
-        <path d="M100 800 L300 400 L500 200 L700 400 L900 800" stroke="#00ff66" strokeWidth="3" strokeDasharray="10,10" />
-        <circle cx="500" cy="200" r="30" fill="#00ff66" />
-        <circle cx="300" cy="400" r="25" fill="#10b981" />
-        <circle cx="700" cy="400" r="25" fill="#10b981" />
+        <path d="M520 60 L440 380 L560 400 L380 920" stroke="#00e5ff" strokeWidth="8" strokeLinecap="round" filter="drop-shadow(0 0 15px #00e5ff)" />
+        <path d="M620 140 L560 340 L650 360 L500 780" stroke="#e5c158" strokeWidth="5" strokeLinecap="round" opacity="0.8" />
+        <circle cx="500" cy="400" r="180" fill="#e5c158" fillOpacity="0.12" />
       </svg>
     ),
   },
   prizes: {
-    title: 'POWERFUL TEAM SCENE',
+    title: 'CURSED AZTEC GOLD COINS & TREASURE CHEST',
     svg: (
-      <svg className="w-full h-full opacity-45" viewBox="0 0 1000 1000" fill="none">
-        <polygon points="500,200 800,800 200,800" fill="#071c0f" stroke="#00ff66" strokeWidth="4" />
-        <circle cx="500" cy="450" r="120" fill="#0d2c18" stroke="#10b981" strokeWidth="3" />
+      <svg className="w-full h-full opacity-40" viewBox="0 0 1000 1000" fill="none">
+        <circle cx="500" cy="500" r="280" stroke="#ffd700" strokeWidth="5" strokeDasharray="10,6" />
+        <circle cx="500" cy="500" r="230" fill="#140d04" stroke="#e5c158" strokeWidth="4" />
+        {/* Aztec Medallion Skull Symbol */}
+        <circle cx="500" cy="460" r="60" fill="#e5c158" />
+        <circle cx="475" cy="450" r="14" fill="#03070b" />
+        <circle cx="525" cy="450" r="14" fill="#03070b" />
+        <polygon points="500,470 492,488 508,488" fill="#03070b" />
+        <path d="M465 520 L535 520 L530 550 L470 550 Z" fill="#e5c158" />
+        <line x1="485" y1="520" x2="485" y2="550" stroke="#03070b" strokeWidth="3" />
+        <line x1="500" y1="520" x2="500" y2="550" stroke="#03070b" strokeWidth="3" />
+        <line x1="515" y1="520" x2="515" y2="550" stroke="#03070b" strokeWidth="3" />
       </svg>
     ),
   },
-  register: {
-    title: 'FINAL MISSION SCENE',
+  timeline: {
+    title: 'BLACK PEARL EXPEDITION VOYAGE',
     svg: (
-      <svg className="w-full h-full opacity-45" viewBox="0 0 1000 1000" fill="none">
-        <circle cx="500" cy="500" r="400" stroke="#00ff66" strokeWidth="4" strokeDasharray="20,10" />
-        <circle cx="500" cy="500" r="280" fill="#061c0e" stroke="#10b981" strokeWidth="2" />
-        <polygon points="500,320 620,600 380,600" fill="#00ff66" fillOpacity="0.2" stroke="#00ff66" strokeWidth="3" />
+      <svg className="w-full h-full opacity-35" viewBox="0 0 1000 1000" fill="none">
+        <path d="M150 800 Q350 400 500 250 T850 800" stroke="#e5c158" strokeWidth="4" strokeDasharray="14,10" />
+        <circle cx="500" cy="250" r="30" fill="#e5c158" />
+        <circle cx="300" cy="500" r="20" fill="#00e5ff" />
+        <circle cx="700" cy="500" r="20" fill="#00e5ff" />
       </svg>
     ),
   },
@@ -145,28 +115,22 @@ const sectionIds = [
   'about',
   'dates',
   'countdown',
-  'treasure',
-  'prize-reveal',
+  'prizes',
+  'entertainment',
   'problem-statement',
   'team-rules',
   'hackathon-rules',
   'timeline',
-  'prizes',
-  'register',
+  'faq',
+  'contact',
 ];
 
 const CinematicBackground = () => {
   const [activeScene, setActiveScene] = useState('home');
   const [scrollProgress, setScrollProgress] = useState(0);
   const canvasRef = useRef(null);
-  const prefersReducedMotion = useRef(false);
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    prefersReducedMotion.current = mediaQuery.matches;
-  }, []);
-
-  // Track scroll progress for Sondaven-style scene zoom momentum
+  // Track scroll progress
   useEffect(() => {
     const handleScroll = () => {
       const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -174,30 +138,22 @@ const CinematicBackground = () => {
         setScrollProgress(window.scrollY / totalHeight);
       }
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // IntersectionObserver to switch sticky character scene smoothly on scroll
+  // IntersectionObserver for section transitions
   useEffect(() => {
-    const observerOptions = {
-      root: null,
-      rootMargin: '-25% 0px -25% 0px',
-      threshold: 0.1,
-    };
-
-    const handleIntersect = (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const id = entry.target.id;
-          if (sectionIds.includes(id)) {
-            setActiveScene(id);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && sectionIds.includes(entry.target.id)) {
+            setActiveScene(entry.target.id);
           }
-        }
-      });
-    };
-
-    const observer = new IntersectionObserver(handleIntersect, observerOptions);
+        });
+      },
+      { rootMargin: '-20% 0px -20% 0px', threshold: 0.1 }
+    );
 
     sectionIds.forEach((id) => {
       const el = document.getElementById(id);
@@ -207,7 +163,7 @@ const CinematicBackground = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Particle & Storm Canvas System
+  // Lightning, Sea Sparks & Gold Doubloons Canvas Particle Engine
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -221,14 +177,15 @@ const CinematicBackground = () => {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    const numParticles = prefersReducedMotion.current ? 15 : 60;
-    const particles = Array.from({ length: numParticles }, () => ({
+    // Glowing Aztec gold embers & sea mist particles
+    const particles = Array.from({ length: 55 }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      radius: Math.random() * 2 + 0.5,
-      speedY: Math.random() * 0.8 + 0.2,
-      speedX: (Math.random() - 0.5) * 0.4,
-      alpha: Math.random() * 0.5 + 0.2,
+      radius: Math.random() * 2.2 + 0.6,
+      speedY: Math.random() * 0.7 + 0.2,
+      speedX: (Math.random() - 0.5) * 0.5,
+      alpha: Math.random() * 0.6 + 0.2,
+      isGold: Math.random() > 0.35,
     }));
 
     let lightningTimer = 0;
@@ -237,49 +194,50 @@ const CinematicBackground = () => {
     const render = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+      // Caribbean Deep Ocean Radial Shadow
       const grad = ctx.createRadialGradient(
         canvas.width / 2,
-        canvas.height / 2,
-        50,
+        canvas.height * 0.45,
+        100,
         canvas.width / 2,
         canvas.height / 2,
-        canvas.width / 1.2
+        canvas.width * 0.9
       );
-      grad.addColorStop(0, 'rgba(15, 30, 20, 0.45)');
-      grad.addColorStop(0.6, 'rgba(5, 11, 7, 0.88)');
-      grad.addColorStop(1, '#050b07');
+      grad.addColorStop(0, 'rgba(6, 20, 32, 0.4)');
+      grad.addColorStop(0.65, 'rgba(4, 12, 19, 0.82)');
+      grad.addColorStop(1, '#03070b');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      if (!prefersReducedMotion.current) {
-        lightningTimer++;
-        if (lightningTimer > 280 && Math.random() > 0.95) {
-          lightningFlash = 0.8;
-          lightningTimer = 0;
-        }
-        if (lightningFlash > 0) {
-          ctx.fillStyle = `rgba(0, 255, 102, ${lightningFlash * 0.15})`;
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-          lightningFlash -= 0.05;
-        }
+      // Atmospheric Caribbean Storm Lightning
+      lightningTimer++;
+      if (lightningTimer > 240 && Math.random() > 0.96) {
+        lightningFlash = 0.9;
+        lightningTimer = 0;
+      }
+      if (lightningFlash > 0) {
+        ctx.fillStyle = `rgba(0, 229, 255, ${lightningFlash * 0.12})`;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        lightningFlash -= 0.04;
       }
 
-      ctx.fillStyle = '#00ff66';
+      // Render Floating Embers & Aztec Gold Sparks
       particles.forEach((p) => {
         ctx.save();
         ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = p.isGold ? '#e5c158' : '#00e5ff';
+        ctx.shadowColor = p.isGold ? '#ffd700' : '#00e5ff';
+        ctx.shadowBlur = 8;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
 
-        if (!prefersReducedMotion.current) {
-          p.y -= p.speedY;
-          p.x += p.speedX;
-          if (p.y < 0) {
-            p.y = canvas.height;
-            p.x = Math.random() * canvas.width;
-          }
+        p.y -= p.speedY;
+        p.x += p.speedX;
+        if (p.y < 0) {
+          p.y = canvas.height;
+          p.x = Math.random() * canvas.width;
         }
       });
 
@@ -294,23 +252,35 @@ const CinematicBackground = () => {
     };
   }, []);
 
-  // Sondaven-style subtle scale zoom calculation based on scroll momentum
-  const sceneScale = 1 + (scrollProgress % 0.1) * 0.3;
-
   return (
     <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden select-none">
-      {/* Top Scroll Progress Indicator Bar (Sondaven style) */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-[#0f2416] z-50">
+      {/* Top Gold & Cyan Scroll Progress Indicator Bar */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-[#1c150c] z-50">
         <div
-          className="h-full bg-gradient-to-r from-[#00ff66] via-[#10b981] to-[#00ff66] transition-all duration-150 shadow-[0_0_10px_#00ff66]"
+          className="h-full bg-gradient-to-r from-[#e5c158] via-[#ffd700] to-[#00e5ff] transition-all duration-150 shadow-[0_0_12px_#e5c158]"
           style={{ width: `${scrollProgress * 100}%` }}
         />
       </div>
 
-      {/* Dynamic Canvas Background (Storm & Particles) */}
+      {/* Hero Image Backdrop (Jack Sparrow + Black Pearl + Lightning + Nautical Chart) */}
+      <div className="absolute inset-0">
+        <img
+          src="/pirates-hero-bg-upright.jpg"
+          alt="Pirates of the Caribbean Jack Sparrow"
+          className="w-full h-full object-cover object-center opacity-30 md:opacity-35 scale-105 transition-transform duration-1000 ease-out"
+          style={{
+            transform: `scale(${1.02 + scrollProgress * 0.06}) translateY(${-scrollProgress * 30}px)`,
+          }}
+        />
+        {/* Deep Ocean Vignette & Mystical Gradient Overlays */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#03070b]/75 via-[#03070b]/60 to-[#03070b] pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#03070b]/90 via-transparent to-[#03070b]/90 pointer-events-none" />
+      </div>
+
+      {/* Dynamic Lightning & Gold Spark Particle Canvas */}
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
 
-      {/* Sticky Character Scenes Stack with Sondaven Scroll Crossfade & Scale */}
+      {/* Sticky Pirate Theme Artwork Overlays */}
       <div className="absolute inset-0 flex items-center justify-center">
         {sectionIds.map((id) => {
           const isActive = activeScene === id;
@@ -319,13 +289,8 @@ const CinematicBackground = () => {
           return (
             <div
               key={id}
-              style={{
-                transform: isActive ? `scale(${sceneScale})` : 'scale(1.08)',
-              }}
               className={`absolute inset-0 flex items-center justify-center p-6 transition-all duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)] ${
-                isActive
-                  ? 'opacity-100 blur-0 z-10'
-                  : 'opacity-0 blur-sm z-0'
+                isActive ? 'opacity-100 blur-0 z-10' : 'opacity-0 blur-sm z-0'
               }`}
             >
               <div className="w-full max-w-4xl h-[70vh] flex items-center justify-center">
@@ -336,8 +301,9 @@ const CinematicBackground = () => {
         })}
       </div>
 
-      {/* Grid scanlines overlay */}
-      <div className="absolute inset-0 scanline-bg opacity-30" />
+      {/* Nautical Map Chart Grid & Fog Scanlines */}
+      <div className="absolute inset-0 hex-grid-overlay opacity-30" />
+      <div className="absolute inset-0 scanline-bg opacity-25" />
     </div>
   );
 };

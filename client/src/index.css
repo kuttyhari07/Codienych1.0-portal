@@ -4,118 +4,166 @@
 
 @layer base {
   body {
-    background-color: #050b07;
-    color: #e2e8f0;
-    font-family: 'Rajdhani', sans-serif;
+    background-color: #03070b;
+    color: #f4e6c3;
+    font-family: 'Cinzel', 'Rajdhani', serif;
   }
   
-  h1, h2, h3, h4, .font-orbitron {
-    font-family: 'Orbitron', sans-serif;
-    letter-spacing: 0.05em;
+  h1, h2, h3, h4, .font-orbitron, .font-pirate-title {
+    font-family: 'Cinzel Decorative', 'Pirata One', 'Cinzel', serif;
+    letter-spacing: 0.04em;
   }
 }
 
-/* Custom Futuristic Scrollbar */
+/* Custom Antique Pirates Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 9px;
 }
 ::-webkit-scrollbar-track {
-  background: #050b07;
+  background: #03070b;
+  border-left: 1px solid #1c150c;
 }
 ::-webkit-scrollbar-thumb {
-  background: #0f2b19;
-  border: 1px solid #10b981;
+  background: linear-gradient(to bottom, #8a6d1b, #d4af37, #8a6d1b);
+  border: 1px solid #e5c158;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #00ff66;
+  background: #ffd700;
+  box-shadow: 0 0 10px #ffd700;
 }
 
-/* Scanline Effect */
+/* Caribbean Ocean Fog Gradient */
+.fog-layer {
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(14, 45, 66, 0.35) 0%,
+    rgba(6, 20, 32, 0.75) 60%,
+    rgba(3, 7, 11, 0.95) 100%
+  );
+}
+
+/* Cursed Aztec Gold Glowing Text & 3D Bevel Title */
+.pirate-gold-title {
+  font-family: 'Pirata One', 'Cinzel Decorative', cursive;
+  background: linear-gradient(180deg, #fff2b2 0%, #ffd700 35%, #e5c158 60%, #996515 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.9)) drop-shadow(0 0 20px rgba(229, 193, 88, 0.75));
+}
+
+.pirate-gold-sub {
+  font-family: 'Cinzel Decorative', serif;
+  background: linear-gradient(180deg, #ffffff 0%, #e5c158 70%, #b8860b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 12px rgba(229, 193, 88, 0.6));
+}
+
+.neon-glow-green, .pirate-gold-glow {
+  text-shadow: 0 0 10px rgba(229, 193, 88, 0.8), 0 0 25px rgba(212, 175, 55, 0.6), 0 0 40px rgba(0, 229, 255, 0.3);
+}
+
+.pirate-cyan-glow {
+  text-shadow: 0 0 10px rgba(0, 229, 255, 0.8), 0 0 25px rgba(14, 165, 233, 0.6);
+}
+
+.border-neon-glow, .border-pirate-gold {
+  box-shadow: 0 0 15px rgba(229, 193, 88, 0.35), inset 0 0 15px rgba(229, 193, 88, 0.1);
+}
+
+/* Antique Weathered Pirate Map / Parchment Box */
+.pirate-parchment-card {
+  background: linear-gradient(135deg, rgba(14, 25, 36, 0.92) 0%, rgba(8, 17, 25, 0.96) 100%);
+  border: 1px solid #5a4422;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 0 25px rgba(138, 109, 27, 0.12);
+}
+
+/* Ornate Pirate Corner Brackets */
+.hud-corner-box, .pirate-corner-box {
+  position: relative;
+}
+.hud-corner-box::before, .pirate-corner-box::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 16px;
+  height: 16px;
+  border-top: 2px solid #e5c158;
+  border-left: 2px solid #e5c158;
+  pointer-events: none;
+  filter: drop-shadow(0 0 4px #e5c158);
+}
+.hud-corner-box::after, .pirate-corner-box::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 16px;
+  height: 16px;
+  border-bottom: 2px solid #e5c158;
+  border-right: 2px solid #e5c158;
+  pointer-events: none;
+  filter: drop-shadow(0 0 4px #e5c158);
+}
+
+/* Nautical Grid Chart Overlay */
+.hex-grid-overlay, .nautical-chart-overlay {
+  background-image: 
+    radial-gradient(rgba(229, 193, 88, 0.12) 1px, transparent 1px),
+    linear-gradient(to right, rgba(0, 229, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
+  background-size: 32px 32px, 64px 64px, 64px 64px;
+}
+
+/* Ancient Compass Rose Needle Pulse */
+@keyframes compassFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(2deg);
+  }
+}
+
+.animate-compass-float {
+  animation: compassFloat 6s ease-in-out infinite;
+}
+
+/* Cursed Aztec Gold Shimmer */
+@keyframes goldShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer-gold {
+  background: linear-gradient(90deg, #e5c158 0%, #fff3b0 50%, #e5c158 100%);
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  animation: goldShimmer 4s linear infinite;
+}
+
+/* Scanline Effect tuned to Caribbean Deep Sea */
 .scanline-bg {
   background: linear-gradient(
     to bottom,
     rgba(255,255,255,0),
     rgba(255,255,255,0) 50%,
-    rgba(0, 255, 102, 0.03) 50%,
-    rgba(0, 255, 102, 0.03)
+    rgba(0, 229, 255, 0.02) 50%,
+    rgba(0, 229, 255, 0.02)
   );
   background-size: 100% 4px;
 }
 
-/* Glowing Neon Text & Borders */
-.neon-glow-green {
-  text-shadow: 0 0 10px rgba(0, 255, 102, 0.7), 0 0 20px rgba(16, 185, 129, 0.5);
-}
-
-.border-neon-glow {
-  box-shadow: 0 0 15px rgba(0, 255, 102, 0.3), inset 0 0 15px rgba(0, 255, 102, 0.1);
-}
-
-/* Hex Pattern Overlay */
-.hex-grid-overlay {
-  background-image: radial-gradient(rgba(0, 255, 102, 0.12) 1px, transparent 1px);
-  background-size: 24px 24px;
-}
-
-/* Tactical HUD Corner Borders */
-.hud-corner-box {
+/* Parchment Ribbon Banner styling */
+.pirate-banner-frame {
   position: relative;
-}
-.hud-corner-box::before {
-  content: '';
-  position: absolute;
-  top: -1px;
-  left: -1px;
-  width: 14px;
-  height: 14px;
-  border-top: 2px solid #00ff66;
-  border-left: 2px solid #00ff66;
-  pointer-events: none;
-}
-.hud-corner-box::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  right: -1px;
-  width: 14px;
-  height: 14px;
-  border-bottom: 2px solid #00ff66;
-  border-right: 2px solid #00ff66;
-  pointer-events: none;
-}
-
-/* Radar Sweep Animation */
-@keyframes radarSweep {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.animate-radar {
-  animation: radarSweep 4s linear infinite;
-}
-
-/* Waveform Bars Animation */
-@keyframes wavePulse {
-  0%, 100% {
-    height: 4px;
-  }
-  50% {
-    height: 24px;
-  }
-}
-
-.wave-bar {
-  animation: wavePulse 1.2s ease-in-out infinite;
-}
-
-/* Cyber Matrix stream */
-.matrix-tape {
-  font-family: monospace;
-  letter-spacing: 0.25em;
-  opacity: 0.35;
+  border: 2px solid #8a6d1b;
+  box-shadow: 0 0 25px rgba(229, 193, 88, 0.35), inset 0 0 20px rgba(0, 0, 0, 0.8);
 }

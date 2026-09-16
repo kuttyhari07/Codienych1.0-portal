@@ -4,8 +4,8 @@ import { playLaserBlip } from '../utils/cyberSound';
 const SpotlightCard = ({
   children,
   className = '',
-  spotlightColor = 'rgba(0, 255, 102, 0.15)',
-  borderColor = 'border-[#1b3524] hover:border-[#00ff66]',
+  spotlightColor = 'rgba(229, 193, 88, 0.2)',
+  borderColor = 'border-[#5a4422] hover:border-[#ffd700]',
 }) => {
   const divRef = useRef(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -32,7 +32,7 @@ const SpotlightCard = ({
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`relative rounded-2xl bg-[#0a140e]/95 border ${borderColor} overflow-hidden transition-all duration-300 transform hover:-translate-y-1.5 hover:shadow-[0_0_30px_rgba(0,255,102,0.2)] hud-corner-box ${className}`}
+      className={`relative rounded-2xl bg-[#08121a]/95 border ${borderColor} overflow-hidden transition-all duration-300 transform hover:-translate-y-1.5 hover:shadow-[0_0_30px_rgba(229,193,88,0.22)] hud-corner-box ${className}`}
     >
       {/* Radial Cursor Flashlight Spotlight */}
       <div
