@@ -74,7 +74,7 @@ const CyberEnergyMatrixCanvas = () => {
 
     return () => {
       window.removeEventListener('resize', resize);
-      cancelAnimationFrame(animationFrameId);
+      cancelAnimationFrame(animationId);
     };
   }, [pulseSpeed]);
 
