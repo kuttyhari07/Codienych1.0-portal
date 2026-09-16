@@ -3,10 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import LoadingScreen from '../components/LoadingScreen';
 import CinematicBackground from '../components/CinematicBackground';
 import InteractiveCursor from '../components/InteractiveCursor';
-import PiratesCompass3dCanvas from '../components/PiratesCompass3dCanvas';
 import { EVENT_CONFIG } from '../utils/config';
 import { Compass, Sparkles, Swords, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { playLaserBlip } from '../utils/cyberSound';
 
 const HomePage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -99,14 +99,37 @@ const HomePage = () => {
           “{EVENT_CONFIG.TAGLINE}”
         </motion.p>
 
-        {/* 3D Interactive Pirates of the Caribbean Compass (with North, South, East, West) */}
+        {/* Primary Voyage Action Buttons */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.65 }}
-          className="w-full my-2"
+          className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-xl px-4"
         >
-          <PiratesCompass3dCanvas />
+          <button
+            type="button"
+            onClick={() => {
+              playLaserBlip();
+              navigate('/portal');
+            }}
+            className="w-full sm:w-auto px-8 py-4 rounded-2xl font-cinzel font-black text-sm sm:text-base text-black bg-gradient-to-r from-[#ffd700] via-[#f39c12] to-[#b8860b] hover:from-[#ffe66d] hover:to-[#ffd700] transition-all duration-300 shadow-[0_0_30px_rgba(255,215,0,0.6)] hover:shadow-[0_0_50px_rgba(255,215,0,0.85)] transform hover:-translate-y-1 active:scale-95 flex items-center justify-center space-x-2.5 cursor-pointer uppercase tracking-wider"
+          >
+            <Compass className="w-5 h-5 text-black" />
+            <span>EXPLORE EVENT PORTAL</span>
+            <ArrowRight className="w-4 h-4 text-black" />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              playLaserBlip();
+              navigate('/register');
+            }}
+            className="w-full sm:w-auto px-7 py-4 rounded-2xl font-cinzel font-bold text-xs sm:text-sm text-[#ffd700] bg-[#120a04]/90 hover:bg-[#ffd700] hover:text-black border-2 border-[#ffd700]/70 hover:border-[#ffd700] transition-all duration-300 shadow-[0_0_20px_rgba(0,0,0,0.8)] hover:shadow-[0_0_30px_rgba(255,215,0,0.5)] transform hover:-translate-y-1 active:scale-95 flex items-center justify-center space-x-2 cursor-pointer uppercase tracking-wider backdrop-blur-sm"
+          >
+            <Swords className="w-4 h-4" />
+            <span>JOIN THE CREW (REGISTER)</span>
+          </button>
         </motion.div>
       </motion.main>
 
