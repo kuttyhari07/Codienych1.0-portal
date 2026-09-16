@@ -51,7 +51,7 @@ const TreasureBox = () => {
             <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-64 h-64 bg-[#ffd700]/20 rounded-full blur-3xl pointer-events-none" />
 
             {/* Realistic 3D Interactive Pirate Treasure Chest Canvas */}
-            <div className="relative mx-auto w-full max-w-sm mb-3">
+            <div className="relative mx-auto w-full max-w-md mb-4 sm:mb-6 flex items-center justify-center">
               <RealisticTreasureChest3DCanvas
                 isOpen={false}
                 isOpening={isOpening}
