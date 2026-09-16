@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import LoadingScreen from '../components/LoadingScreen';
 import CinematicBackground from '../components/CinematicBackground';
 import InteractiveCursor from '../components/InteractiveCursor';
+import RealisticCompass3D from '../components/RealisticCompass3D';
 import { EVENT_CONFIG } from '../utils/config';
 import { Compass, Sparkles, Swords, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -123,12 +124,22 @@ const HomePage = () => {
           </div>
         </motion.div>
 
+        {/* Realistic 3D Interactive Rotating Pirate Compass (Inspired by Captain Jack Sparrow Reference) */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.88 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.9, delay: 0.65 }}
+          className="my-3 sm:my-4 flex flex-col items-center justify-center w-full"
+        >
+          <RealisticCompass3D />
+        </motion.div>
+
         {/* Primary Voyage Action Buttons */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.65 }}
-          className="mt-4 flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-xl px-4"
+          transition={{ duration: 0.8, delay: 0.75 }}
+          className="mt-3 sm:mt-4 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full max-w-xl px-4"
         >
           <button
             type="button"
