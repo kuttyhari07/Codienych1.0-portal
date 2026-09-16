@@ -94,17 +94,41 @@ const HomePage = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.55 }}
-          className="font-medieval text-xs sm:text-base text-[#f4e6c3] max-w-xl mx-auto mb-4 italic opacity-90"
+          className="font-medieval text-xs sm:text-base text-[#f4e6c3] max-w-xl mx-auto mb-2 italic opacity-90"
         >
           “{EVENT_CONFIG.TAGLINE}”
         </motion.p>
+
+        {/* Registration Fee & Team Enlistment Badge */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.92 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+          className="my-3 inline-flex items-center space-x-2.5 sm:space-x-3 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full bg-gradient-to-r from-[#1c1208]/95 via-[#2b1709]/95 to-[#1c1208]/95 border-2 border-[#ffd700] shadow-[0_0_25px_rgba(255,215,0,0.35)] backdrop-blur-md select-none"
+        >
+          <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-br from-[#ffd700] via-[#f39c12] to-[#b8860b] flex items-center justify-center text-black font-black text-xs sm:text-sm shadow-md flex-shrink-0">
+            ₹
+          </div>
+          <div className="text-left">
+            <div className="font-cinzel text-[9px] sm:text-[10px] text-[#ffd700] tracking-widest uppercase font-bold leading-none">
+              VOYAGE ENLISTMENT FEE
+            </div>
+            <div className="font-cinzel text-xs sm:text-sm text-white font-extrabold tracking-wider mt-0.5">
+              <span className="text-[#ffd700] font-black text-sm sm:text-base">₹{EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER}</span>{' '}
+              <span className="text-gray-300 font-medium text-[11px] sm:text-xs">/ Member</span>
+            </div>
+          </div>
+          <div className="hidden sm:flex items-center border-l border-[#ffd700]/30 pl-3 font-cinzel text-[11px] text-[#cfb07a] font-semibold">
+            (4 to 6 Pirates per Crew)
+          </div>
+        </motion.div>
 
         {/* Primary Voyage Action Buttons */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.65 }}
-          className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-xl px-4"
+          className="mt-4 flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-xl px-4"
         >
           <button
             type="button"
