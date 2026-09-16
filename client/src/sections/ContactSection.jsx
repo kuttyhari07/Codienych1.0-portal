@@ -63,9 +63,14 @@ const ContactSection = () => {
                 <span className="font-cinzel text-xs text-[#ffd700] block uppercase font-bold">
                   ASSOCIATION COORDINATOR
                 </span>
-                <div className="flex items-center justify-between">
-                  <span className="font-cinzel text-gray-200 text-sm font-semibold">Mr. M. Dhanapal, AP/IT</span>
-                  <a href="tel:9994036446" className="font-mono text-xs text-[#ffd700] hover:underline font-bold">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="font-['Rajdhani',sans-serif] text-gray-100 text-sm sm:text-base font-semibold tracking-wide">
+                    Mr. M. Dhanapal, <span className="text-gray-400 font-normal text-xs sm:text-sm">AP/IT</span>
+                  </span>
+                  <a
+                    href="tel:9994036446"
+                    className="font-mono text-xs text-[#ffd700] hover:text-white hover:underline font-bold whitespace-nowrap shrink-0 px-2.5 py-1 rounded-md bg-[#ffd700]/10 border border-[#ffd700]/30 transition-colors"
+                  >
                     +91 99940 36446
                   </a>
                 </div>
@@ -76,16 +81,26 @@ const ContactSection = () => {
                 <span className="font-cinzel text-xs text-[#ffd700] block uppercase font-bold">
                   FACULTY CAPTAINS / COORDINATORS
                 </span>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="font-cinzel text-gray-200 text-sm font-semibold">Mr. S. Prabakaran, AP/IT</span>
-                    <a href="tel:7904640937" className="font-mono text-xs text-[#ffd700] hover:underline font-bold">
+                <div className="space-y-2.5">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="font-['Rajdhani',sans-serif] text-gray-100 text-sm sm:text-base font-semibold tracking-wide">
+                      Mr. S. Prabakaran, <span className="text-gray-400 font-normal text-xs sm:text-sm">AP/IT</span>
+                    </span>
+                    <a
+                      href="tel:7904640937"
+                      className="font-mono text-xs text-[#ffd700] hover:text-white hover:underline font-bold whitespace-nowrap shrink-0 px-2.5 py-1 rounded-md bg-[#ffd700]/10 border border-[#ffd700]/30 transition-colors"
+                    >
                       +91 79046 40937
                     </a>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="font-cinzel text-gray-200 text-sm font-semibold">Mr. M. Sujith Kumar, AP/IT</span>
-                    <a href="tel:9361636487" className="font-mono text-xs text-[#ffd700] hover:underline font-bold">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="font-['Rajdhani',sans-serif] text-gray-100 text-sm sm:text-base font-semibold tracking-wide">
+                      Mr. M. Sujith Kumar, <span className="text-gray-400 font-normal text-xs sm:text-sm">AP/IT</span>
+                    </span>
+                    <a
+                      href="tel:9361636487"
+                      className="font-mono text-xs text-[#ffd700] hover:text-white hover:underline font-bold whitespace-nowrap shrink-0 px-2.5 py-1 rounded-md bg-[#ffd700]/10 border border-[#ffd700]/30 transition-colors"
+                    >
                       +91 93616 36487
                     </a>
                   </div>
@@ -97,11 +112,14 @@ const ContactSection = () => {
                 <span className="font-cinzel text-xs text-[#ffd700] block uppercase font-bold">
                   STUDENT PIRATE CAPTAINS
                 </span>
-                <div className="space-y-2">
+                <div className="space-y-2.5">
                   {EVENT_CONFIG.STUDENT_COORDINATORS.map((sc, index) => (
-                    <div key={index} className="flex items-center justify-between">
-                      <span className="font-cinzel text-gray-200 text-sm font-semibold">{sc.name}</span>
-                      <a href={`tel:${sc.phone.replace(/[^0-9+]/g, '')}`} className="font-mono text-xs text-[#ffd700] hover:underline font-bold">
+                    <div key={index} className="flex items-center justify-between gap-3">
+                      <span className="font-['Rajdhani',sans-serif] text-gray-100 text-sm sm:text-base font-semibold tracking-wide">{sc.name}</span>
+                      <a
+                        href={`tel:${sc.phone.replace(/[^0-9+]/g, '')}`}
+                        className="font-mono text-xs text-[#ffd700] hover:text-white hover:underline font-bold whitespace-nowrap shrink-0 px-2.5 py-1 rounded-md bg-[#ffd700]/10 border border-[#ffd700]/30 transition-colors"
+                      >
                         {sc.phone}
                       </a>
                     </div>
