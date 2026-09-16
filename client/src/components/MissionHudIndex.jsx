@@ -6,14 +6,15 @@ const hudItems = [
   { id: 'about', label: '02 DOSSIER' },
   { id: 'dates', label: '03 TIMEFRAME' },
   { id: 'countdown', label: '04 COUNTDOWN' },
-  { id: 'prizes', label: '05 BOUNTIES' },
-  { id: 'entertainment', label: '06 TAVERN' },
-  { id: 'problem-statement', label: '07 RIDDLE' },
-  { id: 'team-rules', label: '08 CREW CODE' },
-  { id: 'hackathon-rules', label: '09 RULES' },
-  { id: 'timeline', label: '10 VOYAGE MAP' },
-  { id: 'faq', label: '11 CAPTAIN FAQ' },
-  { id: 'contact', label: '12 ADMIRALTY' },
+  { id: 'domains', label: '05 DOMAINS' },
+  { id: 'prizes', label: '06 BOUNTIES' },
+  { id: 'entertainment', label: '07 TAVERN' },
+  { id: 'problem-statement', label: '08 RIDDLE' },
+  { id: 'team-rules', label: '09 CREW CODE' },
+  { id: 'hackathon-rules', label: '10 RULES' },
+  { id: 'timeline', label: '11 VOYAGE MAP' },
+  { id: 'faq', label: '12 CAPTAIN FAQ' },
+  { id: 'contact', label: '13 ADMIRALTY' },
 ];
 
 const MissionHudIndex = () => {

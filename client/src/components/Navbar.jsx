@@ -5,6 +5,7 @@ import { Menu, X, Compass, Skull, Swords, Anchor, Scroll, MapPin } from 'lucide-
 const navItems = [
   { label: 'ABOUT', href: '#about' },
   { label: 'DATES', href: '#dates' },
+  { label: 'DOMAINS', href: '#domains' },
   { label: 'BOUNTIES', href: '#prizes' },
   { label: 'TAVERN', href: '#entertainment' },
   { label: 'RIDDLE', href: '#problem-statement' },

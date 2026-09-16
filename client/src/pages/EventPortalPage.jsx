@@ -13,6 +13,7 @@ import TeamRulesSection from '../sections/TeamRulesSection';
 import HackathonRulesSection from '../sections/HackathonRulesSection';
 import TimelineSection from '../sections/TimelineSection';
 import PrizesSection from '../sections/PrizesSection';
+import DomainsSection from '../sections/DomainsSection';
 import EntertainmentSection from '../sections/EntertainmentSection';
 import FaqSection from '../sections/FaqSection';
 import ContactSection from '../sections/ContactSection';
@@ -71,7 +72,12 @@ const EventPortalPage = () => {
             <CountdownSection />
           </ScrollReveal>
 
-          {/* 3. Prizes & Bounties */}
+          {/* 3. Competition Domains */}
+          <ScrollReveal variant="fade-up">
+            <DomainsSection />
+          </ScrollReveal>
+
+          {/* 4. Prizes & Bounties */}
           <ScrollReveal variant="fade-up">
             <PrizesSection />
           </ScrollReveal>
