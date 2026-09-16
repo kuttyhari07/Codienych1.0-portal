@@ -39,13 +39,23 @@ const LoadingScreen = ({ onFinish }) => {
       <div className="absolute inset-0 bg-radial from-[#1c150c]/40 via-[#0a1824]/20 to-transparent blur-3xl" />
 
       <div className="relative z-10 text-center px-4 max-w-lg">
-        {/* Pirates of the Caribbean Banner Scroll */}
-        <div className="mx-auto w-64 sm:w-80 mb-6 relative flex items-center justify-center">
-          <img
-            src="/pirates-banner.png"
-            alt="Pirates of the Caribbean"
-            className="w-full h-auto drop-shadow-[0_0_30px_rgba(229,193,88,0.7)] animate-pulse"
-          />
+        {/* Ornate Glowing Pirate Skull & Cutlasses Emblem */}
+        <div className="mx-auto w-24 h-24 sm:w-28 sm:h-28 mb-6 relative flex items-center justify-center">
+          <div className="absolute inset-0 rounded-full border border-[#ffd700]/30 animate-ping" />
+          <div className="absolute -inset-2 rounded-full border border-[#e5c158]/20 animate-pulse" />
+          <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#140e06] border-2 border-[#ffd700] p-3 flex items-center justify-center shadow-[0_0_35px_rgba(255,215,0,0.6)] backdrop-blur-md overflow-hidden">
+            <svg viewBox="0 0 100 100" className="w-full h-full filter drop-shadow-[0_0_8px_#ffd700]">
+              <path d="M20 75 L80 25 M80 75 L20 25" stroke="#ffd700" strokeWidth="4" strokeLinecap="round" />
+              <circle cx="50" cy="45" r="24" fill="#f4e6c3" stroke="#ffd700" strokeWidth="2" />
+              <circle cx="42" cy="42" r="5" fill="#03070b" />
+              <circle cx="58" cy="42" r="5" fill="#03070b" />
+              <polygon points="50,48 46,55 54,55" fill="#03070b" />
+              <rect x="42" y="60" width="16" height="6" rx="2" fill="#ffd700" />
+              <line x1="46" y1="60" x2="46" y2="66" stroke="#03070b" strokeWidth="1.5" />
+              <line x1="50" y1="60" x2="50" y2="66" stroke="#03070b" strokeWidth="1.5" />
+              <line x1="54" y1="60" x2="54" y2="66" stroke="#03070b" strokeWidth="1.5" />
+            </svg>
+          </div>
         </div>
 
         <h1 className="font-pirate text-4xl sm:text-6xl tracking-wider text-[#ffd700] mb-2 pirate-gold-title">

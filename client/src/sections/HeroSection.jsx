@@ -26,25 +26,11 @@ const HeroSection = () => {
       id="home"
       className="relative min-h-screen flex flex-col items-center justify-center pt-28 pb-16 px-4 text-center z-10 overflow-hidden"
     >
-      {/* Top Pirates Banner Scroll Image */}
-      <motion.div
-        initial={{ opacity: 0, y: -20, scale: 0.95 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.8 }}
-        className="max-w-md sm:max-w-xl md:max-w-2xl mx-auto mb-4 px-2"
-      >
-        <img
-          src="/pirates-banner.png"
-          alt="Pirates of the Caribbean Scroll Banner"
-          className="w-full h-auto drop-shadow-[0_0_25px_rgba(229,193,88,0.5)] select-none pointer-events-none"
-        />
-      </motion.div>
-
       {/* Nautical Telemetry Coordinates Stream */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
         className="flex items-center space-x-3 font-mono text-[10px] sm:text-xs text-[#e5c158]/80 mb-3 select-none"
       >
         <span className="flex items-center space-x-1 text-[#00e5ff]">
