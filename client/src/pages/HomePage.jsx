@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import LoadingScreen from '../components/LoadingScreen';
 import CinematicBackground from '../components/CinematicBackground';
 import InteractiveCursor from '../components/InteractiveCursor';
-import Campus3dCanvas from '../components/Campus3dCanvas';
+import PiratesCompass3dCanvas from '../components/PiratesCompass3dCanvas';
 import { EVENT_CONFIG } from '../utils/config';
 import { Compass, Sparkles, Swords, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -99,14 +99,14 @@ const HomePage = () => {
           “{EVENT_CONFIG.TAGLINE}”
         </motion.p>
 
-        {/* 3D Interactive ESEC Campus Model (Replaces 3D Round Shape) */}
+        {/* 3D Interactive Pirates of the Caribbean Compass (with North, South, East, West) */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.65 }}
           className="w-full my-2"
         >
-          <Campus3dCanvas />
+          <PiratesCompass3dCanvas />
         </motion.div>
       </motion.main>
 
