@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import LoadingScreen from '../components/LoadingScreen';
 import CinematicBackground from '../components/CinematicBackground';
 import InteractiveCursor from '../components/InteractiveCursor';
-import CyberEasterEggHud from '../components/CyberEasterEggHud';
-import CyberTerminalCli from '../components/CyberTerminalCli';
 import CyberBotAssistant from '../components/CyberBotAssistant';
 import Navbar from '../components/Navbar';
 import MissionHudIndex from '../components/MissionHudIndex';
@@ -42,21 +40,14 @@ const HomePage = () => {
 
   return (
     <SmoothScrollProvider>
-      <div className="relative min-h-screen bg-[#050b07] text-gray-100 overflow-x-hidden selection:bg-[#00ff66] selection:text-black">
+      <div className="relative min-h-screen bg-[#020508] text-[#f4e6c3] overflow-x-hidden selection:bg-[#ffd700] selection:text-black">
         {/* Loading Screen Overlay */}
         <AnimatePresence>
           {isLoading && <LoadingScreen onFinish={() => setIsLoading(false)} />}
         </AnimatePresence>
 
-        {/* Interactive Ambient Cursor Glow & Easter Eggs HUD */}
+        {/* Interactive Ambient Cursor */}
         <InteractiveCursor />
-        <CyberEasterEggHud onOpenCli={() => setIsCliOpen(true)} />
-
-        {/* Tactical CLI Terminal Shell */}
-        <CyberTerminalCli
-          isOpen={isCliOpen}
-          onClose={() => setIsCliOpen(false)}
-        />
 
         {/* Interactive Cartoon Cyber Bot Companion Mascot */}
         <CyberBotAssistant />

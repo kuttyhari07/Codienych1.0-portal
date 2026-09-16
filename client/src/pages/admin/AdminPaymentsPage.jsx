@@ -58,47 +58,60 @@ const AdminPaymentsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#050b07] text-white pb-20">
-      <AdminNavbar title="PAYMENT VERIFICATIONS" showBack={true} backTo="/admin" />
+    <div className="min-h-screen bg-[#03070b] text-[#f4e6c3] pb-20 relative overflow-hidden">
+      <AdminNavbar title="TREASURY TRIBUTE VERIFICATIONS" showBack={true} backTo="/admin" />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-        <div className="bg-[#0a140e] border border-[#1b3524] rounded-xl overflow-hidden shadow-lg">
+        <div className="bg-[#08121a] border border-[#3a2e1d] rounded-xl overflow-hidden shadow-xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left font-mono text-xs">
               <thead>
-                <tr className="bg-[#050b07] border-b border-[#1b3524] text-gray-400 uppercase">
-                  <th className="py-4 px-4">TEAM ID</th>
+                <tr className="bg-[#04090f] border-b border-[#3a2e1d] text-[#e5c158] uppercase font-cinzel">
+                  <th className="py-4 px-4">FLEET ID</th>
                   <th className="py-4 px-4">TRANSACTION ID / UTR</th>
                   <th className="py-4 px-4">AMOUNT</th>
-                  <th className="py-4 px-4">SCREENSHOT PROOF</th>
+                  <th className="py-4 px-4">RECEIPT PROOF</th>
                   <th className="py-4 px-4">STATUS</th>
                   <th className="py-4 px-4">SUBMITTED DATE</th>
                   <th className="py-4 px-4 text-center">ACTION</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#1b3524]/60">
+              <tbody className="divide-y divide-[#3a2e1d]/60">
                 {loading ? (
-                  <tr><td colSpan="7" className="py-8 text-center text-gray-500">LOADING PAYMENTS...</td></tr>
+                  <tr>
+                    <td colSpan="7" className="py-8 text-center text-gray-400 font-cinzel">
+                      SEARCHING TREASURY VAULT...
+                    </td>
+                  </tr>
                 ) : payments.length === 0 ? (
-                  <tr><td colSpan="7" className="py-8 text-center text-gray-500">NO PAYMENT RECORDS FOUND.</td></tr>
+                  <tr>
+                    <td colSpan="7" className="py-8 text-center text-gray-400 font-cinzel">
+                      NO TREASURY PAYMENT RECORDS FOUND.
+                    </td>
+                  </tr>
                 ) : (
                   payments.map((p) => (
-                    <tr key={p._id} className="hover:bg-[#0f1e14]/50">
-                      <td className="py-3.5 px-4 font-bold text-[#00ff66]">
+                    <tr key={p._id} className="hover:bg-[#0c1e2d]/50">
+                      <td className="py-3.5 px-4 font-bold text-[#ffd700]">
                         {p.registration ? p.registration.registrationId : 'N/A'}
                       </td>
                       <td className="py-3.5 px-4 font-bold text-white">{p.transactionId}</td>
-                      <td className="py-3.5 px-4 text-[#00ff66] font-bold">₹{p.expectedAmount}</td>
+                      <td className="py-3.5 px-4 text-[#ffd700] font-bold">₹{p.expectedAmount}</td>
                       <td className="py-3.5 px-4">
-                        <a href={assetUrl(p.screenshotUrl)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center space-x-1 text-gray-300 hover:text-[#00ff66] underline">
+                        <a
+                          href={assetUrl(p.screenshotUrl)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center space-x-1 text-[#00e5ff] hover:text-[#ffd700] underline"
+                        >
                           <ExternalLink className="w-3.5 h-3.5" />
-                          <span>VIEW IMAGE</span>
+                          <span>VIEW RECEIPT</span>
                         </a>
                       </td>
                       <td className="py-3.5 px-4">
-                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                        <span className={`px-2 py-0.5 rounded text-[10px] font-cinzel font-bold ${
                           p.status === 'VERIFIED'
-                            ? 'bg-green-500/20 text-green-400 border border-green-500/40'
+                            ? 'bg-[#ffd700]/20 text-[#ffd700] border border-[#ffd700]/40'
                             : p.status === 'REJECTED'
                             ? 'bg-red-500/20 text-red-400 border border-red-500/40'
                             : 'bg-amber-500/20 text-amber-400 border border-amber-500/40'
@@ -111,9 +124,9 @@ const AdminPaymentsPage = () => {
                         <div className="flex gap-2">
                           <button
                             onClick={() => handleVerify(p._id)}
-                            className="px-3 py-1 bg-[#00ff66] text-black font-orbitron font-bold text-[10px] rounded hover:bg-[#10b981] hover:text-white"
+                            className="px-3 py-1 bg-gradient-to-r from-[#ffd700] via-[#f39c12] to-[#b8860b] hover:from-[#ffe043] hover:to-[#d4af37] text-black font-cinzel font-bold text-[10px] rounded cursor-pointer shadow-[0_0_10px_rgba(255,215,0,0.3)]"
                           >
-                            VERIFY
+                            VERIFY TRIBUTE
                           </button>
                         </div>
                         <div className="flex gap-1">
@@ -122,11 +135,11 @@ const AdminPaymentsPage = () => {
                             placeholder="Rejection reason..."
                             value={rejectionReasons[p._id] || ''}
                             onChange={(e) => setRejectionReasons({ ...rejectionReasons, [p._id]: e.target.value })}
-                            className="bg-[#050b07] border border-[#1b3524] px-2 py-1 text-[10px] text-white rounded outline-none"
+                            className="bg-[#04090f] border border-[#3a2e1d] focus:border-[#ffd700] px-2 py-1 text-[10px] text-white rounded outline-none"
                           />
                           <button
                             onClick={() => handleReject(p._id)}
-                            className="px-2 py-1 bg-red-950 text-red-300 font-bold text-[10px] rounded hover:bg-red-900 border border-red-500/50"
+                            className="px-2 py-1 bg-red-950/80 text-red-300 font-cinzel font-bold text-[10px] rounded hover:bg-red-900 border border-red-500/50 cursor-pointer"
                           >
                             REJECT
                           </button>

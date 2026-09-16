@@ -191,7 +191,7 @@ const createTransporter = () => {
 };
 
 /**
- * Common HTML wrapper with clean email-client compatible styling (avoiding spam triggers)
+ * Common HTML wrapper with Pirates of the Caribbean Aztec Gold & Caribbean Ocean styling
  */
 const wrapEmailTemplate = (title, badgeText, contentHtml) => `
 <!DOCTYPE html>
@@ -201,26 +201,26 @@ const wrapEmailTemplate = (title, badgeText, contentHtml) => `
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${title}</title>
 </head>
-<body style="margin: 0; padding: 20px; background-color: #030712; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #e2e8f0;">
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width: 600px; margin: 0 auto; background: #0b0f19; border: 1px solid #1f293d; border-radius: 12px; overflow: hidden;">
+<body style="margin: 0; padding: 20px; background-color: #020508; font-family: 'Cinzel', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Georgia, serif; color: #f4e6c3;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width: 600px; margin: 0 auto; background: #08121a; border: 1px solid #6b5321; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.8);">
     <tr>
-      <td style="background: #09131f; padding: 25px; border-bottom: 1px solid #1e293b; text-align: center;">
-        <h1 style="margin: 0; font-size: 24px; color: #00ff66; letter-spacing: 2px; text-transform: uppercase;">CODIENYCH 1.0</h1>
-        <p style="margin: 4px 0 0; color: #94a3b8; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;">24-Hour Hackathon</p>
-        <div style="display: inline-block; padding: 4px 12px; border-radius: 16px; font-size: 11px; font-weight: bold; margin-top: 10px; background: rgba(0,255,102,0.1); color: #00ff66; border: 1px solid #00ff66;">
+      <td style="background: #140e06; padding: 28px 25px; border-bottom: 2px solid #ffd700; text-align: center;">
+        <h1 style="margin: 0; font-size: 26px; color: #ffd700; letter-spacing: 3px; text-transform: uppercase; font-weight: 900; text-shadow: 0 0 12px rgba(255,215,0,0.4);">⚔️ CODIENYCH 1.0 ⚔️</h1>
+        <p style="margin: 6px 0 0; color: #cfb07a; font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; font-weight: bold;">24-Hour Caribbean Hackathon Expedition</p>
+        <div style="display: inline-block; padding: 5px 16px; border-radius: 20px; font-size: 11px; font-weight: bold; margin-top: 12px; background: rgba(255,215,0,0.12); color: #ffd700; border: 1px solid #ffd700; text-transform: uppercase; letter-spacing: 1px;">
           ${badgeText.text}
         </div>
       </td>
     </tr>
     <tr>
-      <td style="padding: 25px; color: #e2e8f0; font-size: 14px; line-height: 1.6;">
+      <td style="padding: 28px 25px; color: #f4e6c3; font-size: 14px; line-height: 1.7;">
         ${contentHtml}
       </td>
     </tr>
     <tr>
-      <td style="background: #060a12; padding: 15px 25px; border-top: 1px solid #1e293b; text-align: center; color: #64748b; font-size: 11px;">
-        <p style="margin: 0 0 4px 0;">Department of Information Technology, Erode Sengunthar Engineering College</p>
-        <p style="margin: 0;">Need help? Email <a href="mailto:${config.ORGANIZER_EMAIL}" style="color: #00ff66; text-decoration: none;">${config.ORGANIZER_EMAIL}</a></p>
+      <td style="background: #04080e; padding: 18px 25px; border-top: 1px solid #3b2b19; text-align: center; color: #94a3b8; font-size: 11px;">
+        <p style="margin: 0 0 5px 0; color: #cfb07a;">Department of Information Technology, Erode Sengunthar Engineering College</p>
+        <p style="margin: 0;">Port Comms? Email <a href="mailto:${config.ORGANIZER_EMAIL}" style="color: #ffd700; text-decoration: none; font-weight: bold;">${config.ORGANIZER_EMAIL}</a></p>
       </td>
     </tr>
   </table>
@@ -244,59 +244,59 @@ const sendOrganizerNewRegistrationAlert = async ({
   department,
 }) => {
   const contentHtml = `
-    <h2 style="color: #ffffff; margin-top: 0;">⚡ New Team Registration Submitted</h2>
-    <p>A new team has registered for CODIENYCH 1.0 and is awaiting admin payment & ID verification.</p>
+    <h2 style="color: #ffd700; margin-top: 0; font-size: 20px;">⚡ New Crew Enlistment Submitted</h2>
+    <p>A new pirate crew has enlisted for CODIENYCH 1.0 and is awaiting admiralty payment & ID verification.</p>
     
-    <div style="background: #131b2e; border: 1px solid #1f293d; border-radius: 8px; padding: 18px; margin: 20px 0;">
-      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Registration ID:</span> <span style="color:#00ff66; font-size: 16px; font-weight: bold;">${registrationId}</span></div>
-      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Team Name:</span> <span style="color: #fff; font-weight: bold;">${teamName}</span></div>
-      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Team Size:</span> <span style="color: #fff;">${teamSize} Members</span></div>
-      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Expected Fee:</span> <span style="color: #fff; font-weight: bold;">₹${expectedAmount}</span></div>
-      <div><span style="color: #94a3b8; font-size: 13px;">UPI UTR / Tx ID:</span> <span style="color: #38bdf8; font-weight: bold;">${transactionId}</span></div>
+    <div style="background: #0d1a24; border: 1px solid #6b5321; border-radius: 10px; padding: 18px; margin: 20px 0;">
+      <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Registration ID:</span> <span style="color:#ffd700; font-size: 16px; font-weight: bold;">${registrationId}</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Crew Name:</span> <span style="color: #fff; font-weight: bold;">${teamName}</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Crew Size:</span> <span style="color: #fff;">${teamSize} Pirates</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Expected Fee:</span> <span style="color: #ffd700; font-weight: bold;">₹${expectedAmount}</span></div>
+      <div><span style="color: #cfb07a; font-size: 13px;">UPI UTR / Tx ID:</span> <span style="color: #00e5ff; font-weight: bold;">${transactionId}</span></div>
     </div>
 
-    <h3 style="color: #38bdf8; margin-bottom: 8px; font-size: 15px;">Team Leader Contact Details:</h3>
-    <div style="background: #131b2e; border: 1px solid #1f293d; border-radius: 8px; padding: 18px; margin: 20px 0;">
-      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Name:</span> <span style="color: #fff;">${leaderName}</span></div>
-      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Email:</span> <span style="color: #00ff66;">${leaderEmail}</span></div>
-      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Phone:</span> <span style="color: #fff;">${leaderPhone}</span></div>
-      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">College:</span> <span style="color: #fff;">${college}</span></div>
-      <div><span style="color: #94a3b8; font-size: 13px;">Department:</span> <span style="color: #fff;">${department}</span></div>
+    <h3 style="color: #00e5ff; margin-bottom: 8px; font-size: 15px;">Captain Contact Details:</h3>
+    <div style="background: #0d1a24; border: 1px solid #6b5321; border-radius: 10px; padding: 18px; margin: 20px 0;">
+      <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Captain Name:</span> <span style="color: #fff;">${leaderName}</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Email:</span> <span style="color: #ffd700;">${leaderEmail}</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Phone:</span> <span style="color: #fff;">${leaderPhone}</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">College:</span> <span style="color: #fff;">${college}</span></div>
+      <div><span style="color: #cfb07a; font-size: 13px;">Department:</span> <span style="color: #fff;">${department}</span></div>
     </div>
 
-    <p style="margin-top: 20px;">Please login to the Admin Dashboard to verify payment receipt and student ID credentials.</p>
+    <p style="margin-top: 20px;">Please login to the Admiralty Dashboard to verify payment receipt and student ID credentials.</p>
   `;
 
   const html = wrapEmailTemplate(
     'New Registration Received',
-    { text: 'NEW REGISTRATION ALERT', type: 'badge-info' },
+    { text: 'NEW CREW ENLISTMENT ALERT', type: 'badge-info' },
     contentHtml
   );
 
   const text = `
-⚡ NEW TEAM REGISTRATION SUBMITTED - CODIENYCH 1.0
+⚡ NEW CREW ENLISTMENT SUBMITTED - CODIENYCH 1.0
 
 Registration ID: ${registrationId}
-Team Name: ${teamName}
-Team Size: ${teamSize} Members
+Crew Name: ${teamName}
+Crew Size: ${teamSize} Pirates
 Expected Fee: ₹${expectedAmount}
 UPI UTR / Tx ID: ${transactionId}
 
-Team Leader Contact:
+Captain Contact:
 Name: ${leaderName}
 Email: ${leaderEmail}
 Phone: ${leaderPhone}
 College: ${college}
 Department: ${department}
 
-Please login to Admin Dashboard to review ID cards & payment proof.
+Please login to Admiralty Dashboard to review ID cards & payment proof.
   `.trim();
 
   const adminAlertEmail = (process.env.ADMIN_EMAIL || config.ADMIN_EMAIL || config.ORGANIZER_EMAIL || 'codienych@gmail.com').trim();
   return await sendUniversalMail({
     to: adminAlertEmail,
     replyTo: leaderEmail,
-    subject: `[NEW REGISTRATION] Team ${teamName} (${registrationId}) - CODIENYCH 1.0`,
+    subject: `[NEW ENLISTMENT] Crew ${teamName} (${registrationId}) - CODIENYCH 1.0`,
     text,
     html,
   });
@@ -315,44 +315,44 @@ const sendRegistrationReceivedToLeader = async ({
   transactionId,
 }) => {
   const contentHtml = `
-    <h2 style="color: #ffffff; margin-top: 0;">Registration Received 📥</h2>
-    <p>Hello <strong>${leaderName}</strong>,</p>
-    <p>Thank you for registering <strong>Team ${teamName}</strong> for <strong>CODIENYCH 1.0</strong>! Your registration details and payment proof have been received successfully.</p>
+    <h2 style="color: #ffd700; margin-top: 0; font-size: 20px;">Crew Manifest Received 📜</h2>
+    <p>Ahoy <strong>Captain ${leaderName}</strong>,</p>
+    <p>Thank you for enlisting <strong>Crew ${teamName}</strong> for <strong>CODIENYCH 1.0</strong>! Your crew details and bounty payment proof have been received aboard.</p>
     
-    <div style="background: #131b2e; border: 1px solid #1f293d; border-radius: 8px; padding: 18px; margin: 20px 0;">
-      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Registration ID:</span> <span style="color:#00ff66; font-size: 16px; font-weight: bold;">${registrationId}</span></div>
-      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Team Name:</span> <span style="color: #fff; font-weight: bold;">${teamName}</span></div>
-      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Team Size:</span> <span style="color: #fff;">${teamSize} Members</span></div>
-      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Amount Paid:</span> <span style="color: #00ff66; font-weight: bold;">₹${expectedAmount}</span></div>
-      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Transaction ID:</span> <span style="color: #fff;">${transactionId}</span></div>
-      <div><span style="color: #94a3b8; font-size: 13px;">Current Status:</span> <span style="color:#38bdf8; font-weight: bold;">PENDING VERIFICATION</span></div>
+    <div style="background: #0d1a24; border: 1px solid #6b5321; border-radius: 10px; padding: 18px; margin: 20px 0;">
+      <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Registration ID:</span> <span style="color:#ffd700; font-size: 16px; font-weight: bold;">${registrationId}</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Crew Name:</span> <span style="color: #fff; font-weight: bold;">${teamName}</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Crew Size:</span> <span style="color: #fff;">${teamSize} Pirates</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Amount Paid:</span> <span style="color: #ffd700; font-weight: bold;">₹${expectedAmount}</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Transaction ID:</span> <span style="color: #fff;">${transactionId}</span></div>
+      <div><span style="color: #cfb07a; font-size: 13px;">Current Status:</span> <span style="color:#00e5ff; font-weight: bold;">PENDING ADMIRALTY VERIFICATION</span></div>
     </div>
 
-    <p><strong>Next Steps:</strong></p>
+    <p><strong>Next Steps on the Horizon:</strong></p>
     <ul style="padding-left: 20px; color: #cbd5e1;">
-      <li>Our organizing team is currently verifying your payment UTR and student ID cards.</li>
-      <li>Once verified, you will receive an official <strong>Registration Confirmation</strong> email.</li>
-      <li>You can also track your live registration status anytime on our portal using your Registration ID: <strong style="color:#00ff66;">${registrationId}</strong>.</li>
+      <li>Our port admiralty team is currently verifying your payment UTR and student ID cards.</li>
+      <li>Once verified, you will receive an official <strong>Registration Confirmation</strong> dispatch.</li>
+      <li>You can also track your live voyage status anytime on our portal using Registration ID: <strong style="color:#ffd700;">${registrationId}</strong>.</li>
     </ul>
 
-    <p style="margin-top: 25px;">Good luck to your team!</p>
+    <p style="margin-top: 25px; color: #ffd700; font-weight: bold;">Fair winds and good luck to your crew!</p>
   `;
 
   const html = wrapEmailTemplate(
     'Registration Received',
-    { text: 'SUBMISSION RECEIVED - PENDING REVIEW', type: 'badge-info' },
+    { text: 'MANIFEST RECEIVED - PENDING REVIEW', type: 'badge-info' },
     contentHtml
   );
 
   const text = `
 Registration Received - CODIENYCH 1.0
 
-Hello ${leaderName},
-Thank you for registering Team ${teamName} for CODIENYCH 1.0!
+Ahoy Captain ${leaderName},
+Thank you for enlisting Crew ${teamName} for CODIENYCH 1.0!
 
 Registration ID: ${registrationId}
-Team Name: ${teamName}
-Team Size: ${teamSize} Members
+Crew Name: ${teamName}
+Crew Size: ${teamSize} Pirates
 Amount: ₹${expectedAmount}
 Transaction ID: ${transactionId}
 Status: PENDING VERIFICATION
@@ -364,7 +364,7 @@ Track your status on our portal anytime using Registration ID: ${registrationId}
   return await sendUniversalMail({
     to: leaderEmail,
     replyTo: (process.env.ORGANIZER_EMAIL || config.ORGANIZER_EMAIL || 'codienych1.0@gmail.com').trim(),
-    subject: `[CODIENYCH 1.0] Registration Received - ${teamName} (${registrationId})`,
+    subject: `[CODIENYCH 1.0] Manifest Received - Crew ${teamName} (${registrationId})`,
     text,
     html,
   });
@@ -375,44 +375,44 @@ Track your status on our portal anytime using Registration ID: ${registrationId}
  */
 const sendRegistrationConfirmation = async ({ leaderEmail, leaderName, teamName, registrationId, teamSize }) => {
   const contentHtml = `
-    <h2 style="color: #00ff66; margin-top: 0;">🎉 REGISTRATION CONFIRMED!</h2>
-    <p>Hello <strong>${leaderName}</strong>,</p>
-    <p>Congratulations! Your team payment and student credentials for <strong>${teamName}</strong> have been <strong>verified and approved</strong> by the CODIENYCH 1.0 organizing committee.</p>
+    <h2 style="color: #ffd700; margin-top: 0; font-size: 22px;">🎉 CREW ENLISTMENT CONFIRMED!</h2>
+    <p>Ahoy <strong>Captain ${leaderName}</strong>,</p>
+    <p>Congratulations! Your crew payment and student credentials for <strong>${teamName}</strong> have been <strong>verified and approved</strong> by the CODIENYCH 1.0 Admiralty!</p>
     
-    <div style="background: #131b2e; border: 1px solid #00ff66; border-radius: 8px; padding: 18px; margin: 20px 0;">
-      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Registration ID:</span> <span style="color:#00ff66; font-size: 16px; font-weight: bold;">${registrationId}</span></div>
-      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Team Name:</span> <span style="color: #fff; font-weight: bold;">${teamName}</span></div>
-      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Team Size:</span> <span style="color: #fff; font-weight: bold;">${teamSize} Members</span></div>
-      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Status:</span> <span style="color:#00ff66; font-weight: bold;">CONFIRMED & SEAT RESERVED</span></div>
-      <div><span style="color: #94a3b8; font-size: 13px;">Venue:</span> <span style="color: #fff; font-weight: bold;">${config.VENUE}</span></div>
+    <div style="background: #0d1a24; border: 2px solid #ffd700; border-radius: 10px; padding: 18px; margin: 20px 0; box-shadow: 0 0 20px rgba(255,215,0,0.15);">
+      <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Registration ID:</span> <span style="color:#ffd700; font-size: 16px; font-weight: bold;">${registrationId}</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Crew Name:</span> <span style="color: #fff; font-weight: bold;">${teamName}</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Crew Size:</span> <span style="color: #fff;">${teamSize} Pirates</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Status:</span> <span style="color:#ffd700; font-weight: bold;">CONFIRMED & CABIN RESERVED ⚓</span></div>
+      <div><span style="color: #cfb07a; font-size: 13px;">Port Venue:</span> <span style="color: #fff; font-weight: bold;">${config.VENUE}</span></div>
     </div>
 
-    <p><strong>Important Instructions:</strong></p>
+    <p><strong>Crucial Voyage Directives:</strong></p>
     <ul style="padding-left: 20px; color: #cbd5e1;">
-      <li>Please bring your original physical College ID cards on the event day.</li>
-      <li>Carry your laptops, extension cords, and necessary hardware components.</li>
-      <li>Stay tuned to official announcements and WhatsApp group updates.</li>
+      <li>Please bring your original physical College ID cards on the embarkation day.</li>
+      <li>Carry your laptops, extension cables, and necessary hardware tools.</li>
+      <li>Join the Official WhatsApp Fleet via the Voyage Status page for real-time announcements.</li>
     </ul>
 
-    <p style="margin-top: 25px;">Get ready for 24 hours of non-stop coding, innovation, and intense competition!</p>
+    <p style="margin-top: 25px; color: #ffd700; font-weight: bold;">Prepare for 24 hours of non-stop coding on the high seas!</p>
   `;
 
   const html = wrapEmailTemplate(
     'Registration Confirmed',
-    { text: 'VERIFIED & CONFIRMED', type: 'badge-success' },
+    { text: 'VERIFIED & VOYAGE CONFIRMED', type: 'badge-success' },
     contentHtml
   );
 
   const text = `
 🎉 REGISTRATION CONFIRMED - CODIENYCH 1.0
 
-Hello ${leaderName},
-Congratulations! Your team payment and student credentials for ${teamName} have been verified and approved.
+Ahoy Captain ${leaderName},
+Congratulations! Your crew payment and student credentials for ${teamName} have been verified and approved.
 
 Registration ID: ${registrationId}
-Team Name: ${teamName}
-Team Size: ${teamSize} Members
-Status: CONFIRMED & SEAT RESERVED
+Crew Name: ${teamName}
+Crew Size: ${teamSize} Pirates
+Status: CONFIRMED & CABIN RESERVED
 Venue: ${config.VENUE}
 
 Please bring physical College ID cards and laptops on the event day.
@@ -421,7 +421,7 @@ Please bring physical College ID cards and laptops on the event day.
   return await sendUniversalMail({
     to: leaderEmail,
     replyTo: (process.env.ORGANIZER_EMAIL || config.ORGANIZER_EMAIL || 'codienych1.0@gmail.com').trim(),
-    subject: `[CODIENYCH 1.0] Registration Approved & Confirmed! - ${registrationId}`,
+    subject: `[CODIENYCH 1.0] Voyage Approved & Confirmed! - ${registrationId}`,
     text,
     html,
   });
@@ -439,22 +439,22 @@ const sendRegistrationRejection = async ({
   reason,
 }) => {
   const contentHtml = `
-    <h2 style="color: #ef4444; margin-top: 0;">Registration Update: Action Required ⚠️</h2>
-    <p>Hello <strong>${leaderName}</strong>,</p>
-    <p>We are contacting you regarding the registration for <strong>Team ${teamName}</strong> (ID: <strong style="color: #ef4444;">${registrationId}</strong>) for CODIENYCH 1.0.</p>
-    <p>During verification, an issue was found with your <strong>${rejectionType}</strong> and the status has been marked as <strong>REJECTED</strong>.</p>
+    <h2 style="color: #ef4444; margin-top: 0; font-size: 20px;">Manifest Update: Action Required ⚠️</h2>
+    <p>Ahoy <strong>Captain ${leaderName}</strong>,</p>
+    <p>We are contacting you regarding the crew registration for <strong>${teamName}</strong> (ID: <strong style="color: #ef4444;">${registrationId}</strong>) for CODIENYCH 1.0.</p>
+    <p>During admiralty verification, an issue was identified with your <strong>${rejectionType}</strong> and the status has been marked as <strong>REJECTED</strong>.</p>
     
-    <div style="background: #1c1117; border: 1px solid #ef4444; border-radius: 8px; padding: 18px; margin: 20px 0;">
-      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Registration ID:</span> <span style="color: #fff; font-weight: bold;">${registrationId}</span></div>
-      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Team Name:</span> <span style="color: #fff; font-weight: bold;">${teamName}</span></div>
-      <div style="margin-bottom: 8px;"><span style="color: #94a3b8; font-size: 13px;">Rejected Item:</span> <span style="color: #f87171; font-weight: bold;">${rejectionType}</span></div>
-      <div style="margin-top: 10px; padding: 10px; background: rgba(239,68,68,0.1); border-left: 3px solid #ef4444; border-radius: 4px;">
-        <span style="color: #fca5a5; display: block; margin-bottom: 4px; font-size: 12px;">Reason:</span>
+    <div style="background: #190c10; border: 1px solid #ef4444; border-radius: 10px; padding: 18px; margin: 20px 0;">
+      <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Registration ID:</span> <span style="color: #fff; font-weight: bold;">${registrationId}</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Crew Name:</span> <span style="color: #fff; font-weight: bold;">${teamName}</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Rejected Item:</span> <span style="color: #f87171; font-weight: bold;">${rejectionType}</span></div>
+      <div style="margin-top: 10px; padding: 12px; background: rgba(239,68,68,0.12); border-left: 3px solid #ef4444; border-radius: 4px;">
+        <span style="color: #fca5a5; display: block; margin-bottom: 4px; font-size: 12px; font-weight: bold;">Reason:</span>
         <span style="color: #ffffff; font-weight: bold;">${reason || 'Verification criteria not met.'}</span>
       </div>
     </div>
 
-    <p>If you believe this is a mistake, contact us at <a href="mailto:${config.ORGANIZER_EMAIL}" style="color: #00ff66;">${config.ORGANIZER_EMAIL}</a>.</p>
+    <p>If you believe this is an error or need assistance, contact the Admiralty at <a href="mailto:${config.ORGANIZER_EMAIL}" style="color: #ffd700; font-weight: bold;">${config.ORGANIZER_EMAIL}</a>.</p>
   `;
 
   const html = wrapEmailTemplate(
@@ -466,8 +466,8 @@ const sendRegistrationRejection = async ({
   const text = `
 Registration Update: Action Required - CODIENYCH 1.0
 
-Hello ${leaderName},
-We are contacting you regarding the registration for Team ${teamName} (ID: ${registrationId}).
+Ahoy Captain ${leaderName},
+We are contacting you regarding the crew registration for ${teamName} (ID: ${registrationId}).
 Your ${rejectionType} has been marked as REJECTED.
 
 Reason: ${reason || 'Verification criteria not met.'}
@@ -478,7 +478,7 @@ Please contact the organizing team at ${config.ORGANIZER_EMAIL} for assistance.
   return await sendUniversalMail({
     to: leaderEmail,
     replyTo: (process.env.ORGANIZER_EMAIL || config.ORGANIZER_EMAIL || 'codienych1.0@gmail.com').trim(),
-    subject: `[CODIENYCH 1.0] Registration Issue / Rejection Notice - ${registrationId}`,
+    subject: `[CODIENYCH 1.0] Manifest Issue / Rejection Notice - ${registrationId}`,
     text,
     html,
   });
