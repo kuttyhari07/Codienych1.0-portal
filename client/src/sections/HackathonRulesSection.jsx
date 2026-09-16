@@ -89,19 +89,19 @@ const HackathonRulesSection = () => {
         defaultOpen={false}
       >
         {/* Direct Text on Ancient Scroll Map */}
-        <div className="space-y-6">
-          <div className="text-center">
-            <h3 className="font-pirate text-2xl sm:text-3xl text-[#3b1f09] tracking-wider drop-shadow-sm uppercase">
-              ~ The Caribbean Code & Voyage Decrees ~
+        <div className="space-y-4 sm:space-y-6">
+          <div className="text-center mb-4 sm:mb-6">
+            <h3 className="font-pirate text-lg sm:text-2xl md:text-3xl text-[#3b1f09] tracking-wider drop-shadow-sm uppercase leading-tight px-1">
+              The Caribbean Code & Voyage Decrees
             </h3>
-            <p className="font-cinzel text-xs text-[#5c3514] font-semibold mt-1">
+            <p className="font-cinzel text-[10px] sm:text-xs text-[#5c3514] font-semibold mt-1">
               Select an edict below to reveal its clauses on the charter map
             </p>
-            <div className="w-24 h-0.5 bg-[#6b421a]/40 mx-auto mt-2" />
+            <div className="w-16 sm:w-24 h-0.5 bg-[#6b421a]/30 mx-auto mt-2" />
           </div>
 
           {/* Interactive Edict Bookmark Tabs on Parchment */}
-          <div className="flex flex-wrap justify-center gap-2">
+          <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2">
             {rulesCategories.map((cat) => {
               const isActive = cat.id === activeCategory;
               return (
@@ -109,7 +109,7 @@ const HackathonRulesSection = () => {
                   key={cat.id}
                   type="button"
                   onClick={() => handleCategorySelect(cat.id)}
-                  className={`px-3 py-1.5 rounded-lg font-cinzel text-xs font-bold transition-all flex items-center space-x-1.5 ${
+                  className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg font-cinzel text-[11px] sm:text-xs font-bold transition-all flex items-center space-x-1 sm:space-x-1.5 ${
                     isActive
                       ? 'bg-gradient-to-r from-[#6e1e1e] to-[#450d0d] text-[#ffe57f] border-2 border-[#d4af37] shadow-md scale-105'
                       : 'bg-[#3b200b]/10 hover:bg-[#3b200b]/20 text-[#3a1f0a] border border-[#5c3514]/30'
@@ -123,32 +123,32 @@ const HackathonRulesSection = () => {
           </div>
 
           {/* Active Edict Display Inscribed Directly on Parchment */}
-          <div className="p-5 sm:p-6 rounded-2xl bg-[#2e190b]/[0.06] border-2 border-[#5c3514]/30 shadow-inner">
-            <div className="flex items-center space-x-3 mb-4 pb-3 border-b border-[#5c3514]/25">
-              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#8a1c1c] via-[#5c0e0e] to-[#360505] border border-[#d4af37] flex items-center justify-center text-[#ffe57f] font-cinzel font-bold text-sm shadow-md">
+          <div className="p-3.5 sm:p-6 rounded-xl sm:rounded-2xl bg-[#2e190b]/[0.06] border border-[#5c3514]/30 shadow-inner">
+            <div className="flex items-center space-x-2.5 sm:space-x-3 mb-3 sm:mb-4 pb-2.5 sm:pb-3 border-b border-[#5c3514]/25">
+              <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-gradient-to-br from-[#8a1c1c] via-[#5c0e0e] to-[#360505] border border-[#d4af37] flex items-center justify-center text-[#ffe57f] font-cinzel font-bold text-xs sm:text-sm shadow-md flex-shrink-0">
                 {selectedCategory.numeral}
               </div>
-              <div>
-                <span className="font-cinzel text-[11px] font-extrabold text-[#703d16] uppercase tracking-wider block">
+              <div className="min-w-0">
+                <span className="font-cinzel text-[9px] sm:text-[11px] font-extrabold text-[#703d16] uppercase tracking-wider block">
                   VOYAGE EDICT {selectedCategory.numeral}
                 </span>
-                <h4 className="font-pirate text-xl sm:text-2xl text-[#2b1709] tracking-wide">
+                <h4 className="font-pirate text-base sm:text-2xl text-[#2b1709] tracking-wide leading-tight truncate">
                   {selectedCategory.title}
                 </h4>
               </div>
             </div>
 
             {/* Clauses List printed directly on the parchment */}
-            <div className="space-y-3">
+            <div className="space-y-2 sm:space-y-3">
               {selectedCategory.content.map((item, idx) => (
                 <div
                   key={idx}
-                  className="flex items-start space-x-3 p-3 rounded-xl bg-white/30 border border-[#5c3514]/15 hover:bg-white/50 transition-colors"
+                  className="flex items-start space-x-2.5 sm:space-x-3 p-2.5 sm:p-3 rounded-lg sm:rounded-xl bg-white/30 border border-[#5c3514]/15 hover:bg-white/50 transition-colors"
                 >
-                  <div className="w-5 h-5 rounded-full bg-[#4a280e]/15 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <Check className="w-3.5 h-3.5 text-[#5e220a]" />
+                  <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#4a280e]/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Check className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#5e220a]" />
                   </div>
-                  <p className="font-cinzel text-sm font-semibold text-[#241205] leading-relaxed drop-shadow-[0_1px_0_rgba(255,255,255,0.4)]">
+                  <p className="font-cinzel text-xs sm:text-sm font-semibold text-[#241205] leading-relaxed drop-shadow-[0_1px_0_rgba(255,255,255,0.4)]">
                     {item}
                   </p>
                 </div>
@@ -157,13 +157,13 @@ const HackathonRulesSection = () => {
           </div>
 
           {/* Brethren Court Seal of Authenticity */}
-          <div className="pt-3 border-t border-[#6b421a]/30 flex items-center justify-between flex-wrap gap-3 text-[11px] font-cinzel text-[#4e2b10] font-bold px-2">
-            <div className="flex items-center space-x-2">
-              <Compass className="w-4 h-4 text-[#75441b]" />
-              <span>MARITIME LAWS ENFORCED ACROSS ALL 24 HOURS OF THE VOYAGE</span>
+          <div className="pt-3 border-t border-[#6b421a]/30 flex flex-col sm:flex-row items-center justify-between gap-2 text-[10px] sm:text-[11px] font-cinzel text-[#4e2b10] font-bold px-1 text-center sm:text-left">
+            <div className="flex items-center space-x-1.5">
+              <Compass className="w-3.5 h-3.5 text-[#75441b] flex-shrink-0" />
+              <span>MARITIME LAWS ENFORCED ACROSS ALL 24 HOURS</span>
             </div>
-            <div className="flex items-center space-x-1.5 text-[#8a1c1c]">
-              <Skull className="w-4 h-4" />
+            <div className="flex items-center space-x-1.5 text-[#8a1c1c] flex-shrink-0">
+              <Skull className="w-3.5 h-3.5" />
               <span>DISQUALIFICATION APPLIES TO INFRACTIONS</span>
             </div>
           </div>
