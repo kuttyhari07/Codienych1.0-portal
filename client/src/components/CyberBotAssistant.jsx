@@ -51,8 +51,12 @@ const CyberBotAssistant = () => {
             transition={{ duration: 0.3 }}
             className="mb-3 max-w-[220px] sm:max-w-xs bg-[#08121a]/98 border-2 border-[#ffd700] p-3 sm:p-3.5 rounded-2xl rounded-br-none text-xs font-cinzel text-white shadow-[0_0_25px_rgba(229,193,88,0.5)] backdrop-blur-md relative hud-corner-box"
           >
-            <div className="flex items-center space-x-1.5 text-[#ffd700] font-bold text-[10px] uppercase mb-1">
-              <Skull className="w-3.5 h-3.5 text-[#ffd700] animate-pulse" />
+            <div className="flex items-center space-x-2 text-[#ffd700] font-bold text-[10px] uppercase mb-1">
+              <img
+                src="/pirate-skeleton-face.png"
+                alt="Skeleton"
+                className="w-4 h-4 rounded-full border border-[#ffd700] object-cover shadow-[0_0_6px_#ffd700]"
+              />
               <span>CAPTAIN JACK // COMPANION</span>
             </div>
             <p className="font-cinzel text-xs text-[#f4e6c3] leading-snug">
@@ -81,39 +85,22 @@ const CyberBotAssistant = () => {
         {/* Hover Energy Aura */}
         <div className="absolute -inset-2 bg-[#ffd700]/20 rounded-full blur-xl group-hover:bg-[#ffd700]/40 transition-all duration-300 pointer-events-none" />
 
-        {/* Animated Pirate Mascot SVG */}
-        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-b from-[#241a0e] via-[#140e06] to-[#04080e] border-2 border-[#ffd700] p-2 flex items-center justify-center shadow-[0_0_20px_rgba(229,193,88,0.5)] group-hover:shadow-[0_0_35px_#ffd700] group-hover:scale-110 active:scale-95 transition-all">
-          <svg viewBox="0 0 100 100" className="w-full h-full">
-            {/* Pirate Tricorn Hat */}
-            <path d="M15 35 Q50 15 85 35 Q50 25 15 35 Z" fill="#140e06" stroke="#ffd700" strokeWidth="2" />
-            <polygon points="50,15 20,35 80,35" fill="#1c150c" stroke="#ffd700" strokeWidth="2" />
-            <circle cx="50" cy="27" r="4" fill="#ffd700" />
-
-            {/* Pirate Skull Head */}
-            <circle cx="50" cy="50" r="18" fill="#f4e6c3" stroke="#8a6d1b" strokeWidth="2" />
-            {/* Eye Patch on Left Eye */}
-            <circle cx="43" cy="48" r="5" fill="#04080e" stroke="#000" strokeWidth="1" />
-            <line x1="30" y1="38" x2="56" y2="58" stroke="#04080e" strokeWidth="1.5" />
-            {/* Right Glowing Eye */}
-            <circle cx="57" cy="48" r="4" fill="#00e5ff" className="animate-pulse" />
-            <circle cx="57" cy="48" r="2" fill="#ffffff" />
-            
-            {/* Crimson Pirate Bandana */}
-            <path d="M32 40 Q50 36 68 40 L68 44 Q50 40 32 44 Z" fill="#dc2626" />
-
-            {/* Pirate Smirk */}
-            <path d="M44 58 Q50 62 56 57" stroke="#3b2b19" strokeWidth="2" strokeLinecap="round" fill="none" />
-            {/* Gold Tooth */}
-            <rect x="49" y="58" width="3" height="3" fill="#ffd700" />
-
-            {/* Crossed Cutlasses Base */}
-            <line x1="25" y1="75" x2="75" y2="85" stroke="#ffd700" strokeWidth="2.5" strokeLinecap="round" />
-            <line x1="75" y1="75" x2="25" y2="85" stroke="#ffd700" strokeWidth="2.5" strokeLinecap="round" />
-          </svg>
+        {/* Animated Pirate Mascot with Original Codienych Skeleton */}
+        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-b from-[#1c1409] via-[#0b121a] to-[#04080e] border-2 border-[#ffd700] p-1 flex items-center justify-center shadow-[0_0_20px_rgba(229,193,88,0.55)] group-hover:shadow-[0_0_35px_#ffd700] group-hover:scale-110 active:scale-95 transition-all overflow-hidden relative hud-corner-box">
+          <img
+            src="/pirate-skeleton-face.png"
+            alt="Captain Jack Pirate Skeleton"
+            className="w-full h-full object-cover rounded-xl filter drop-shadow-[0_0_10px_rgba(255,215,0,0.4)] transition-transform duration-300 group-hover:scale-110"
+          />
+          {/* Subtle Ambient Golden Shimmer */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-[#ffd700]/15 via-transparent to-transparent pointer-events-none rounded-xl" />
         </div>
 
-        {/* Small Status Badge */}
-        <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-[#ffd700] border-2 border-[#020508] shadow-[0_0_8px_#ffd700]" />
+        {/* Status Indicator Badge with Ping */}
+        <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ffd700] opacity-75" />
+          <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-[#ffd700] border-2 border-[#020508] shadow-[0_0_8px_#ffd700]" />
+        </span>
       </motion.div>
     </div>
   );
