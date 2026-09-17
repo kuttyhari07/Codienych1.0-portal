@@ -474,9 +474,6 @@ const exportReport = async (req, res) => {
         'Team Members',
         'Transaction ID',
         'Fee Amount',
-        'Payment Status',
-        'Registration Status',
-        'Registration Date',
       ];
 
       const csvRows = [
@@ -495,9 +492,6 @@ const exportReport = async (req, res) => {
             `"${r.memberNames.replace(/"/g, '""')}"`,
             `"${r.transactionId.replace(/"/g, '""')}"`,
             `"${r.amount}"`,
-            `"${r.paymentStatus}"`,
-            `"${r.registrationStatus}"`,
-            `"${r.registeredAt}"`,
           ].join(',')
         ),
       ];
@@ -603,15 +597,12 @@ const exportReport = async (req, res) => {
         <th>Members</th>
         <th>UTR / Tx ID</th>
         <th class="text-center">Fee</th>
-        <th class="text-center">Payment</th>
-        <th class="text-center">Status</th>
-        <th class="text-center">Date</th>
       </tr>
     </thead>
     <tbody>
       ${
         rows.length === 0
-          ? '<tr><td colspan="15" class="text-center" style="padding: 20px;">No registered teams found.</td></tr>'
+          ? '<tr><td colspan="12" class="text-center" style="padding: 20px;">No registered teams found.</td></tr>'
           : rows
               .map(
                 (r) => `
@@ -628,9 +619,6 @@ const exportReport = async (req, res) => {
           <td>${r.memberNames}</td>
           <td class="nowrap"><strong>${r.transactionId}</strong></td>
           <td class="text-center nowrap">${r.amount}</td>
-          <td class="text-center nowrap">${r.paymentStatus}</td>
-          <td class="text-center nowrap"><strong>${r.registrationStatus}</strong></td>
-          <td class="text-center nowrap">${r.registeredAt}</td>
         </tr>`
               )
               .join('')
