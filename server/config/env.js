@@ -22,6 +22,7 @@ module.exports = {
   VENUE: process.env.VENUE || '[VENUE PLACEHOLDER]',
   ORGANIZER_EMAIL: process.env.ORGANIZER_EMAIL || 'codienych@gmail.com',
   PHONE_NUMBER: process.env.PHONE_NUMBER || '+91 7904640937',
+  WHATSAPP_GROUP_URL: process.env.WHATSAPP_GROUP_URL || 'https://chat.whatsapp.com/J8wJdNPam0j7cJIOGnPXHy',
 
   USE_CLOUDINARY: process.env.USE_CLOUDINARY === 'true',
   CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME || '',

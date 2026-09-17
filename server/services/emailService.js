@@ -383,6 +383,8 @@ Track your status on our portal anytime using Registration ID: ${registrationId}
  */
 const sendRegistrationConfirmation = async ({ leaderEmail, leaderName, teamName, registrationId, teamSize, domain }) => {
   const domainText = domain || 'Not Specified';
+  const whatsappUrl = (process.env.WHATSAPP_GROUP_URL || config.WHATSAPP_GROUP_URL || 'https://chat.whatsapp.com/J8wJdNPam0j7cJIOGnPXHy').trim();
+
   const contentHtml = `
     <h2 style="color: #ffd700; margin-top: 0; font-size: 22px;">🎉 CREW ENLISTMENT CONFIRMED!</h2>
     <p>Ahoy <strong>Captain ${leaderName}</strong>,</p>
@@ -397,11 +399,30 @@ const sendRegistrationConfirmation = async ({ leaderEmail, leaderName, teamName,
       <div><span style="color: #cfb07a; font-size: 13px;">Port Venue:</span> <span style="color: #fff; font-weight: bold;">${config.VENUE}</span></div>
     </div>
 
+    <!-- Official WhatsApp Fleet Community Box -->
+    <div style="background: #071f14; border: 2px solid #25D366; border-radius: 12px; padding: 22px 18px; margin: 25px 0; text-align: center; box-shadow: 0 0 25px rgba(37,211,102,0.25);">
+      <div style="font-size: 32px; line-height: 1; margin-bottom: 10px;">📲 ⚔️</div>
+      <h3 style="color: #25D366; margin: 0 0 8px 0; font-size: 18px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px;">
+        MANDATORY: JOIN OFFICIAL WHATSAPP FLEET
+      </h3>
+      <p style="color: #e2e8f0; font-size: 13px; line-height: 1.6; margin: 0 0 18px 0;">
+        Captain <strong style="color: #ffd700;">${leaderName}</strong>, please join our official WhatsApp group immediately and share this link with all <strong style="color: #fff;">${teamSize} crew mates</strong>. All event day seatings, review schedules, Wi-Fi keys, and admiralty announcements will be shared exclusively here!
+      </p>
+      <div>
+        <a href="${whatsappUrl}" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); color: #020508; font-weight: 900; font-size: 14px; text-decoration: none; padding: 14px 32px; border-radius: 8px; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(37,211,102,0.4);">
+          👉 TAP HERE TO JOIN WHATSAPP GROUP 👈
+        </a>
+      </div>
+      <p style="margin: 14px 0 0 0; font-size: 11px; color: #86efac; word-break: break-all;">
+        Direct Link: <a href="${whatsappUrl}" style="color: #25D366; text-decoration: underline; font-weight: bold;">${whatsappUrl}</a>
+      </p>
+    </div>
+
     <p><strong>Crucial Voyage Directives:</strong></p>
     <ul style="padding-left: 20px; color: #cbd5e1;">
       <li>Please bring your original physical College ID cards on the embarkation day.</li>
       <li>Carry your laptops, extension cables, and necessary hardware tools.</li>
-      <li>Join the Official WhatsApp Fleet via the Voyage Status page for real-time announcements.</li>
+      <li>Ensure all members have joined the WhatsApp group via the link above.</li>
     </ul>
 
     <p style="margin-top: 25px; color: #ffd700; font-weight: bold;">Prepare for 24 hours of non-stop coding on the high seas!</p>
@@ -425,6 +446,12 @@ Domain / Track: ${domainText}
 Crew Size: ${teamSize} Pirates
 Status: CONFIRMED & CABIN RESERVED
 Venue: ${config.VENUE}
+
+============================================================
+📲 MANDATORY: JOIN OFFICIAL WHATSAPP FLEET
+All captains and crew members must join the official WhatsApp group for live schedules, table allocations, and announcements:
+Join Link: ${whatsappUrl}
+============================================================
 
 Please bring physical College ID cards and laptops on the event day.
   `.trim();
