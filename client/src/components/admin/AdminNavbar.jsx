@@ -32,9 +32,13 @@ const AdminNavbar = ({ title, showBack = false, backTo = '/admin' }) => {
           ) : (
             <Link
               to="/admin"
-              className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-[#0c1e2d] border border-[#ffd700] flex items-center justify-center text-[#ffd700] flex-shrink-0 shadow-[0_0_12px_rgba(255,215,0,0.35)]"
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#140e06] border border-[#ffd700] flex items-center justify-center overflow-hidden flex-shrink-0 shadow-[0_0_12px_rgba(255,215,0,0.35)] p-0.5"
             >
-              <Anchor className="w-4 h-4 sm:w-5 sm:h-5 text-[#ffd700]" />
+              <img
+                src="/codienych-logo-round.png"
+                alt="CODIENYCH 1.0 Logo"
+                className="w-full h-full object-cover rounded-full"
+              />
             </Link>
           )}
 
