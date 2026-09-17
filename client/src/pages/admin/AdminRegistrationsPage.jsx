@@ -85,6 +85,7 @@ const AdminRegistrationsPage = () => {
                 <tr className="bg-[#04090f] border-b border-[#3a2e1d] text-[#e5c158] uppercase font-cinzel">
                   <th className="py-4 px-4">REG ID</th>
                   <th className="py-4 px-4">FLEET NAME</th>
+                  <th className="py-4 px-4">DOMAIN / TRACK</th>
                   <th className="py-4 px-4">SIZE</th>
                   <th className="py-4 px-4">CAPTAIN</th>
                   <th className="py-4 px-4">COLLEGE</th>
@@ -97,13 +98,13 @@ const AdminRegistrationsPage = () => {
               <tbody className="divide-y divide-[#3a2e1d]/60">
                 {loading ? (
                   <tr>
-                    <td colSpan="9" className="py-8 text-center text-gray-400 font-cinzel">
+                    <td colSpan="10" className="py-8 text-center text-gray-400 font-cinzel">
                       SEARCHING FLEET RECORDS...
                     </td>
                   </tr>
                 ) : registrations.length === 0 ? (
                   <tr>
-                    <td colSpan="9" className="py-8 text-center text-gray-400 font-cinzel">
+                    <td colSpan="10" className="py-8 text-center text-gray-400 font-cinzel">
                       NO FLEET MANIFEST RECORDS FOUND.
                     </td>
                   </tr>
@@ -112,6 +113,11 @@ const AdminRegistrationsPage = () => {
                     <tr key={reg.id} className="hover:bg-[#0c1e2d]/50">
                       <td className="py-3.5 px-4 font-bold text-[#ffd700]">{reg.registrationId}</td>
                       <td className="py-3.5 px-4 font-bold text-white">{reg.teamName}</td>
+                      <td className="py-3.5 px-4">
+                        <span className="px-2.5 py-1 rounded bg-[#0c1e2d] border border-[#00e5ff]/40 text-[#00e5ff] text-[10px] font-cinzel font-bold whitespace-nowrap inline-block">
+                          {reg.domain || 'Not Specified'}
+                        </span>
+                      </td>
                       <td className="py-3.5 px-4 text-gray-300">{reg.teamSize}</td>
                       <td className="py-3.5 px-4 text-gray-200">
                         <div className="font-bold">{reg.teamLeader}</div>

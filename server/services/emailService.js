@@ -235,6 +235,7 @@ const sendOrganizerNewRegistrationAlert = async ({
   teamName,
   registrationId,
   teamSize,
+  domain,
   expectedAmount,
   transactionId,
   leaderName,
@@ -243,6 +244,7 @@ const sendOrganizerNewRegistrationAlert = async ({
   college,
   department,
 }) => {
+  const domainText = domain || 'Not Specified';
   const contentHtml = `
     <h2 style="color: #ffd700; margin-top: 0; font-size: 20px;">⚡ New Crew Enlistment Submitted</h2>
     <p>A new pirate crew has enlisted for CODIENYCH 1.0 and is awaiting admiralty payment & ID verification.</p>
@@ -250,6 +252,7 @@ const sendOrganizerNewRegistrationAlert = async ({
     <div style="background: #0d1a24; border: 1px solid #6b5321; border-radius: 10px; padding: 18px; margin: 20px 0;">
       <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Registration ID:</span> <span style="color:#ffd700; font-size: 16px; font-weight: bold;">${registrationId}</span></div>
       <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Crew Name:</span> <span style="color: #fff; font-weight: bold;">${teamName}</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Domain / Track:</span> <span style="color: #ffd700; font-weight: bold;">${domainText}</span></div>
       <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Crew Size:</span> <span style="color: #fff;">${teamSize} Pirates</span></div>
       <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Expected Fee:</span> <span style="color: #ffd700; font-weight: bold;">₹${expectedAmount}</span></div>
       <div><span style="color: #cfb07a; font-size: 13px;">UPI UTR / Tx ID:</span> <span style="color: #00e5ff; font-weight: bold;">${transactionId}</span></div>
@@ -278,6 +281,7 @@ const sendOrganizerNewRegistrationAlert = async ({
 
 Registration ID: ${registrationId}
 Crew Name: ${teamName}
+Domain / Track: ${domainText}
 Crew Size: ${teamSize} Pirates
 Expected Fee: ₹${expectedAmount}
 UPI UTR / Tx ID: ${transactionId}
@@ -296,7 +300,7 @@ Please login to Admiralty Dashboard to review ID cards & payment proof.
   return await sendUniversalMail({
     to: adminAlertEmail,
     replyTo: leaderEmail,
-    subject: `[NEW ENLISTMENT] Crew ${teamName} (${registrationId}) - CODIENYCH 1.0`,
+    subject: `[NEW ENLISTMENT] Crew ${teamName} (${domainText}) - CODIENYCH 1.0`,
     text,
     html,
   });
@@ -311,9 +315,11 @@ const sendRegistrationReceivedToLeader = async ({
   teamName,
   registrationId,
   teamSize,
+  domain,
   expectedAmount,
   transactionId,
 }) => {
+  const domainText = domain || 'Not Specified';
   const contentHtml = `
     <h2 style="color: #ffd700; margin-top: 0; font-size: 20px;">Crew Manifest Received 📜</h2>
     <p>Ahoy <strong>Captain ${leaderName}</strong>,</p>
@@ -322,6 +328,7 @@ const sendRegistrationReceivedToLeader = async ({
     <div style="background: #0d1a24; border: 1px solid #6b5321; border-radius: 10px; padding: 18px; margin: 20px 0;">
       <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Registration ID:</span> <span style="color:#ffd700; font-size: 16px; font-weight: bold;">${registrationId}</span></div>
       <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Crew Name:</span> <span style="color: #fff; font-weight: bold;">${teamName}</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Domain / Track:</span> <span style="color: #ffd700; font-weight: bold;">${domainText}</span></div>
       <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Crew Size:</span> <span style="color: #fff;">${teamSize} Pirates</span></div>
       <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Amount Paid:</span> <span style="color: #ffd700; font-weight: bold;">₹${expectedAmount}</span></div>
       <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Transaction ID:</span> <span style="color: #fff;">${transactionId}</span></div>
@@ -352,6 +359,7 @@ Thank you for enlisting Crew ${teamName} for CODIENYCH 1.0!
 
 Registration ID: ${registrationId}
 Crew Name: ${teamName}
+Domain / Track: ${domainText}
 Crew Size: ${teamSize} Pirates
 Amount: ₹${expectedAmount}
 Transaction ID: ${transactionId}
@@ -373,7 +381,8 @@ Track your status on our portal anytime using Registration ID: ${registrationId}
 /**
  * 3. Send Registration Confirmation / Approval to Team Leader
  */
-const sendRegistrationConfirmation = async ({ leaderEmail, leaderName, teamName, registrationId, teamSize }) => {
+const sendRegistrationConfirmation = async ({ leaderEmail, leaderName, teamName, registrationId, teamSize, domain }) => {
+  const domainText = domain || 'Not Specified';
   const contentHtml = `
     <h2 style="color: #ffd700; margin-top: 0; font-size: 22px;">🎉 CREW ENLISTMENT CONFIRMED!</h2>
     <p>Ahoy <strong>Captain ${leaderName}</strong>,</p>
@@ -382,6 +391,7 @@ const sendRegistrationConfirmation = async ({ leaderEmail, leaderName, teamName,
     <div style="background: #0d1a24; border: 2px solid #ffd700; border-radius: 10px; padding: 18px; margin: 20px 0; box-shadow: 0 0 20px rgba(255,215,0,0.15);">
       <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Registration ID:</span> <span style="color:#ffd700; font-size: 16px; font-weight: bold;">${registrationId}</span></div>
       <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Crew Name:</span> <span style="color: #fff; font-weight: bold;">${teamName}</span></div>
+      <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Domain / Track:</span> <span style="color: #ffd700; font-weight: bold;">${domainText}</span></div>
       <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Crew Size:</span> <span style="color: #fff;">${teamSize} Pirates</span></div>
       <div style="margin-bottom: 8px;"><span style="color: #cfb07a; font-size: 13px;">Status:</span> <span style="color:#ffd700; font-weight: bold;">CONFIRMED & CABIN RESERVED ⚓</span></div>
       <div><span style="color: #cfb07a; font-size: 13px;">Port Venue:</span> <span style="color: #fff; font-weight: bold;">${config.VENUE}</span></div>
@@ -411,6 +421,7 @@ Congratulations! Your crew payment and student credentials for ${teamName} have 
 
 Registration ID: ${registrationId}
 Crew Name: ${teamName}
+Domain / Track: ${domainText}
 Crew Size: ${teamSize} Pirates
 Status: CONFIRMED & CABIN RESERVED
 Venue: ${config.VENUE}

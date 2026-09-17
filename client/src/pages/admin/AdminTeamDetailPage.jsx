@@ -303,6 +303,10 @@ const AdminTeamDetailPage = () => {
             <div className="font-cinzel text-sm text-gray-300 mt-1">
               Fleet: <strong className="text-white font-bold">{registration.teamName}</strong> ({registration.teamSize} Pirates) | Registered: {new Date(registration.createdAt).toLocaleString()}
             </div>
+            <div className="mt-2.5 inline-flex items-center space-x-2 px-3 py-1 rounded-lg bg-[#04090f] border border-[#00e5ff]/50 shadow-sm">
+              <span className="text-[10px] font-cinzel text-gray-400 uppercase tracking-wider">DOMAIN / TRACK:</span>
+              <strong className="text-xs font-cinzel font-bold text-[#00e5ff]">{registration.domain || 'Not Specified'}</strong>
+            </div>
           </div>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">

@@ -151,6 +151,16 @@ const StatusPage = () => {
                 <span className="text-gray-400 font-cinzel text-xs block mb-1">STUDENT ID PASSES</span>
                 <span className="text-[#ffd700] font-bold text-xs">{statusData.participantVerificationProgress}</span>
               </div>
+
+              <div className="bg-[#04090f] p-4 rounded-xl border border-[#3a2e1d] sm:col-span-2 flex items-center justify-between">
+                <div>
+                  <span className="text-gray-400 font-cinzel text-xs block mb-0.5">CHOSEN TRACK / DOMAIN</span>
+                  <span className="text-[#00e5ff] font-bold text-sm font-cinzel">{statusData.domain || 'Not Specified'}</span>
+                </div>
+                <span className="px-2.5 py-1 rounded bg-[#0c1e2d] border border-[#00e5ff]/40 text-[#00e5ff] text-[10px] font-cinzel font-bold">
+                  EXPEDITION REALM
+                </span>
+              </div>
             </div>
 
             {/* Overall Registration Status Banner */}

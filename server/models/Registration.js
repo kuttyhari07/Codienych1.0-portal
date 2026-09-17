@@ -18,6 +18,11 @@ const RegistrationSchema = new mongoose.Schema(
       required: [true, 'Team size is required'],
       enum: [4, 5, 6],
     },
+    domain: {
+      type: String,
+      required: [true, 'Hackathon domain selection is required'],
+      trim: true,
+    },
     status: {
       type: String,
       enum: ['PENDING', 'REGISTRATION CONFIRMED', 'REJECTED'],

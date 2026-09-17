@@ -40,3 +40,42 @@ export const EVENT_CONFIG = {
   OVERALL_COORDINATORS: 'IE Members And Association Members (Information Technology)',
   WHATSAPP_GROUP_URL: 'https://chat.whatsapp.com/J8wJdNPam0j7cJIOGnPXHy',
 };
+
+export const HACKATHON_DOMAINS = [
+  {
+    id: 'aiml',
+    name: 'AI & Machine Learning (AI ML)',
+    shortTitle: 'AI ML',
+    tagline: 'Neural Piracy & Intelligent Agents',
+    color: '#ffd700',
+  },
+  {
+    id: 'web-app',
+    name: 'Web & App Development',
+    shortTitle: 'Web & App Dev',
+    tagline: 'Digital Fleets & Full-Stack Artifacts',
+    color: '#00e5ff',
+  },
+  {
+    id: 'cybersecurity',
+    name: 'Cyber Security',
+    shortTitle: 'Cyber Security',
+    tagline: 'High-Seas Defense & Cryptographic Bastions',
+    color: '#ff4444',
+  },
+  {
+    id: 'iot',
+    name: 'Internet of Things (IOT)',
+    shortTitle: 'IOT',
+    tagline: 'Connected Vessels & Telemetry (Simulation / Hardware)',
+    color: '#39ff14',
+  },
+  {
+    id: 'cloud',
+    name: 'Cloud Computing',
+    shortTitle: 'Cloud Computing',
+    tagline: 'Distributed Oceans & Scalable Infrastructure',
+    color: '#b388ff',
+  },
+];
+

@@ -44,6 +44,7 @@ const updateOverallRegistrationStatus = async (registrationId) => {
             teamName: registration.teamName,
             registrationId: registration.registrationId,
             teamSize: registration.teamSize,
+            domain: registration.domain,
           });
           console.log(`[Email Dispatch on Full Verification] Delivery to ${leader.email}: ${sent}`);
         } catch (mailErr) {
@@ -174,6 +175,7 @@ const getRegistrations = async (req, res) => {
           registrationId: reg.registrationId,
           teamName: reg.teamName,
           teamSize: reg.teamSize,
+          domain: reg.domain || 'Not Specified',
           teamLeader: leader ? leader.fullName : 'N/A',
           leaderEmail: leader ? leader.email : 'N/A',
           leaderPhone: leader ? leader.phone : 'N/A',
@@ -194,6 +196,7 @@ const getRegistrations = async (req, res) => {
         (item) =>
           item.registrationId.toLowerCase().includes(term) ||
           item.teamName.toLowerCase().includes(term) ||
+          (item.domain && item.domain.toLowerCase().includes(term)) ||
           item.teamLeader.toLowerCase().includes(term) ||
           item.leaderEmail.toLowerCase().includes(term) ||
           item.college.toLowerCase().includes(term) ||
@@ -441,6 +444,7 @@ const exportReport = async (req, res) => {
         sNo: sNo++,
         registrationId: reg.registrationId,
         teamName: reg.teamName,
+        domain: reg.domain || 'Not Specified',
         teamSize: reg.teamSize,
         teamLeader: leader ? leader.fullName : 'N/A',
         leaderEmail: leader ? leader.email : 'N/A',
@@ -453,6 +457,54 @@ const exportReport = async (req, res) => {
         registrationStatus: reg.status,
         registeredAt: reg.createdAt ? new Date(reg.createdAt).toLocaleDateString() : 'N/A',
       });
+    }
+
+    // Support direct CSV format if requested
+    if (req.query.format === 'csv') {
+      const headers = [
+        'S.No',
+        'Registration ID',
+        'Team Name',
+        'Domain / Track',
+        'Team Size',
+        'Leader Name',
+        'Leader Email',
+        'Leader Phone',
+        'College',
+        'Team Members',
+        'Transaction ID',
+        'Fee Amount',
+        'Payment Status',
+        'Registration Status',
+        'Registration Date',
+      ];
+
+      const csvRows = [
+        headers.join(','),
+        ...rows.map((r) =>
+          [
+            r.sNo,
+            `"${r.registrationId}"`,
+            `"${r.teamName.replace(/"/g, '""')}"`,
+            `"${r.domain.replace(/"/g, '""')}"`,
+            r.teamSize,
+            `"${r.teamLeader.replace(/"/g, '""')}"`,
+            `"${r.leaderEmail.replace(/"/g, '""')}"`,
+            `"${r.leaderPhone.replace(/"/g, '""')}"`,
+            `"${r.college.replace(/"/g, '""')}"`,
+            `"${r.memberNames.replace(/"/g, '""')}"`,
+            `"${r.transactionId.replace(/"/g, '""')}"`,
+            `"${r.amount}"`,
+            `"${r.paymentStatus}"`,
+            `"${r.registrationStatus}"`,
+            `"${r.registeredAt}"`,
+          ].join(',')
+        ),
+      ];
+
+      res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+      res.setHeader('Content-Disposition', `attachment; filename="CODIENYCH_1.0_Student_Details_${Date.now()}.csv"`);
+      return res.status(200).send(csvRows.join('\n'));
     }
 
     const htmlContent = `<!DOCTYPE html>
@@ -512,6 +564,13 @@ const exportReport = async (req, res) => {
     .nowrap {
       white-space: nowrap;
     }
+    .domain-tag {
+      font-weight: bold;
+      color: #795548;
+      background-color: #fff8e1;
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
     @media print {
       @page {
         size: landscape;
@@ -535,6 +594,7 @@ const exportReport = async (req, res) => {
         <th class="text-center">#</th>
         <th>Reg ID</th>
         <th>Team Name</th>
+        <th>Domain / Track</th>
         <th class="text-center">Size</th>
         <th>Leader</th>
         <th>Email</th>
@@ -551,7 +611,7 @@ const exportReport = async (req, res) => {
     <tbody>
       ${
         rows.length === 0
-          ? '<tr><td colspan="14" class="text-center" style="padding: 20px;">No registered teams found.</td></tr>'
+          ? '<tr><td colspan="15" class="text-center" style="padding: 20px;">No registered teams found.</td></tr>'
           : rows
               .map(
                 (r) => `
@@ -559,6 +619,7 @@ const exportReport = async (req, res) => {
           <td class="text-center">${r.sNo}</td>
           <td class="nowrap"><strong>${r.registrationId}</strong></td>
           <td><strong>${r.teamName}</strong></td>
+          <td class="nowrap"><span class="domain-tag">${r.domain}</span></td>
           <td class="text-center">${r.teamSize}</td>
           <td>${r.teamLeader}</td>
           <td>${r.leaderEmail}</td>
@@ -623,6 +684,7 @@ const approveTeamRegistration = async (req, res) => {
           teamName: registration.teamName,
           registrationId: registration.registrationId,
           teamSize: registration.teamSize,
+          domain: registration.domain,
         }),
         new Promise((_, reject) => setTimeout(() => reject(new Error('Email dispatch timeout')), 8000))
       ])

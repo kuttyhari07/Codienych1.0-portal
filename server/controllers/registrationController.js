@@ -38,7 +38,11 @@ const generateRegistrationId = async () => {
  */
 const registerTeam = async (req, res) => {
   try {
-    const { teamName, teamSize, transactionId, participants } = req.body;
+    const { teamName, teamSize, domain, transactionId, participants } = req.body;
+
+    if (!domain || !domain.trim()) {
+      return res.status(400).json({ success: false, message: 'Please select one hackathon domain for your team.' });
+    }
 
     // Parsed JSON if sent as multipart payload string
     let parsedParticipants = [];
@@ -158,6 +162,7 @@ const registerTeam = async (req, res) => {
       registrationId,
       teamName: teamName.trim(),
       teamSize: numTeamSize,
+      domain: domain.trim(),
       status: 'PENDING',
       registrationDate: new Date(),
     });
@@ -200,6 +205,7 @@ const registerTeam = async (req, res) => {
               teamName: registration.teamName,
               registrationId,
               teamSize: registration.teamSize,
+              domain: registration.domain,
               expectedAmount,
               transactionId: trimmedTxId,
               leaderName: leaderDoc.fullName,
@@ -214,6 +220,7 @@ const registerTeam = async (req, res) => {
               teamName: registration.teamName,
               registrationId,
               teamSize: registration.teamSize,
+              domain: registration.domain,
               expectedAmount,
               transactionId: trimmedTxId,
             }),
@@ -233,6 +240,7 @@ const registerTeam = async (req, res) => {
         registrationId,
         teamName: registration.teamName,
         teamSize: registration.teamSize,
+        domain: registration.domain,
         expectedAmount,
         transactionId: trimmedTxId,
         status: registration.status,
@@ -279,6 +287,7 @@ const getPublicStatus = async (req, res) => {
         registrationId: registration.registrationId,
         teamName: registration.teamName,
         teamSize: registration.teamSize,
+        domain: registration.domain || 'Not Specified',
         registrationDate: registration.registrationDate,
         registrationStatus: registration.status,
         paymentStatus: payment ? payment.status : 'PENDING',

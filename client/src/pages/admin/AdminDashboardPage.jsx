@@ -63,6 +63,36 @@ const AdminDashboardPage = () => {
     }
   };
 
+  const handleDownloadCsvReport = async () => {
+    try {
+      setDownloading(true);
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(apiUrl('/api/admin/export-report?format=csv'), {
+        headers: {
+          Authorization: token ? `Bearer ${token}` : '',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate CSV report');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `CODIENYCH_1.0_Student_Details_${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (err) {
+      alert('Error downloading CSV report: ' + err.message);
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#03070b] text-[#ffd700] flex items-center justify-center font-cinzel tracking-wider text-sm">
@@ -87,14 +117,26 @@ const AdminDashboardPage = () => {
             </p>
           </div>
 
-          <button
-            onClick={handleDownloadReport}
-            disabled={downloading}
-            className="inline-flex items-center justify-center space-x-2 px-4 py-2.5 bg-gradient-to-r from-[#ffd700] via-[#f39c12] to-[#b8860b] hover:from-[#ffe043] hover:to-[#d4af37] text-black font-cinzel font-bold text-xs rounded-xl shadow-[0_0_15px_rgba(255,215,0,0.3)] transition-all cursor-pointer flex-shrink-0 uppercase tracking-wider"
-          >
-            <Download className="w-4 h-4" />
-            <span>{downloading ? 'EXPORTING...' : 'EXPORT LOG (EXCEL / HTML)'}</span>
-          </button>
+          <div className="flex flex-wrap gap-2.5">
+            <button
+              onClick={handleDownloadCsvReport}
+              disabled={downloading}
+              className="inline-flex items-center justify-center space-x-2 px-3.5 py-2.5 bg-[#0c1e2d] hover:bg-[#152e46] border border-[#00e5ff]/50 text-[#00e5ff] font-cinzel font-bold text-xs rounded-xl shadow-md transition-all cursor-pointer flex-shrink-0 uppercase tracking-wider"
+              title="Download direct spreadsheet CSV"
+            >
+              <Download className="w-4 h-4" />
+              <span>{downloading ? 'EXPORTING...' : 'EXPORT CSV'}</span>
+            </button>
+
+            <button
+              onClick={handleDownloadReport}
+              disabled={downloading}
+              className="inline-flex items-center justify-center space-x-2 px-4 py-2.5 bg-gradient-to-r from-[#ffd700] via-[#f39c12] to-[#b8860b] hover:from-[#ffe043] hover:to-[#d4af37] text-black font-cinzel font-bold text-xs rounded-xl shadow-[0_0_15px_rgba(255,215,0,0.3)] transition-all cursor-pointer flex-shrink-0 uppercase tracking-wider"
+            >
+              <Download className="w-4 h-4" />
+              <span>{downloading ? 'EXPORTING...' : 'EXPORT LOG (EXCEL / HTML)'}</span>
+            </button>
+          </div>
         </div>
 
         {/* Stats Cards Matrix */}

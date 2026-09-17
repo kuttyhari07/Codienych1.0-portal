@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Shield, ChevronRight, ChevronLeft, Upload, Check, AlertCircle, QrCode, Copy, CheckCircle2, ArrowRight, Anchor, Compass } from 'lucide-react';
+import { Shield, ChevronRight, ChevronLeft, Upload, Check, AlertCircle, QrCode, Copy, CheckCircle2, ArrowRight, Anchor, Compass, Cpu, Globe, ShieldAlert, Wifi, Cloud } from 'lucide-react';
 import api from '../services/api';
-import { EVENT_CONFIG } from '../utils/config';
+import { EVENT_CONFIG, HACKATHON_DOMAINS } from '../utils/config';
 
 const steps = [
   '1. CREW INFO',
@@ -25,6 +25,7 @@ const RegisterPage = () => {
   // Form State
   const [teamName, setTeamName] = useState('');
   const [teamSize, setTeamSize] = useState(4); // default 4 (options: 4, 5, 6)
+  const [domain, setDomain] = useState(''); // Hackathon domain / track selection
 
   // Participant #1 (Leader / Captain)
   const [leader, setLeader] = useState({
@@ -171,6 +172,10 @@ const RegisterPage = () => {
         setErrorMessage('Team size must be 4, 5, or 6 members.');
         return false;
       }
+      if (!domain) {
+        setErrorMessage('Please select one of the 5 Hackathon Domains / Tracks for your crew.');
+        return false;
+      }
     }
 
     if (step === 2) {
@@ -249,6 +254,7 @@ const RegisterPage = () => {
       const formData = new FormData();
       formData.append('teamName', teamName);
       formData.append('teamSize', teamSize);
+      formData.append('domain', domain);
       formData.append('transactionId', transactionId);
 
       // Package all participants (Leader + Members)
@@ -330,6 +336,10 @@ const RegisterPage = () => {
             <div className="flex justify-between border-b border-[#3a2e1d] pb-2">
               <span className="text-gray-400 font-cinzel">Fleet Name:</span>
               <span className="text-white font-bold">{submissionSuccess.teamName}</span>
+            </div>
+            <div className="flex justify-between border-b border-[#3a2e1d] pb-2">
+              <span className="text-gray-400 font-cinzel">Domain / Track:</span>
+              <span className="text-[#ffd700] font-bold">{submissionSuccess.domain || domain}</span>
             </div>
             <div className="flex justify-between border-b border-[#3a2e1d] pb-2">
               <span className="text-gray-400 font-cinzel">Crew Size:</span>
@@ -504,6 +514,95 @@ const RegisterPage = () => {
                 <p className="font-cinzel text-xs text-gray-400 mt-2.5">
                   Total Gold Tribute: <span className="text-[#ffd700] font-bold">₹{calculatedFee}</span> (₹{EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER} × {teamSize} pirates)
                 </p>
+              </div>
+
+              {/* HACKATHON DOMAIN / TRACK SELECTION (1 of 5) */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block font-cinzel text-xs text-[#e5c158] uppercase tracking-wider">
+                    CHOOSE HACKATHON DOMAIN / TRACK (1 OF 5 MANDATORY) *
+                  </label>
+                  {domain && (
+                    <span className="text-[10px] font-cinzel text-[#ffd700] font-bold uppercase tracking-wider">
+                      ✓ TRACK SELECTED
+                    </span>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {HACKATHON_DOMAINS.map((item) => {
+                    const isSelected = domain === item.name;
+                    let DomainIcon = Shield;
+                    if (item.id === 'aiml') DomainIcon = Cpu;
+                    else if (item.id === 'web-app') DomainIcon = Globe;
+                    else if (item.id === 'cybersecurity') DomainIcon = ShieldAlert;
+                    else if (item.id === 'iot') DomainIcon = Wifi;
+                    else if (item.id === 'cloud') DomainIcon = Cloud;
+
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => setDomain(item.name)}
+                        className={`p-4 rounded-xl border text-left transition-all relative overflow-hidden flex flex-col justify-between cursor-pointer ${
+                          isSelected
+                            ? 'bg-[#0f2334] border-[#ffd700] shadow-[0_0_20px_rgba(255,215,0,0.35)] ring-1 ring-[#ffd700]'
+                            : 'bg-[#04090f] border-[#3a2e1d] hover:border-[#b8860b] hover:bg-[#08121a]'
+                        }`}
+                      >
+                        {isSelected && (
+                          <div className="absolute top-2.5 right-2.5 w-5 h-5 rounded-full bg-[#ffd700] text-black flex items-center justify-center font-bold text-xs shadow-md">
+                            ✓
+                          </div>
+                        )}
+                        <div>
+                          <div className="flex items-center space-x-2.5 mb-2.5">
+                            <div
+                              className="w-8 h-8 rounded-lg flex items-center justify-center border"
+                              style={{
+                                backgroundColor: '#050c14',
+                                borderColor: `${item.color}60`,
+                                color: item.color,
+                              }}
+                            >
+                              <DomainIcon className="w-4 h-4" />
+                            </div>
+                            <span
+                              className="text-[10px] font-cinzel font-bold tracking-wider px-2 py-0.5 rounded border"
+                              style={{
+                                color: item.color,
+                                borderColor: `${item.color}50`,
+                                backgroundColor: `${item.color}15`,
+                              }}
+                            >
+                              {item.shortTitle}
+                            </span>
+                          </div>
+                          <h4 className="font-pirate text-lg text-white mb-1 leading-snug">
+                            {item.name}
+                          </h4>
+                          <p className="font-cinzel text-[10px] text-gray-400 leading-relaxed">
+                            {item.tagline}
+                          </p>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {domain ? (
+                  <div className="mt-3 p-3 bg-[#0c2233] border border-[#ffd700]/60 rounded-xl flex items-center justify-between text-xs font-cinzel">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-[#ffd700] font-bold">CHOSEN TRACK:</span>
+                      <strong className="text-white font-bold">{domain}</strong>
+                    </div>
+                    <span className="text-[10px] text-[#00e5ff] font-mono">READY FOR VOYAGE</span>
+                  </div>
+                ) : (
+                  <p className="font-cinzel text-[11px] text-amber-400/90 mt-2">
+                    * Please click on one track above to assign your crew's hackathon focus area.
+                  </p>
+                )}
               </div>
             </div>
           )}
@@ -805,6 +904,10 @@ const RegisterPage = () => {
                 <div className="flex justify-between border-b border-[#3a2e1d] pb-2">
                   <span className="text-gray-400 font-cinzel">Fleet Name:</span>
                   <span className="text-[#ffd700] font-bold">{teamName}</span>
+                </div>
+                <div className="flex justify-between border-b border-[#3a2e1d] pb-2">
+                  <span className="text-gray-400 font-cinzel">Chosen Track / Domain:</span>
+                  <span className="text-[#00e5ff] font-bold">{domain}</span>
                 </div>
                 <div className="flex justify-between border-b border-[#3a2e1d] pb-2">
                   <span className="text-gray-400 font-cinzel">Crew Size:</span>
