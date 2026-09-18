@@ -4,7 +4,7 @@ import { Sparkles, Zap, MessageSquare, Terminal, Heart, Trophy, Flame, Skull, Co
 import { playLaserBlip, playVictoryFanfare } from '../utils/cyberSound';
 
 const dialogues = [
-  "🏴‍☠️ AHOY MATEY! Ready to plunder the ₹₹ Cash Bounty?",
+  "🏴‍☠️ AHOY MATEY! Ready to plunder the Upto ₹50,000+ Cash Prize?",
   "☕ Midnight grog & tavern lounge waiting on deck!",
   "💎 Shiver me timbers! Free Internship in the treasure vault!",
   "🔥 24 Hours of high-seas coding power incoming!",

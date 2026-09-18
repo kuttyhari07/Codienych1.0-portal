@@ -13,10 +13,12 @@ const PrizesSection = () => {
             // CARIBBEAN BOUNTIES & PLUNDER
           </div>
           <h2 className="font-pirate text-4xl sm:text-6xl text-white tracking-wide mb-3">
-            SURPRISE <span className="text-[#ffd700] pirate-gold-title"><DecipherText text="CASH BOUNTIES" /></span>
+            CASH PRIZE <span className="text-[#ffd700] pirate-gold-title"><DecipherText text="UPTO ₹50,000+" /></span>
           </h2>
-          <p className="font-cinzel text-xs sm:text-sm text-[#e5c158] uppercase tracking-widest font-semibold">
-            THE TREASURE IS CLASSIFIED — OPEN DAVY JONES' CHEST TO REVEAL
+          <p className="font-cinzel text-xs sm:text-sm text-[#e5c158] uppercase tracking-widest font-semibold flex items-center justify-center flex-wrap gap-2">
+            <span className="text-[#00e5ff] font-bold">+ FREE INTERNSHIP OPPORTUNITIES</span>
+            <span className="text-[#ffd700]">•</span>
+            <span>OPEN DAVY JONES' CHEST TO UNVEIL DETAILS</span>
           </p>
         </div>
 
@@ -38,14 +40,14 @@ const PrizesSection = () => {
               <DecipherText text="1st Bounty" />
             </h3>
             <div className="inline-flex items-center space-x-1 text-[#ffd700] font-cinzel text-xs bg-[#ffd700]/10 border border-[#ffd700]/40 px-3 py-1 rounded-full my-3 font-bold">
-              <Lock className="w-3.5 h-3.5" />
-              <span>CLASSIFIED BOUNTY</span>
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>GRAND CASH PRIZE + TROPHY</span>
             </div>
-            <p className="font-cinzel text-xs text-[#ffd700] font-bold mt-2">
+            <p className="font-cinzel text-xs text-[#00e5ff] font-bold mt-2">
               + Free Internship Opportunity
             </p>
             <p className="font-cinzel text-xs text-gray-300 mt-1">
-              Unveiled at the Grand Opening Ceremony!
+              Top Share from Upto ₹50,000+ Bounty Pool!
             </p>
           </SpotlightCard>
 
@@ -60,14 +62,14 @@ const PrizesSection = () => {
               <DecipherText text="2nd Bounty" />
             </h3>
             <div className="inline-flex items-center space-x-1 text-[#00e5ff] font-cinzel text-xs bg-[#00e5ff]/10 border border-[#00e5ff]/40 px-3 py-1 rounded-full my-3 font-bold">
-              <Lock className="w-3.5 h-3.5" />
-              <span>CLASSIFIED BOUNTY</span>
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>RUNNER-UP CASH PRIZE + TROPHY</span>
             </div>
             <p className="font-cinzel text-xs text-[#00e5ff] font-bold mt-2">
               + Free Internship Opportunity
             </p>
             <p className="font-cinzel text-xs text-gray-300 mt-1">
-              Unveiled at the Grand Opening Ceremony!
+              High Share from Upto ₹50,000+ Bounty Pool!
             </p>
           </SpotlightCard>
 
@@ -82,14 +84,14 @@ const PrizesSection = () => {
               <DecipherText text="3rd Bounty" />
             </h3>
             <div className="inline-flex items-center space-x-1 text-[#e5c158] font-cinzel text-xs bg-[#e5c158]/10 border border-[#e5c158]/40 px-3 py-1 rounded-full my-3 font-bold">
-              <Lock className="w-3.5 h-3.5" />
-              <span>CLASSIFIED BOUNTY</span>
+              <Gift className="w-3.5 h-3.5" />
+              <span>CASH BOUNTY + GOODIES + TROPHY</span>
             </div>
             <p className="font-cinzel text-xs text-gray-200 font-bold mt-2">
               + Special Goodies & Perks
             </p>
             <p className="font-cinzel text-xs text-gray-400 mt-1">
-              Unveiled at the Grand Opening Ceremony!
+              Cash Bounty from Upto ₹50,000+ Pool!
             </p>
           </SpotlightCard>
         </div>

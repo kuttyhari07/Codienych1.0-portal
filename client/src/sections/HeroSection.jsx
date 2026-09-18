@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronDown, Compass, Skull, Anchor, Sparkles, Swords } from 'lucide-react';
+import { ChevronDown, Compass, Skull, Anchor, Sparkles, Swords, Trophy } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { EVENT_CONFIG } from '../utils/config';
 import Cyber3dReactorCanvas from '../components/Cyber3dReactorCanvas';
@@ -122,20 +122,33 @@ const HeroSection = () => {
         <Cyber3dReactorCanvas />
       </motion.div>
 
-      {/* Registration Fee Highlight Pill */}
+      {/* Cash Prize & Crew Bounty Fee Highlight Pills */}
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.7, delay: 0.7 }}
-        whileHover={{ scale: 1.03 }}
-        className="inline-flex items-center space-x-2 bg-gradient-to-r from-[#1c150c] via-[#2a1e12] to-[#1c150c] border-2 border-[#e5c158] px-4 py-2 sm:px-6 sm:py-2.5 rounded-2xl text-xs sm:text-sm font-cinzel text-white mb-7 sm:mb-9 shadow-[0_0_30px_rgba(229,193,88,0.35)] hover:shadow-[0_0_45px_rgba(229,193,88,0.6)] transition-all cursor-default"
+        className="flex flex-wrap items-center justify-center gap-3.5 mb-7 sm:mb-9 max-w-4xl mx-auto"
       >
-        <CoinsIcon />
-        <span className="text-[#ffd700] font-bold tracking-wider uppercase">CREW BOUNTY FEE:</span>
-        <span className="font-pirate text-xl sm:text-2xl text-[#ffd700]">₹{EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER}</span>
-        <span className="text-gray-300 font-mono text-xs">/ CREW MEMBER</span>
-        <span className="text-[#e5c158] hidden sm:inline">|</span>
-        <span className="text-[#f4e6c3] text-xs hidden sm:inline">(4 to 6 Pirates / Crew)</span>
+        {/* Prize Pool Pill */}
+        <a
+          href="#prizes"
+          className="inline-flex items-center space-x-2 bg-gradient-to-r from-[#201507] via-[#2f1f09] to-[#201507] border-2 border-[#ffd700] px-4 py-2 sm:px-6 sm:py-2.5 rounded-2xl text-xs sm:text-sm font-cinzel text-white shadow-[0_0_25px_rgba(255,215,0,0.45)] hover:shadow-[0_0_40px_rgba(255,215,0,0.7)] transition-all cursor-pointer transform hover:scale-105"
+        >
+          <Trophy className="w-4 h-4 text-[#ffd700] animate-bounce" />
+          <span className="text-[#ffd700] font-bold tracking-wider uppercase">CASH PRIZE:</span>
+          <span className="font-pirate text-lg sm:text-2xl text-[#ffd700]">UPTO 50K+</span>
+          <span className="text-[#00e5ff] font-bold hidden sm:inline">& FREE INTERNSHIP</span>
+        </a>
+
+        {/* Registration Fee Highlight Pill */}
+        <div
+          className="inline-flex items-center space-x-2 bg-gradient-to-r from-[#1c150c] via-[#2a1e12] to-[#1c150c] border-2 border-[#e5c158] px-4 py-2 sm:px-6 sm:py-2.5 rounded-2xl text-xs sm:text-sm font-cinzel text-white shadow-[0_0_20px_rgba(229,193,88,0.3)] hover:shadow-[0_0_35px_rgba(229,193,88,0.5)] transition-all cursor-default"
+        >
+          <CoinsIcon />
+          <span className="text-[#ffd700] font-bold tracking-wider uppercase">CREW FEE:</span>
+          <span className="font-pirate text-lg sm:text-2xl text-[#ffd700]">₹{EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER}</span>
+          <span className="text-gray-300 font-mono text-xs">/ MEMBER</span>
+        </div>
       </motion.div>
 
       {/* CTA Buttons */}

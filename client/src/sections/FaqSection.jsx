@@ -18,7 +18,7 @@ const quickChips = [
   },
   {
     chip: 'Free Internship & Perks',
-    answer: 'Along with surprise cash prize bounties and trophies, top-performing pirate crews receive direct Free Internship Opportunities for hands-on industry projects.',
+    answer: 'Along with cash prize bounties upto ₹50,000+ and trophies, top-performing pirate crews receive direct Free Internship Opportunities for hands-on industry projects.',
   },
   {
     chip: 'Midnight Tavern & Games',
@@ -93,7 +93,7 @@ const faqs = [
   },
   {
     q: 'What are the perks and rewards besides the prize pool?',
-    a: 'Along with surprise cash bounties and trophies, top winning teams will receive Free Internship Opportunities to work on real-world projects and build industry credentials!',
+    a: 'Along with cash prize bounties upto ₹50,000+ and trophies, top winning teams will receive Free Internship Opportunities to work on real-world projects and build industry credentials!',
   },
   {
     q: 'Are there entertainment activities during the 24-hour hackathon?',

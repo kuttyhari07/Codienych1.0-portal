@@ -40,7 +40,7 @@ const CyberTerminalCli = ({ isOpen, onClose, onTriggerMatrix }) => {
             { text: '  fee       - View registration fee & team pricing breakdown', type: 'info' },
             { text: '  dates     - View important registration & hackathon dates', type: 'info' },
             { text: '  rules     - View squad eligibility and event directives', type: 'info' },
-            { text: '  prizes    - Inspect surprise bounties & Free Internship perks', type: 'info' },
+            { text: '  prizes    - Inspect Upto ₹50,000+ bounties & Free Internship perks', type: 'info' },
             { text: '  matrix    - Engage full-screen digital matrix cascade', type: 'info' },
             { text: '  register  - Jump directly to team registration form', type: 'info' },
             { text: '  contact   - Display coordinator hotlines and support', type: 'info' },
@@ -80,10 +80,10 @@ const CyberTerminalCli = ({ isOpen, onClose, onTriggerMatrix }) => {
         case 'prizes':
           playVictoryFanfare();
           newHistory.push(
-            { text: 'VAULT REWARDS:', type: 'highlight' },
-            { text: '  🥇 1st Prize: Classified Cash Bounty + Free Internship', type: 'highlight' },
-            { text: '  🥈 2nd Prize: Classified Cash Bounty + Free Internship', type: 'highlight' },
-            { text: '  🥉 3rd Prize: Classified Cash Bounty + Goodies', type: 'highlight' },
+            { text: 'VAULT REWARDS (UPTO ₹50,000+ & FREE INTERNSHIP):', type: 'highlight' },
+            { text: '  🥇 1st Prize: Top Cash Bounty Share + Free Internship', type: 'highlight' },
+            { text: '  🥈 2nd Prize: Cash Bounty Share + Free Internship', type: 'highlight' },
+            { text: '  🥉 3rd Prize: Cash Bounty Share + Goodies & Perks', type: 'highlight' },
             { text: '  💼 Free Internship Opportunities for top performers!', type: 'info' }
           );
           break;

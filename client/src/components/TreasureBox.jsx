@@ -64,7 +64,7 @@ const TreasureBox = () => {
               DAVY JONES' <span className="text-[#ffd700] pirate-gold-title">CURSED TREASURE CHEST</span>
             </h3>
             <p className="relative z-10 font-cinzel text-xs sm:text-sm text-[#cfb07a] mb-6 uppercase tracking-widest font-semibold">
-              TAP THE 3D CHEST TO UNLOCK CASH BOUNTIES & INTERNSHIPS
+              TAP THE 3D CHEST TO UNLOCK UPTO ₹50,000+ CASH PRIZES & FREE INTERNSHIPS
             </p>
 
             <button
@@ -121,10 +121,10 @@ const TreasureBox = () => {
                 <Trophy className="w-11 h-11 animate-bounce" />
               </div>
               <h3 className="font-pirate text-3xl sm:text-5xl text-white tracking-wide">
-                SURPRISE <span className="text-[#ffd700] pirate-gold-title">CASH BOUNTIES & PLUNDER</span>
+                CASH PRIZE <span className="text-[#ffd700] pirate-gold-title">UPTO ₹50,000+</span>
               </h3>
               <p className="font-cinzel text-xs sm:text-sm text-[#e5c158] uppercase tracking-widest mt-2 font-bold">
-                GRAND BOUNTY POOL TO BE UNVEILED AT OPENING CEREMONY!
+                + EXCLUSIVE FREE INTERNSHIP OPPORTUNITIES FOR TOP CREWS!
               </p>
             </motion.div>
 
@@ -165,7 +165,7 @@ const TreasureBox = () => {
             </motion.div>
 
             <div className="text-center font-cinzel text-xs text-gray-300">
-              Individual 1st, 2nd & 3rd prize breakdowns will be proclaimed during the Grand Opening Ceremony!
+              Prize pool of Upto ₹50,000+ with individual 1st, 2nd & 3rd prize breakdowns will be proclaimed during the Grand Opening Ceremony!
             </div>
           </motion.div>
         )}
