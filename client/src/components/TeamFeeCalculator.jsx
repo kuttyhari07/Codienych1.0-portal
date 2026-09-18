@@ -10,9 +10,9 @@ const TeamFeeCalculator = () => {
   const [membersCount, setMembersCount] = useState(4);
 
   const teamSizes = [
-    { count: 4, fee: 2100, label: 'Standard Corsair Squad', icon: '4' },
-    { count: 5, fee: 2625, label: 'Expanded Raiding Crew', icon: '5' },
-    { count: 6, fee: 3150, label: 'Full Flagship Armada Unit', icon: '6' },
+    { count: 4, fee: 4 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER, label: 'Standard Corsair Squad', icon: '4' },
+    { count: 5, fee: 5 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER, label: 'Expanded Raiding Crew', icon: '5' },
+    { count: 6, fee: 6 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER, label: 'Full Flagship Armada Unit', icon: '6' },
   ];
 
   const currentConfig = teamSizes.find((t) => t.count === membersCount) || teamSizes[0];

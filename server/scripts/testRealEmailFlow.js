@@ -11,7 +11,7 @@ const runFullTest = async () => {
     teamName: 'CyberKnights (Test)',
     registrationId: 'CODIENYCH-2026-TEST01',
     teamSize: 4,
-    expectedAmount: 2100,
+    expectedAmount: 1400,
     transactionId: 'TEST-UTR-987654321',
     leaderName: 'Hariharan G',
     leaderEmail: 'hariharangmhk0429@gmail.com',

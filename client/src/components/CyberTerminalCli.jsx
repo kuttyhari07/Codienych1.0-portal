@@ -52,9 +52,9 @@ const CyberTerminalCli = ({ isOpen, onClose, onTriggerMatrix }) => {
         case 'fee':
           newHistory.push(
             { text: `ENTRY FEE: ₹${EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER} / Member`, type: 'highlight' },
-            { text: '  • 4 Members Squad: ₹2,100', type: 'info' },
-            { text: '  • 5 Members Squad: ₹2,625', type: 'info' },
-            { text: '  • 6 Members Squad: ₹3,150', type: 'info' },
+            { text: `  • 4 Members Squad: ₹${(4 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()}`, type: 'info' },
+            { text: `  • 5 Members Squad: ₹${(5 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()}`, type: 'info' },
+            { text: `  • 6 Members Squad: ₹${(6 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()}`, type: 'info' },
             { text: `  • UPI ID: ${EVENT_CONFIG.UPI_ID}`, type: 'info' }
           );
           break;

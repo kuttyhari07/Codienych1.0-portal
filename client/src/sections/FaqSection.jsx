@@ -6,7 +6,7 @@ import { playLaserBlip, speakIntelTransmission, stopIntelSpeech } from '../utils
 const quickChips = [
   {
     chip: 'Crew Fee & Bounty Pricing',
-    answer: `Entry fee is strictly ₹${EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER} per pirate participant (₹2,100 for 4 members, ₹2,625 for 5 members, ₹3,150 for 6 members). UPI Payment ID: ${EVENT_CONFIG.UPI_ID}.`,
+    answer: `Entry fee is strictly ₹${EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER} per pirate participant (₹${(4 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()} for 4 members, ₹${(5 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()} for 5 members, ₹${(6 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()} for 6 members). UPI Payment ID: ${EVENT_CONFIG.UPI_ID}.`,
   },
   {
     chip: 'Crew Size & Gender Rule',
@@ -45,7 +45,7 @@ const faqs = [
   },
   {
     q: 'What is the crew enlistment fee?',
-    a: `₹${EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER} per participant (₹2,100 for 4 members, ₹2,625 for 5 members, ₹3,150 for 6 members).`,
+    a: `₹${EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER} per participant (₹${(4 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()} for 4 members, ₹${(5 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()} for 5 members, ₹${(6 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()} for 6 members).`,
   },
   {
     q: 'How can our crew register?',

@@ -13,7 +13,7 @@ module.exports = {
   EVENT_TYPE: process.env.EVENT_TYPE || '24-HOUR HACKATHON',
   REGISTRATION_DEADLINE: process.env.REGISTRATION_DEADLINE || '2026-10-04',
   HACKATHON_START_DATE: process.env.HACKATHON_START_DATE || '2026-10-08T09:00:00',
-  REGISTRATION_FEE: parseInt(process.env.REGISTRATION_FEE, 10) || 567,
+  REGISTRATION_FEE: parseInt(process.env.REGISTRATION_FEE, 10) || 350,
 
   UPI_ID: process.env.UPI_ID || '',
   UPI_MERCHANT_NAME: process.env.UPI_MERCHANT_NAME || 'CODIENYCH 1.0 Hackathon',
