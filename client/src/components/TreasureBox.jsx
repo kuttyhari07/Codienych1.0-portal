@@ -4,8 +4,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { playVictoryFanfare, playLaserBlip, playChirp } from '../utils/cyberSound';
 import RealisticTreasureChest3DCanvas from './RealisticTreasureChest3DCanvas';
 
-const TreasureBox = () => {
-  const [isOpen, setIsOpen] = useState(false);
+const TreasureBox = ({ isOpen: propIsOpen, onOpenChange }) => {
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+  const isOpen = propIsOpen !== undefined ? propIsOpen : internalIsOpen;
   const [isHovered, setIsHovered] = useState(false);
   const [isOpening, setIsOpening] = useState(false);
 
@@ -16,7 +17,11 @@ const TreasureBox = () => {
 
     setTimeout(() => {
       setIsOpening(false);
-      setIsOpen(true);
+      if (onOpenChange) {
+        onOpenChange(true);
+      } else {
+        setInternalIsOpen(true);
+      }
       playVictoryFanfare();
     }, 900);
   };
@@ -24,7 +29,11 @@ const TreasureBox = () => {
   const handleReset = (e) => {
     if (e && e.stopPropagation) e.stopPropagation();
     playChirp();
-    setIsOpen(false);
+    if (onOpenChange) {
+      onOpenChange(false);
+    } else {
+      setInternalIsOpen(false);
+    }
   };
 
   return (
@@ -64,7 +73,7 @@ const TreasureBox = () => {
               DAVY JONES' <span className="text-[#ffd700] pirate-gold-title">CURSED TREASURE CHEST</span>
             </h3>
             <p className="relative z-10 font-cinzel text-xs sm:text-sm text-[#cfb07a] mb-6 uppercase tracking-widest font-semibold">
-              TAP THE 3D CHEST TO UNLOCK UPTO ₹50,000+ CASH PRIZES & FREE INTERNSHIPS
+              TAP THE 3D CHEST TO UNSEAL GRAND CASH PRIZES & FREE INTERNSHIPS
             </p>
 
             <button
