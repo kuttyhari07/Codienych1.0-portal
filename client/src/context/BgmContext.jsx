@@ -5,51 +5,68 @@ const BgmContext = createContext(null);
 export const BgmProvider = ({ children }) => {
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const userPausedRef = useRef(false);
 
   useEffect(() => {
-    // Single shared audio instance for seamless background playback
-    const audio = new Audio('/pirates-of-caribbean-theme.mp3');
+    // Clear any previous stored mute so BGM always plays by default on visit/refresh
+    try {
+      localStorage.removeItem('codienych_bgm_off');
+      localStorage.removeItem('codienych_bgm_user_paused');
+      localStorage.removeItem('codienych_bgm_enabled');
+    } catch (e) {}
+
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    audio.volume = 0.22; // Mild ambient volume as requested
     audio.loop = true;
-    audio.volume = 0.18; // Mild, subtle ambient volume as requested
-    audioRef.current = audio;
 
-    const tryPlay = () => {
-      if (localStorage.getItem('codienych_bgm_off') === 'true') {
-        setIsPlaying(false);
-        return;
-      }
-      audio.play()
-        .then(() => {
-          setIsPlaying(true);
-        })
-        .catch(() => {
-          // Autoplay restricted until user gesture
-          setIsPlaying(false);
-        });
-    };
+    const onPlay = () => setIsPlaying(true);
+    const onPause = () => setIsPlaying(false);
 
-    tryPlay();
+    audio.addEventListener('play', onPlay);
+    audio.addEventListener('pause', onPause);
 
-    // Fallback on first user gesture anywhere on the window (click, tap, key, scroll)
-    const handleFirstGesture = () => {
-      if (audio.paused && localStorage.getItem('codienych_bgm_off') !== 'true') {
-        audio.play()
-          .then(() => setIsPlaying(true))
-          .catch(() => {});
+    // Play function
+    const playAudio = () => {
+      if (userPausedRef.current) return;
+      audio.volume = 0.22;
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsPlaying(true);
+          })
+          .catch(() => {
+            // Autoplay policy prevented immediate playback without user interaction
+            setIsPlaying(false);
+          });
       }
     };
 
-    window.addEventListener('click', handleFirstGesture, { once: true });
-    window.addEventListener('touchstart', handleFirstGesture, { once: true });
-    window.addEventListener('keydown', handleFirstGesture, { once: true });
-    window.addEventListener('scroll', handleFirstGesture, { once: true });
+    // 1. Immediate play on mount
+    playAudio();
+
+    // 2. Browser autoplay fallback: play on first interaction anywhere
+    const triggerPlayOnGesture = () => {
+      if (!userPausedRef.current && audio.paused) {
+        playAudio();
+      }
+    };
+
+    const gestureEvents = ['pointerdown', 'mousedown', 'touchstart', 'touchend', 'click', 'keydown', 'wheel'];
+    gestureEvents.forEach((evt) => {
+      window.addEventListener(evt, triggerPlayOnGesture, { passive: true });
+      document.addEventListener(evt, triggerPlayOnGesture, { passive: true });
+    });
 
     return () => {
-      window.removeEventListener('click', handleFirstGesture);
-      window.removeEventListener('touchstart', handleFirstGesture);
-      window.removeEventListener('keydown', handleFirstGesture);
-      window.removeEventListener('scroll', handleFirstGesture);
-      audio.pause();
+      gestureEvents.forEach((evt) => {
+        window.removeEventListener(evt, triggerPlayOnGesture);
+        document.removeEventListener(evt, triggerPlayOnGesture);
+      });
+      audio.removeEventListener('play', onPlay);
+      audio.removeEventListener('pause', onPause);
     };
   }, []);
 
@@ -58,23 +75,31 @@ export const BgmProvider = ({ children }) => {
     if (!audio) return;
 
     if (!audio.paused) {
+      // User explicitly wants to turn it OFF
+      userPausedRef.current = true;
       audio.pause();
       setIsPlaying(false);
-      localStorage.setItem('codienych_bgm_off', 'true');
     } else {
+      // User explicitly wants to turn it back ON
+      userPausedRef.current = false;
+      audio.volume = 0.22;
       audio.play()
-        .then(() => {
-          setIsPlaying(true);
-          localStorage.removeItem('codienych_bgm_off');
-        })
-        .catch((err) => {
-          console.warn('Audio play failed:', err);
-        });
+        .then(() => setIsPlaying(true))
+        .catch((err) => console.warn('BGM play failed:', err));
     }
   };
 
   return (
     <BgmContext.Provider value={{ isPlaying, toggleBgm }}>
+      {/* Real DOM audio element with autoPlay and loop */}
+      <audio
+        ref={audioRef}
+        src="/pirates-of-caribbean-theme.mp3"
+        autoPlay
+        loop
+        playsInline
+        preload="auto"
+      />
       {children}
     </BgmContext.Provider>
   );
