@@ -10,10 +10,12 @@ import AdminRegistrationsPage from './pages/admin/AdminRegistrationsPage';
 import AdminTeamDetailPage from './pages/admin/AdminTeamDetailPage';
 import AdminPaymentsPage from './pages/admin/AdminPaymentsPage';
 import AdminParticipantsPage from './pages/admin/AdminParticipantsPage';
+import PirateBgmPlayer from './components/PirateBgmPlayer';
 
 function App() {
   return (
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <PirateBgmPlayer />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/portal" element={<EventPortalPage />} />
