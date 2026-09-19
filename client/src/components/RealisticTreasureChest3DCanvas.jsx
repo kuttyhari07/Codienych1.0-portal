@@ -209,7 +209,7 @@ const RealisticTreasureChest3DCanvas = ({
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.35;
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.type = THREE.PCFShadowMap;
 
     container.innerHTML = '';
     container.appendChild(renderer.domElement);
@@ -647,13 +647,13 @@ const RealisticTreasureChest3DCanvas = ({
     container.addEventListener('mouseleave', handlePointerLeave);
 
     // 7. ANIMATION LOOP
-    let clock = new THREE.Clock();
+    const startTime = performance.now();
 
     const animate = () => {
       if (isDisposed) return;
       animFrameId.current = requestAnimationFrame(animate);
 
-      const elapsedTime = clock.getElapsedTime();
+      const elapsedTime = (performance.now() - startTime) * 0.001;
 
       // Smooth hinge lid swing opening
       currentLidAngle.current += (targetLidAngle.current - currentLidAngle.current) * 0.1;

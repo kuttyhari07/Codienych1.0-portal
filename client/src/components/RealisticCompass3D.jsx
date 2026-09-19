@@ -570,13 +570,13 @@ const RealisticCompass3D = ({ className = '' }) => {
 
     // 10. Animation Loop
     let animationFrameId;
-    let clock = new THREE.Clock();
+    const startTime = performance.now();
 
     const animate = () => {
       if (isDisposed) return;
       animationFrameId = requestAnimationFrame(animate);
 
-      const elapsedTime = clock.getElapsedTime();
+      const elapsedTime = (performance.now() - startTime) * 0.001;
       const state = stateRef.current;
 
       // Smooth Gimbal Floating / Nautical Ship Wave Oscillation
