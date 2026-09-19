@@ -14,7 +14,7 @@ const quickChips = [
   },
   {
     chip: 'Who Is Eligible?',
-    answer: 'Undergraduate (UG) engineering and tech students from all recognized institutions (except host college ESEC students) are fully eligible.',
+    answer: 'Undergraduate (UG) engineering and tech students from all recognized institutions are fully eligible. ESEC students can also participate (Limited slots only for ESEC Students).',
   },
   {
     chip: 'Free Internship & Perks',
@@ -41,7 +41,7 @@ const faqs = [
   },
   {
     q: 'Who can participate in this voyage?',
-    a: 'Only Undergraduate (UG) students from other recognized colleges and universities are eligible. This hackathon is strictly for Other College Students (Not for ESEC Students).',
+    a: 'Undergraduate (UG) students from recognized colleges and universities are eligible. ESEC students can also participate (Limited slots only for ESEC Students).',
   },
   {
     q: 'What is the crew enlistment fee?',

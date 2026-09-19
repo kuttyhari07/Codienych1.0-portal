@@ -11,7 +11,7 @@ const teamRulesList = [
   'One crew receives one unique Registration ID.',
   'College/University ID cards of all crew members must be presented at port.',
   'All crew members must be physically present at the event venue during the voyage.',
-  'This hackathon is only for other college students (Not for ESEC students).',
+  'Open to other college students & ESEC students (Limited slots only for ESEC Students).',
 ];
 
 const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];

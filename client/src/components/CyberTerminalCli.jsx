@@ -71,7 +71,7 @@ const CyberTerminalCli = ({ isOpen, onClose, onTriggerMatrix }) => {
           newHistory.push(
             { text: 'SQUAD DIRECTIVES:', type: 'highlight' },
             { text: '  • Team Size: 4 to 6 members strictly', type: 'info' },
-            { text: '  • Eligibility: UG students from other recognized colleges', type: 'info' },
+            { text: '  • Eligibility: UG students from recognized colleges & ESEC (Limited slots for ESEC)', type: 'info' },
             { text: '  • One Leader registers the complete team', type: 'info' },
             { text: '  • College physical ID card mandatory for every participant', type: 'info' }
           );

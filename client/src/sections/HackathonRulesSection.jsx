@@ -20,8 +20,8 @@ const rulesCategories = [
     numeral: 'II',
     title: 'Eligibility & Crew Enlistment Rules',
     content: [
-      'Open strictly to Undergraduate (UG) students from other recognized engineering colleges/universities.',
-      'This hackathon is strictly for Other College Students (Not for ESEC Students).',
+      'Open to Undergraduate (UG) students from recognized engineering colleges/universities.',
+      'ESEC students can also participate (Limited slots only for ESEC Students).',
       'Valid official college physical ID card is mandatory for every crew participant.',
     ],
   },
