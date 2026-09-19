@@ -10,13 +10,13 @@ import AdminRegistrationsPage from './pages/admin/AdminRegistrationsPage';
 import AdminTeamDetailPage from './pages/admin/AdminTeamDetailPage';
 import AdminPaymentsPage from './pages/admin/AdminPaymentsPage';
 import AdminParticipantsPage from './pages/admin/AdminParticipantsPage';
-import PirateBgmPlayer from './components/PirateBgmPlayer';
+import { BgmProvider } from './context/BgmContext';
 
 function App() {
   return (
-    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-      <PirateBgmPlayer />
-      <Routes>
+    <BgmProvider>
+      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/portal" element={<EventPortalPage />} />
         <Route path="/event" element={<EventPortalPage />} />
@@ -29,7 +29,8 @@ function App() {
         <Route path="/admin/payments" element={<AdminPaymentsPage />} />
         <Route path="/admin/participants" element={<AdminParticipantsPage />} />
       </Routes>
-    </Router>
+      </Router>
+    </BgmProvider>
   );
 }
 

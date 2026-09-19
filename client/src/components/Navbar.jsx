@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, Compass, Skull, Swords, Anchor, Scroll, MapPin } from 'lucide-react';
+import TinyBgmToggle from './TinyBgmToggle';
 
 const navItems = [
   { label: 'ABOUT', href: '#about' },
@@ -120,6 +121,7 @@ const Navbar = () => {
 
         {/* Action Buttons */}
         <div className="hidden sm:flex items-center space-x-3">
+          <TinyBgmToggle />
           <Link
             to="/status"
             className="px-3.5 py-2 text-xs font-cinzel text-gray-300 hover:text-[#ffd700] border border-[#3b2b19] rounded-lg hover:border-[#e5c158] transition-all flex items-center space-x-1.5 bg-[#091522]/60"
@@ -138,6 +140,7 @@ const Navbar = () => {
 
         {/* Mobile Hamburger Toggle */}
         <div className="lg:hidden flex items-center space-x-1.5 sm:space-x-2 flex-shrink-0">
+          <TinyBgmToggle />
           <Link
             to="/register"
             className="px-3 py-1.5 rounded text-xs font-pirate text-sm font-bold text-black bg-[#ffd700] shadow-[0_0_10px_#ffd700] uppercase"

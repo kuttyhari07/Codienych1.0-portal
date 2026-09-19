@@ -8,6 +8,7 @@ import { EVENT_CONFIG } from '../utils/config';
 import { Compass, Sparkles, Swords, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { playLaserBlip } from '../utils/cyberSound';
+import TinyBgmToggle from '../components/TinyBgmToggle';
 
 const HomePage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -15,6 +16,11 @@ const HomePage = () => {
 
   return (
     <div className="relative min-h-screen bg-[#020508] text-[#f4e6c3] overflow-x-hidden selection:bg-[#ffd700] selection:text-black flex flex-col justify-between">
+      {/* Tiny Minimal BGM Sound Toggle on Home Page */}
+      <div className="fixed top-4 right-4 sm:top-6 sm:right-6 z-50">
+        <TinyBgmToggle />
+      </div>
+
       {/* Loading Screen Overlay */}
       <AnimatePresence>
         {isLoading && <LoadingScreen onFinish={() => setIsLoading(false)} />}
