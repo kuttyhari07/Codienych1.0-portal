@@ -64,7 +64,7 @@ const SquadHonorBadgeShowcase = () => {
           <div>
             <div className="inline-flex items-center space-x-2 font-cinzel text-xs text-[#ffd700] uppercase tracking-wider mb-1">
               <Star className="w-4 h-4 text-[#ffd700]" />
-              <span>TREASURE TROPHY & REPUTATION SYSTEM</span>
+              <span>TREASURE BOUNTY & REPUTATION SYSTEM</span>
             </div>
             <h3 className="font-pirate font-black text-2xl sm:text-4xl text-white tracking-wide">
               CREW HONOR <span className="text-[#ffd700] pirate-gold-glow">BADGES OF GLORY</span>
@@ -72,7 +72,7 @@ const SquadHonorBadgeShowcase = () => {
           </div>
 
           <div className="font-cinzel text-xs text-[#ffd700] bg-[#04090f] border border-[#ffd700]/40 px-3.5 py-1.5 rounded-xl">
-            🏆 IMMORTALIZED ON STAGE
+            ⚔️ IMMORTALIZED ON STAGE
           </div>
         </div>
 

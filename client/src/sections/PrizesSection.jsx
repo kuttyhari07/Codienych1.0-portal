@@ -91,7 +91,7 @@ const PrizesSection = () => {
                 </h3>
                 <div className="inline-flex items-center space-x-1 text-[#ffd700] font-cinzel text-xs bg-[#ffd700]/10 border border-[#ffd700]/40 px-3 py-1 rounded-full my-3 font-bold">
                   <Sparkles className="w-3.5 h-3.5" />
-                  <span>GRAND CASH PRIZE + TROPHY</span>
+                  <span>GRAND CASH PRIZE</span>
                 </div>
                 <p className="font-cinzel text-xs text-[#00e5ff] font-bold mt-2">
                   + Free Internship Opportunity
@@ -113,7 +113,7 @@ const PrizesSection = () => {
                 </h3>
                 <div className="inline-flex items-center space-x-1 text-[#00e5ff] font-cinzel text-xs bg-[#00e5ff]/10 border border-[#00e5ff]/40 px-3 py-1 rounded-full my-3 font-bold">
                   <Sparkles className="w-3.5 h-3.5" />
-                  <span>RUNNER-UP CASH PRIZE + TROPHY</span>
+                  <span>RUNNER-UP CASH PRIZE</span>
                 </div>
                 <p className="font-cinzel text-xs text-[#00e5ff] font-bold mt-2">
                   + Free Internship Opportunity
@@ -135,7 +135,7 @@ const PrizesSection = () => {
                 </h3>
                 <div className="inline-flex items-center space-x-1 text-[#e5c158] font-cinzel text-xs bg-[#e5c158]/10 border border-[#e5c158]/40 px-3 py-1 rounded-full my-3 font-bold">
                   <Gift className="w-3.5 h-3.5" />
-                  <span>CASH BOUNTY + GOODIES + TROPHY</span>
+                  <span>CASH BOUNTY + GOODIES</span>
                 </div>
                 <p className="font-cinzel text-xs text-gray-200 font-bold mt-2">
                   + Special Goodies & Perks
