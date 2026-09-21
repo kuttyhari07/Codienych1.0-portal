@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as THREE from 'three';
 import { playLaserBlip } from '../utils/cyberSound';
@@ -349,7 +349,7 @@ function createFacetedNeedleGroup() {
   return needleGroup;
 }
 
-const RealisticCompass3D = ({ className = '' }) => {
+const RealisticCompass3D = forwardRef(({ className = '', onStartSpin, onEmbark }, ref) => {
   const mountRef = useRef(null);
   const navigate = useNavigate();
   const [isSpinningFast, setIsSpinningFast] = useState(false);
@@ -640,19 +640,43 @@ const RealisticCompass3D = ({ className = '' }) => {
     };
   }, []);
 
-  // Handle click / tap on the compass (or center core)
+  // Handle click / tap on the compass (or center core or external trigger)
   const handleCompassClick = () => {
+    if (isSpinningFast) return;
     playLaserBlip();
     setIsSpinningFast(true);
+    if (onStartSpin) onStartSpin();
 
     // Boost spin velocity dramatically like Jack Sparrow's compass locking coordinates!
-    stateRef.current.spinVelocity = 0.35;
+    if (stateRef.current) {
+      stateRef.current.spinVelocity = 0.48;
+    }
 
     // Small delay so user enjoys the rapid spin feedback, then navigates to next page (/portal)
     setTimeout(() => {
-      navigate('/portal');
-    }, 450);
+      if (onEmbark) {
+        onEmbark();
+      } else {
+        navigate('/portal');
+      }
+    }, 550);
   };
+
+  useImperativeHandle(ref, () => ({
+    spinAndEmbark: handleCompassClick,
+    spin: (velocity = 0.48) => {
+      setIsSpinningFast(true);
+      if (stateRef.current) {
+        stateRef.current.spinVelocity = velocity;
+      }
+    },
+    setHovered: (hovered) => {
+      setIsHovered(hovered);
+      if (hovered && stateRef.current && stateRef.current.spinVelocity <= 0.015) {
+        stateRef.current.spinVelocity = 0.025;
+      }
+    },
+  }));
 
   return (
     <div
@@ -714,6 +738,7 @@ const RealisticCompass3D = ({ className = '' }) => {
       </div>
     </div>
   );
-};
+});
+RealisticCompass3D.displayName = 'RealisticCompass3D';
 
 export default RealisticCompass3D;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import LoadingScreen from '../components/LoadingScreen';
 import CinematicBackground from '../components/CinematicBackground';
@@ -12,7 +12,22 @@ import TinyBgmToggle from '../components/TinyBgmToggle';
 
 const HomePage = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [isEmbarking, setIsEmbarking] = useState(false);
+  const compassRef = useRef(null);
   const navigate = useNavigate();
+
+  const handleExplorePortal = () => {
+    if (isEmbarking) return;
+    setIsEmbarking(true);
+    if (compassRef.current) {
+      compassRef.current.spinAndEmbark();
+    } else {
+      playLaserBlip();
+      setTimeout(() => {
+        navigate('/portal');
+      }, 500);
+    }
+  };
 
   return (
     <div className="relative min-h-screen bg-[#020508] text-[#f4e6c3] overflow-x-hidden selection:bg-[#ffd700] selection:text-black flex flex-col justify-between">
@@ -137,7 +152,11 @@ const HomePage = () => {
           transition={{ duration: 0.9, delay: 0.65 }}
           className="my-3 sm:my-4 flex flex-col items-center justify-center w-full"
         >
-          <RealisticCompass3D />
+          <RealisticCompass3D
+            ref={compassRef}
+            onStartSpin={() => setIsEmbarking(true)}
+            onEmbark={() => navigate('/portal')}
+          />
         </motion.div>
 
         {/* Primary Voyage Action Buttons */}
@@ -149,15 +168,17 @@ const HomePage = () => {
         >
           <button
             type="button"
-            onClick={() => {
-              playLaserBlip();
-              navigate('/portal');
-            }}
-            className="w-full sm:w-auto px-8 py-4 rounded-2xl font-cinzel font-black text-sm sm:text-base text-black bg-gradient-to-r from-[#ffd700] via-[#f39c12] to-[#b8860b] hover:from-[#ffe66d] hover:to-[#ffd700] transition-all duration-300 shadow-[0_0_30px_rgba(255,215,0,0.6)] hover:shadow-[0_0_50px_rgba(255,215,0,0.85)] transform hover:-translate-y-1 active:scale-95 flex items-center justify-center space-x-2.5 cursor-pointer uppercase tracking-wider"
+            onClick={handleExplorePortal}
+            onMouseEnter={() => compassRef.current?.setHovered?.(true)}
+            onMouseLeave={() => compassRef.current?.setHovered?.(false)}
+            disabled={isEmbarking}
+            className={`w-full sm:w-auto px-8 py-4 rounded-2xl font-cinzel font-black text-sm sm:text-base text-black bg-gradient-to-r from-[#ffd700] via-[#f39c12] to-[#b8860b] hover:from-[#ffe66d] hover:to-[#ffd700] transition-all duration-300 shadow-[0_0_30px_rgba(255,215,0,0.6)] hover:shadow-[0_0_50px_rgba(255,215,0,0.85)] transform hover:-translate-y-1 active:scale-95 flex items-center justify-center space-x-2.5 cursor-pointer uppercase tracking-wider ${
+              isEmbarking ? 'ring-4 ring-[#ffd700] scale-105 shadow-[0_0_60px_rgba(255,215,0,0.9)] brightness-110' : ''
+            }`}
           >
-            <Compass className="w-5 h-5 text-black" />
-            <span>EXPLORE EVENT PORTAL</span>
-            <ArrowRight className="w-4 h-4 text-black" />
+            <Compass className={`w-5 h-5 text-black ${isEmbarking ? 'animate-spin' : ''}`} style={isEmbarking ? { animationDuration: '0.6s' } : {}} />
+            <span>{isEmbarking ? 'SETTING SAIL...' : 'EXPLORE EVENT PORTAL'}</span>
+            <ArrowRight className={`w-4 h-4 text-black transition-transform ${isEmbarking ? 'translate-x-1.5' : ''}`} />
           </button>
 
           <button
