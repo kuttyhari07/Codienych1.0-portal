@@ -91,11 +91,11 @@ const EntertainmentSection = () => {
                 <Coffee className="w-6 h-6 sm:w-7 sm:h-7 text-[#ffd700]" />
               </div>
               <div>
-                <div className="flex items-center space-x-2 mb-1">
+                <div className="flex flex-wrap items-center gap-2 mb-1">
                   <span className="font-cinzel text-[11px] uppercase tracking-wider text-[#ffd700] font-bold">
                     🌙 Midnight Anti-Boredom Protocol
                   </span>
-                  <span className="bg-[#ffd700]/20 text-[#ffd700] text-[10px] font-cinzel px-2 py-0.5 rounded-full border border-[#ffd700]/40 font-bold">
+                  <span className="bg-[#ffd700]/20 text-[#ffd700] text-[10px] font-cinzel px-2.5 py-0.5 rounded-full border border-[#ffd700]/40 font-bold whitespace-nowrap">
                     24-HR VIBES
                   </span>
                 </div>
