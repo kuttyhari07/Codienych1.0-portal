@@ -554,14 +554,13 @@ const RealisticDJDeck3D = ({ bassPulsing = false, activeSoundFx = null, onTrigge
     // F. ANIMATION LOOP & MOUSE PARALLAX
     // -------------------------------------------------------------
     let animationFrameId;
-    let clock = new THREE.Clock();
+    const startTime = performance.now();
 
     const animate = () => {
       if (isDisposed) return;
       animationFrameId = requestAnimationFrame(animate);
 
-      const delta = clock.getDelta();
-      const elapsedTime = clock.getElapsedTime();
+      const elapsedTime = (performance.now() - startTime) * 0.001;
 
       // Smooth interpolation for 3D Deck Parallax tilt
       stateRef.current.currentTiltX += (stateRef.current.targetTiltX - stateRef.current.currentTiltX) * 0.08;
