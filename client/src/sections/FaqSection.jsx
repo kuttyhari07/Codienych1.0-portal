@@ -96,8 +96,8 @@ const faqs = [
     a: 'Along with cash prize bounties upto ₹50,000+ and trophies, top winning teams will receive Free Internship Opportunities to work on real-world projects and build industry credentials!',
   },
   {
-    q: 'Are there entertainment activities during the 24-hour hackathon?',
-    a: 'Yes! We have an interactive Pirates Tavern featuring late-night Chess and Carrom board games, along with quick reflex mini-games and trivia that reward winners with instant surprise gifts and goodies!',
+    q: 'Are there entertainment activities & music during the 24-hour hackathon?',
+    a: 'Yes! We have an electrifying Pirates Tavern featuring an exclusive Midnight DJ Night (12:00 AM - 02:00 AM) with EDM, mass bass drops & dance vibes, late-night Chess and Carrom board battles, complimentary midnight coffee & grog, and quick reflex mini-games that reward winners with instant surprise gifts and goodies!',
   },
   {
     q: 'How will projects be evaluated?',

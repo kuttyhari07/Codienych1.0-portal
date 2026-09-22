@@ -5,12 +5,13 @@ import { playLaserBlip } from '../utils/cyberSound';
 
 const dialogues = [
   "🏴‍☠️ AHOY! Plunder Upto ₹50K+ Cash Prize!",
+  "🎧 Midnight DJ Party in Pirates Tavern at 12 AM!",
   "☕ Midnight coffee & lounge waiting on deck!",
   "💎 Free Internship in the treasure vault!",
   "🔥 24 Hours of high-seas coding power!",
   "🧭 Tip: Click on me to spin Jack's compass!",
   "⚔️ Top pirate crews qualify for grand booty!",
-  "🎮 Check out the duel in Pirates Tavern!",
+  "🎮 Check out the duel & DJ in Pirates Tavern!",
 ];
 
 const CyberBotAssistant = () => {

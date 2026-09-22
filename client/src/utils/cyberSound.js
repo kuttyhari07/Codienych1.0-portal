@@ -162,3 +162,105 @@ export const speakIntelTransmission = (text, onStart, onEnd) => {
   }
 };
 
+// --- PIRATE DJ WEB AUDIO SYNTHESIZERS ---
+
+// Deep 808 Sub-Bass Drop
+export const playBassDrop = () => {
+  if (!soundEnabled) return;
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = 'sine';
+    // Pitch drop from 180Hz down to 35Hz
+    osc.frequency.setValueAtTime(180, now);
+    osc.frequency.exponentialRampToValueAtTime(35, now + 0.85);
+
+    // Punchy attack and sub sustain
+    gain.gain.setValueAtTime(0.25, now);
+    gain.gain.linearRampToValueAtTime(0.3, now + 0.05);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.9);
+  } catch (e) {
+    // Ignore audio errors
+  }
+};
+
+// Iconic Club / Festival DJ Reggae Airhorn (3 quick stabs + 1 trail)
+export const playAirhorn = () => {
+  if (!soundEnabled) return;
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    const baseFreqs = [466.16, 587.33]; // Bb4 and D5 for rich brass tone
+    const stabs = [
+      { start: 0.0, dur: 0.1 },
+      { start: 0.14, dur: 0.1 },
+      { start: 0.28, dur: 0.1 },
+      { start: 0.42, dur: 0.35 }
+    ];
+
+    const now = ctx.currentTime;
+
+    stabs.forEach((stab) => {
+      baseFreqs.forEach((freq) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(freq, now + stab.start);
+        osc.frequency.linearRampToValueAtTime(freq * 1.02, now + stab.start + stab.dur);
+
+        gain.gain.setValueAtTime(0.08, now + stab.start);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + stab.start + stab.dur);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(now + stab.start);
+        osc.stop(now + stab.start + stab.dur);
+      });
+    });
+  } catch (e) {
+    // Ignore audio errors
+  }
+};
+
+// Electro Laser Sweep Zap
+export const playLaserSweep = () => {
+  if (!soundEnabled) return;
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(3200, now);
+    osc.frequency.exponentialRampToValueAtTime(150, now + 0.28);
+
+    gain.gain.setValueAtTime(0.12, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.28);
+  } catch (e) {
+    // Ignore audio errors
+  }
+};
+
