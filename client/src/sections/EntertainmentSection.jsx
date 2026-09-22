@@ -23,6 +23,8 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { playBassDrop, playAirhorn, playLaserSweep } from '../utils/cyberSound';
+import RealisticDJDeck3D from '../components/RealisticDJDeck3D';
+
 
 const activities = [
   {
@@ -259,54 +261,33 @@ const EntertainmentSection = () => {
               </div>
             </div>
 
-            {/* Right Content (5 Cols): Animated Spinning Vinyl Turntable & Equalizer Stage */}
+            {/* Right Content (5 Cols): Realistic 3D DJ Turntable & Equalizer Stage */}
             <div className="lg:col-span-5 flex flex-col items-center justify-center">
-              <div className="relative w-full max-w-sm aspect-square flex items-center justify-center">
-                {/* Background Rotating Aura Rings */}
-                <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#ffd700]/20 via-cyan-500/10 to-purple-600/20 blur-xl animate-pulse" />
-                
-                {/* Outermost Deck Casing */}
-                <div className="relative w-64 h-64 sm:w-72 sm:h-72 rounded-full p-3 bg-gradient-to-br from-[#1c1409] via-[#0d1620] to-[#04080e] border-4 border-[#ffd700]/70 shadow-[0_0_40px_rgba(255,215,0,0.35)] flex items-center justify-center">
-                  {/* Outer Vinyl Grooves with metallic sheen */}
-                  <div className={`w-full h-full rounded-full bg-[#0a0a0c] border-2 border-gray-800 p-4 relative flex items-center justify-center shadow-inner ${bassPulsing ? 'animate-spin [animation-duration:1.5s]' : 'animate-spin [animation-duration:5s]'}`}>
-                    {/* Vinyl Grooves concentric rings */}
-                    <div className="absolute inset-4 rounded-full border border-gray-800/80 pointer-events-none" />
-                    <div className="absolute inset-8 rounded-full border border-gray-700/60 pointer-events-none" />
-                    <div className="absolute inset-12 rounded-full border border-gray-800/70 pointer-events-none" />
-                    <div className="absolute inset-16 rounded-full border border-gray-700/50 pointer-events-none" />
-
-                    {/* Gold Vinyl Center Label */}
-                    <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-[#ffd700] via-[#e5c158] to-[#996515] border-2 border-white/60 flex flex-col items-center justify-center text-black shadow-[0_0_20px_rgba(255,215,0,0.6)] z-10">
-                      <Skull className="w-8 h-8 text-black drop-shadow" />
-                      <span className="font-pirate text-[10px] font-black tracking-wider uppercase mt-0.5">CODIENYCH</span>
-                      <span className="text-[8px] font-cinzel font-bold tracking-widest">NIGHT DJ</span>
-                    </div>
-                  </div>
-
-                  {/* Turntable Tonearm overlay */}
-                  <div className="absolute -top-3 -right-2 w-16 h-28 pointer-events-none z-20">
-                    <div className="w-5 h-5 rounded-full bg-[#ffd700] border-2 border-black absolute top-0 right-0 shadow-[0_0_10px_#ffd700]" />
-                    <div className="w-1.5 h-20 bg-gradient-to-b from-[#ffd700] to-gray-400 absolute top-3 right-2 origin-top rotate-[-22deg] rounded-full shadow" />
-                    <div className="w-3 h-4 bg-cyan-400 border border-white absolute bottom-3 right-7 rotate-[-22deg] rounded-sm shadow-[0_0_8px_#00e5ff]" />
-                  </div>
-                </div>
-
+              <div className="relative w-full flex items-center justify-center">
                 {/* Floating Music Notes */}
                 <motion.div
                   animate={{ y: [-5, -25, -5], opacity: [0, 1, 0] }}
                   transition={{ repeat: Infinity, duration: 2.2, ease: 'easeInOut' }}
-                  className="absolute -top-2 left-6 text-[#ffd700] text-2xl font-bold pointer-events-none"
+                  className="absolute -top-2 left-6 text-[#ffd700] text-2xl font-bold pointer-events-none z-20"
                 >
                   🎵
                 </motion.div>
                 <motion.div
                   animate={{ y: [-5, -30, -5], opacity: [0, 1, 0] }}
                   transition={{ repeat: Infinity, duration: 2.7, delay: 0.8, ease: 'easeInOut' }}
-                  className="absolute top-8 right-4 text-cyan-400 text-3xl font-bold pointer-events-none"
+                  className="absolute top-8 right-4 text-cyan-400 text-3xl font-bold pointer-events-none z-20"
                 >
                   🎶
                 </motion.div>
+
+                {/* Hyper-Realistic 3D DJ Vinyl Deck with Event Logo */}
+                <RealisticDJDeck3D
+                  bassPulsing={bassPulsing}
+                  activeSoundFx={activeSoundFx}
+                  onTriggerSound={handleTriggerSound}
+                />
               </div>
+
 
               {/* Dynamic Equalizer Visualizer Spectrum */}
               <div className="w-full max-w-sm mt-4 bg-[#08121a]/95 border border-[#ffd700]/40 rounded-2xl p-4 shadow-[0_0_25px_rgba(0,0,0,0.5)]">

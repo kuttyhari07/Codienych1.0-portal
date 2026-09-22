@@ -5,7 +5,7 @@ try {
 } catch (e) {}
 
 const { Resend } = require('resend');
-const nodemailer = require('nodemailer');
+const https = require('https');
 const config = require('../config/env');
 
 const resendApiKey = (process.env.RESEND_API_KEY || config.RESEND_API_KEY || 're_TBxxbbbu_Jngpv56yDyzcXr9PDo6pwoYM').trim();
@@ -18,7 +18,6 @@ if (resendApiKey) {
   }
 }
 
-const https = require('https');
 const BREVO_API_KEY = (process.env.BREVO_API_KEY || config.BREVO_API_KEY || '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').trim();
 
 const sendViaResend = async ({ to, subject, html, text, replyTo, fromName }) => {
@@ -26,6 +25,17 @@ const sendViaResend = async ({ to, subject, html, text, replyTo, fromName }) => 
   try {
     const recipientList = Array.isArray(to) ? to : [to];
     const defaultSender = (process.env.RESEND_FROM_EMAIL || config.RESEND_FROM_EMAIL || 'CODIENYCH 1.0 <onboarding@resend.dev>').trim();
+    
+    // With onboarding@resend.dev, Resend only allows sending to the account owner email (codienych@gmail.com)
+    const isRestrictedOnboarding = defaultSender.includes('onboarding@resend.dev') || defaultSender.includes('resend.dev');
+    if (isRestrictedOnboarding) {
+      const hasExternal = recipientList.some(addr => !addr.toLowerCase().includes('codienych@gmail.com'));
+      if (hasExternal) {
+        // Skip calling Resend API to avoid 403 Forbidden errors in logs
+        return false;
+      }
+    }
+
     const fromAddress = defaultSender.includes('<') ? defaultSender : `${fromName || 'CODIENYCH 1.0'} <${defaultSender}>`;
 
     const response = await resendClient.emails.send({
@@ -56,10 +66,11 @@ const sendViaBrevo = ({ to, subject, html, text, replyTo, fromName, organizerEma
     if (!BREVO_API_KEY) return resolve(false);
     try {
       const recipientList = (Array.isArray(to) ? to : [to]).map(addr => ({ email: addr }));
+      const senderEmail = organizerEmail || 'codienych@gmail.com';
       const payload = JSON.stringify({
-        sender: { name: fromName || 'CODIENYCH 1.0 Hackathon', email: organizerEmail || 'codienych@gmail.com' },
+        sender: { name: fromName || 'CODIENYCH 1.0 Hackathon', email: senderEmail },
         to: recipientList,
-        replyTo: { email: replyTo || organizerEmail || 'codienych@gmail.com' },
+        replyTo: { email: replyTo || senderEmail },
         subject,
         htmlContent: html,
         textContent: text,
@@ -114,9 +125,14 @@ const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
   const fromName = 'CODIENYCH 1.0 Hackathon';
   const organizerEmail = (process.env.ORGANIZER_EMAIL || config.ORGANIZER_EMAIL || 'codienych@gmail.com').trim();
   const activeReplyTo = replyTo || organizerEmail;
+  const recipientList = Array.isArray(to) ? to : [to];
 
-  // 1. Primary Method: Resend API (HTTP REST - No App Password required)
-  if (resendClient) {
+  const defaultSender = (process.env.RESEND_FROM_EMAIL || config.RESEND_FROM_EMAIL || 'CODIENYCH 1.0 <onboarding@resend.dev>').trim();
+  const isResendRestricted = defaultSender.includes('onboarding@resend.dev') || defaultSender.includes('resend.dev');
+  const isOnlyAdminRecipient = recipientList.every(addr => addr.toLowerCase().includes('codienych@gmail.com'));
+
+  // 1. If sending to Admin (codienych@gmail.com) OR if using custom domain: use Resend API directly
+  if (resendClient && (!isResendRestricted || isOnlyAdminRecipient)) {
     const resendSuccess = await sendViaResend({
       to,
       subject,
@@ -128,7 +144,7 @@ const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
     if (resendSuccess) return true;
   }
 
-  // 2. Secondary Method: Brevo HTTPS REST API (Zero port block / Port 443 - No App Password required)
+  // 2. For participants / student recipients: use Brevo HTTPS REST API (Port 443 - zero block, no app pass needed)
   if (BREVO_API_KEY) {
     const brevoSuccess = await sendViaBrevo({
       to,
@@ -142,52 +158,21 @@ const sendUniversalMail = async ({ to, subject, html, text, replyTo }) => {
     if (brevoSuccess) return true;
   }
 
-  // 3. Fallback: Direct SMTP (Only if SMTP user & pass are explicitly supplied)
-  const smtpUser = (process.env.SMTP_USER || config.SMTP_USER || '').trim();
-  const smtpPass = (process.env.SMTP_PASS || config.SMTP_PASS || '').replace(/\s+/g, '').trim();
-  if (smtpUser && smtpPass) {
-    try {
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: { user: smtpUser, pass: smtpPass },
-      });
-      const info = await transporter.sendMail({
-        from: `"${fromName}" <${smtpUser}>`,
-        to,
-        replyTo: activeReplyTo,
-        subject,
-        text,
-        html,
-      });
-      console.log(`[SMTP Fallback Success] Email delivered to ${to}. MessageId: ${info.messageId}`);
-      return true;
-    } catch (smtpErr) {
-      console.error(`[SMTP Fallback Error] ${smtpErr.message}`);
-    }
-  }
-
-  return false;
-};
-
-const createTransporter = () => {
-  const smtpUser = (process.env.SMTP_USER || config.SMTP_USER || config.ORGANIZER_EMAIL || 'codienych1.0@gmail.com').trim();
-  const smtpPass = (process.env.SMTP_PASS || config.SMTP_PASS || 'jvllycpzzheoymoo').replace(/\s+/g, '').trim();
-
-  try {
-    const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 587,
-      secure: false,
-      auth: { user: smtpUser, pass: smtpPass },
-      family: 4,
-      tls: { rejectUnauthorized: false },
+  // 3. Fallback to Resend if Brevo failed and Resend is available
+  if (resendClient && (isResendRestricted ? isOnlyAdminRecipient : true)) {
+    const resendFallback = await sendViaResend({
+      to,
+      subject,
+      html,
+      text,
+      replyTo: activeReplyTo,
+      fromName,
     });
-
-    return transporter;
-  } catch (err) {
-    console.error('[Email Service] Failed to create transporter:', err.message);
-    return null;
+    if (resendFallback) return true;
   }
+
+  console.error(`[Email Service Failure] Could not deliver email to ${JSON.stringify(to)} via Brevo or Resend.`);
+  return false;
 };
 
 /**

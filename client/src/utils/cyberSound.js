@@ -264,3 +264,43 @@ export const playLaserSweep = () => {
   }
 };
 
+// DJ Vinyl Scratch / Backspin SFX
+export const playVinylScratch = () => {
+  if (!soundEnabled) return;
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
+
+    osc.type = 'sawtooth';
+    filter.type = 'bandpass';
+    filter.Q.setValueAtTime(4.0, now);
+
+    // Rapid pitch sweep up and down for authentic DJ scratch
+    osc.frequency.setValueAtTime(240, now);
+    osc.frequency.linearRampToValueAtTime(860, now + 0.07);
+    osc.frequency.linearRampToValueAtTime(180, now + 0.15);
+
+    filter.frequency.setValueAtTime(650, now);
+    filter.frequency.linearRampToValueAtTime(1900, now + 0.07);
+    filter.frequency.linearRampToValueAtTime(420, now + 0.15);
+
+    gain.gain.setValueAtTime(0.12, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.16);
+  } catch (e) {
+    // Ignore audio errors
+  }
+};
+
+
