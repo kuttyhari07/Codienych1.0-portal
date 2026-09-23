@@ -1,3 +1,4 @@
+const fs = require('fs');
 const Registration = require('../models/Registration');
 const Participant = require('../models/Participant');
 const Payment = require('../models/Payment');
@@ -8,25 +9,58 @@ const {
   sendRegistrationReceivedToLeader,
 } = require('../services/emailService');
 
+const cleanUpTempFiles = (files) => {
+  if (!files) return;
+  try {
+    const allFiles = [
+      ...(files['paymentScreenshot'] || []),
+      ...(files['idCards'] || []),
+    ];
+    allFiles.forEach((f) => {
+      if (f && f.path && fs.existsSync(f.path)) {
+        try {
+          fs.unlinkSync(f.path);
+        } catch (e) {}
+      }
+    });
+  } catch (e) {}
+};
+
 /**
  * Generate sequential Registration ID starting from 0001
  * Format: CODIENYCH-2026-0001, CODIENYCH-2026-0002...
  */
 const generateRegistrationId = async () => {
   const currentYear = new Date().getFullYear();
-  const count = await Registration.countDocuments();
-  let nextSeq = count + 1;
+  // Find the highest existing registrationId to guarantee sequential ordering
+  const latest = await Registration.findOne({
+    registrationId: new RegExp(`^CODIENYCH-${currentYear}-`),
+  })
+    .sort({ registrationId: -1 })
+    .select('registrationId')
+    .lean();
+
+  let nextSeq = 1;
+  if (latest && latest.registrationId) {
+    const parts = latest.registrationId.split('-');
+    const lastNum = parseInt(parts[parts.length - 1], 10);
+    if (!isNaN(lastNum)) {
+      nextSeq = lastNum + 1;
+    }
+  }
+
   let unique = false;
   let regId = '';
-
-  while (!unique) {
+  let attempts = 0;
+  while (!unique && attempts < 50) {
     const formattedNum = String(nextSeq).padStart(4, '0');
     regId = `CODIENYCH-${currentYear}-${formattedNum}`;
-    const existing = await Registration.findOne({ registrationId: regId });
+    const existing = await Registration.findOne({ registrationId: regId }).select('_id').lean();
     if (!existing) {
       unique = true;
     } else {
       nextSeq += 1;
+      attempts += 1;
     }
   }
   return regId;
@@ -41,6 +75,7 @@ const registerTeam = async (req, res) => {
     const { teamName, teamSize, domain, transactionId, participants } = req.body;
 
     if (!domain || !domain.trim()) {
+      cleanUpTempFiles(req.files);
       return res.status(400).json({ success: false, message: 'Please select one hackathon domain for your team.' });
     }
 
@@ -49,15 +84,18 @@ const registerTeam = async (req, res) => {
     try {
       parsedParticipants = typeof participants === 'string' ? JSON.parse(participants) : participants;
     } catch (e) {
+      cleanUpTempFiles(req.files);
       return res.status(400).json({ success: false, message: 'Invalid participants payload format.' });
     }
 
     const numTeamSize = parseInt(teamSize, 10);
     if (![4, 5, 6].includes(numTeamSize)) {
+      cleanUpTempFiles(req.files);
       return res.status(400).json({ success: false, message: 'Team size must be 4, 5, or 6 members.' });
     }
 
     if (!parsedParticipants || parsedParticipants.length !== numTeamSize) {
+      cleanUpTempFiles(req.files);
       return res.status(400).json({
         success: false,
         message: `Expected ${numTeamSize} participants details, but received ${parsedParticipants ? parsedParticipants.length : 0}.`,
@@ -65,17 +103,19 @@ const registerTeam = async (req, res) => {
     }
 
     if (!transactionId || !transactionId.trim()) {
+      cleanUpTempFiles(req.files);
       return res.status(400).json({ success: false, message: 'UPI Transaction ID / UTR number is required.' });
     }
 
     const trimmedTxId = transactionId.trim();
 
-    // 1. Check duplicate Transaction ID
-    const existingPayment = await Payment.findOne({ transactionId: trimmedTxId });
+    // 1. Check duplicate Transaction ID early before processing uploads
+    const existingPayment = await Payment.findOne({ transactionId: trimmedTxId }).select('_id').lean();
     if (existingPayment) {
+      cleanUpTempFiles(req.files);
       return res.status(400).json({
         success: false,
-        message: 'This transaction ID / UTR number has already been submitted.',
+        message: 'This transaction ID / UTR number has already been submitted for another registration.',
       });
     }
 
@@ -88,6 +128,7 @@ const registerTeam = async (req, res) => {
       const normStudentId = (p.studentId || '').trim();
 
       if (!normEmail || !normStudentId || !p.fullName || !p.phone || !p.college || !p.department || !p.year) {
+        cleanUpTempFiles(req.files);
         return res.status(400).json({
           success: false,
           message: `All required participant details must be filled for participant #${i + 1}.`,
@@ -95,12 +136,14 @@ const registerTeam = async (req, res) => {
       }
 
       if (internalEmails.has(normEmail)) {
+        cleanUpTempFiles(req.files);
         return res.status(400).json({
           success: false,
           message: `Duplicate email address '${normEmail}' found inside the team registration payload.`,
         });
       }
       if (internalStudentIds.has(normStudentId)) {
+        cleanUpTempFiles(req.files);
         return res.status(400).json({
           success: false,
           message: `Duplicate student ID '${normStudentId}' found inside the team registration payload.`,
@@ -116,9 +159,10 @@ const registerTeam = async (req, res) => {
         { email: { $in: Array.from(internalEmails) } },
         { studentId: { $in: Array.from(internalStudentIds) } },
       ],
-    });
+    }).select('fullName studentId email').lean();
 
     if (existingParticipants.length > 0) {
+      cleanUpTempFiles(req.files);
       const dup = existingParticipants[0];
       return res.status(400).json({
         success: false,
@@ -133,12 +177,14 @@ const registerTeam = async (req, res) => {
 
     const screenshotFile = req.files['paymentScreenshot'] ? req.files['paymentScreenshot'][0] : null;
     if (!screenshotFile) {
+      cleanUpTempFiles(req.files);
       return res.status(400).json({ success: false, message: 'Payment screenshot upload is mandatory.' });
     }
 
     // Match ID card files per participant
     const idCardFiles = req.files['idCards'] || [];
     if (idCardFiles.length !== numTeamSize) {
+      cleanUpTempFiles(req.files);
       return res.status(400).json({
         success: false,
         message: `Each participant must upload an individual ID card photo. Received ${idCardFiles.length} files for ${numTeamSize} participants.`,
@@ -151,24 +197,41 @@ const registerTeam = async (req, res) => {
       : 350;
     const expectedAmount = numTeamSize * feePerMember;
 
-    // Parallel Concurrent Uploads (Payment Screenshot + All ID Cards concurrently in 1-2 seconds)
+    // Parallel Concurrent Uploads (Payment Screenshot + All ID Cards concurrently)
     const [screenshotUrl, ...idCardUrls] = await Promise.all([
       uploadFile(screenshotFile, 'payments'),
       ...idCardFiles.map((file) => uploadFile(file, 'idcards')),
     ]);
 
-    // Generate unique Registration ID
-    const registrationId = await generateRegistrationId();
+    // Create Registration with concurrency-resilient sequential ID assignment
+    let registration;
+    let registrationId;
+    let retries = 0;
 
-    // Create Registration, Payment, and Participants concurrently
-    const registration = await Registration.create({
-      registrationId,
-      teamName: teamName.trim(),
-      teamSize: numTeamSize,
-      domain: domain.trim(),
-      status: 'PENDING',
-      registrationDate: new Date(),
-    });
+    while (!registration && retries < 5) {
+      try {
+        registrationId = await generateRegistrationId();
+        registration = await Registration.create({
+          registrationId,
+          teamName: teamName.trim(),
+          teamSize: numTeamSize,
+          domain: domain.trim(),
+          status: 'PENDING',
+          registrationDate: new Date(),
+        });
+      } catch (insertErr) {
+        if (insertErr.code === 11000 && insertErr.keyPattern && insertErr.keyPattern.registrationId) {
+          retries += 1;
+          await new Promise((resolve) => setTimeout(resolve, 50 * retries));
+        } else {
+          throw insertErr;
+        }
+      }
+    }
+
+    if (!registration) {
+      throw new Error('Could not allocate unique registration ID. Please try again.');
+    }
 
     const participantDocs = parsedParticipants.map((p, i) => ({
       registration: registration._id,
@@ -201,7 +264,7 @@ const registerTeam = async (req, res) => {
     const leaderDoc = participantDocs[0];
     if (leaderDoc) {
       // Detached safe background email execution
-      (async () => {
+      setImmediate(async () => {
         try {
           await Promise.allSettled([
             sendOrganizerNewRegistrationAlert({
@@ -232,7 +295,7 @@ const registerTeam = async (req, res) => {
         } catch (emailErr) {
           console.error('[Registration Email Error]', emailErr.message);
         }
-      })();
+      });
     }
 
     // Return instant response (<1s)
@@ -250,6 +313,7 @@ const registerTeam = async (req, res) => {
       },
     });
   } catch (error) {
+    cleanUpTempFiles(req.files);
     console.error('[Registration Error]', error);
     return res.status(500).json({
       success: false,

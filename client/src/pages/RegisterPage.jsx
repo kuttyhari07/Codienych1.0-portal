@@ -21,6 +21,7 @@ const RegisterPage = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [submissionSuccess, setSubmissionSuccess] = useState(null);
   const [copiedUpi, setCopiedUpi] = useState(false);
+  const [submissionStatus, setSubmissionStatus] = useState('');
 
   // Form State
   const [teamName, setTeamName] = useState('');
@@ -76,8 +77,9 @@ const RegisterPage = () => {
 
   // Client-side quick image compression to make uploads instant (< 1 second)
   const compressImage = async (file) => {
-    if (!file || !file.type.startsWith('image/')) return file;
-    if (file.size < 500 * 1024) return file;
+    if (!file || !file.type || !file.type.startsWith('image/')) return file;
+    // If file is already compact (< 90KB) and in WebP format, skip compression
+    if (file.size < 90 * 1024 && file.type === 'image/webp') return file;
 
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -87,19 +89,19 @@ const RegisterPage = () => {
         img.src = event.target.result;
         img.onload = () => {
           const canvas = document.createElement('canvas');
-          const MAX_WIDTH = 1200;
-          const MAX_HEIGHT = 1200;
+          const MAX_WIDTH = 1000;
+          const MAX_HEIGHT = 1000;
           let width = img.width;
           let height = img.height;
 
           if (width > height) {
             if (width > MAX_WIDTH) {
-              height *= MAX_WIDTH / width;
+              height = Math.round((height * MAX_WIDTH) / width);
               width = MAX_WIDTH;
             }
           } else {
             if (height > MAX_HEIGHT) {
-              width *= MAX_HEIGHT / height;
+              width = Math.round((width * MAX_HEIGHT) / height);
               height = MAX_HEIGHT;
             }
           }
@@ -112,7 +114,8 @@ const RegisterPage = () => {
           canvas.toBlob(
             (blob) => {
               if (blob) {
-                const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".webp", {
+                const cleanName = (file.name || 'image').replace(/\.[^/.]+$/, '') + '.webp';
+                const compressedFile = new File([blob], cleanName, {
                   type: 'image/webp',
                   lastModified: Date.now(),
                 });
@@ -122,7 +125,7 @@ const RegisterPage = () => {
               }
             },
             'image/webp',
-            0.8
+            0.75
           );
         };
         img.onerror = () => resolve(file);
@@ -245,52 +248,64 @@ const RegisterPage = () => {
   // Submit Registration
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return; // Prevent double clicks during transmission
     if (!validateStep(7)) return;
 
     setLoading(true);
     setErrorMessage('');
+    setSubmissionStatus('Optimizing & compressing crew documents...');
 
     try {
+      // Pre-submission compression pass guarantees entire upload payload is strictly < 600KB
+      const [compressedLeaderCard, compressedMemberCards, compressedScreenshot] = await Promise.all([
+        compressImage(leader.idCardFile),
+        Promise.all(members.map((m) => compressImage(m.idCardFile))),
+        compressImage(paymentScreenshotFile),
+      ]);
+
+      setSubmissionStatus('Transmitting manifest securely to Admiralty...');
+
       const formData = new FormData();
-      formData.append('teamName', teamName);
+      formData.append('teamName', teamName.trim());
       formData.append('teamSize', teamSize);
-      formData.append('domain', domain);
-      formData.append('transactionId', transactionId);
+      formData.append('domain', domain.trim());
+      formData.append('transactionId', transactionId.trim());
 
       // Package all participants (Leader + Members)
       const allParticipants = [
         {
-          fullName: leader.fullName,
-          email: leader.email,
-          phone: leader.phone,
-          college: leader.college,
-          department: leader.department,
+          fullName: leader.fullName.trim(),
+          email: leader.email.trim(),
+          phone: leader.phone.trim(),
+          college: leader.college.trim(),
+          department: leader.department.trim(),
           year: leader.year,
-          studentId: leader.studentId,
+          studentId: leader.studentId.trim(),
         },
         ...members.map((m) => ({
-          fullName: m.fullName,
-          email: m.email,
-          phone: m.phone,
-          college: m.college,
-          department: m.department,
+          fullName: m.fullName.trim(),
+          email: m.email.trim(),
+          phone: m.phone.trim(),
+          college: m.college.trim(),
+          department: m.department.trim(),
           year: m.year,
-          studentId: m.studentId,
+          studentId: m.studentId.trim(),
         })),
       ];
 
       formData.append('participants', JSON.stringify(allParticipants));
 
-      // Append files in exact index order
-      formData.append('idCards', leader.idCardFile);
-      members.forEach((m) => {
-        formData.append('idCards', m.idCardFile);
+      // Append compressed files in exact index order
+      formData.append('idCards', compressedLeaderCard);
+      compressedMemberCards.forEach((card) => {
+        formData.append('idCards', card);
       });
 
-      formData.append('paymentScreenshot', paymentScreenshotFile);
+      formData.append('paymentScreenshot', compressedScreenshot);
 
       const response = await api.post('/registrations', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
+        timeout: 45000,
       });
 
       if (response.data.success) {
@@ -302,10 +317,11 @@ const RegisterPage = () => {
       console.error('Registration submit error:', error);
       const msg = error.response && error.response.data && error.response.data.message
         ? error.response.data.message
-        : 'An error occurred during submission. Please try again.';
+        : 'An error occurred during submission. Please verify your details and network, then try again.';
       setErrorMessage(msg);
     } finally {
       setLoading(false);
+      setSubmissionStatus('');
     }
   };
 
@@ -1107,11 +1123,23 @@ const RegisterPage = () => {
                 By clicking submit, your team manifest, pirate student ID photos, and UPI payment UTR proof will be transmitted to the CODIENYCH 1.0 Admirals for verification.
               </p>
 
+              {loading && (
+                <div className="flex flex-col items-center justify-center space-y-2 mb-4 p-4 rounded-xl bg-[#091522]/95 border border-[#ffd700]/40 shadow-[0_0_20px_rgba(255,215,0,0.2)]">
+                  <div className="w-6 h-6 border-2 border-t-[#ffd700] border-r-[#ffd700] border-b-transparent border-l-transparent rounded-full animate-spin" />
+                  <span className="font-cinzel text-xs text-[#ffd700] font-bold tracking-wider">
+                    {submissionStatus || 'TRANSMITTING MANIFEST SECURELY...'}
+                  </span>
+                  <span className="font-cinzel text-[10px] text-gray-400">
+                    Safe transmission in progress. Please do not close or reload.
+                  </span>
+                </div>
+              )}
+
               <button
                 type="button"
                 onClick={handleSubmit}
                 disabled={loading}
-                className="w-full sm:w-auto px-12 py-4 rounded-xl font-cinzel font-extrabold text-base text-black bg-gradient-to-r from-[#ffd700] via-[#f39c12] to-[#b8860b] hover:from-[#ffe043] hover:to-[#d4af37] transition-all shadow-[0_0_30px_rgba(255,215,0,0.6)] transform hover:-translate-y-1 disabled:opacity-50 uppercase tracking-wider cursor-pointer"
+                className="w-full sm:w-auto px-12 py-4 rounded-xl font-cinzel font-extrabold text-base text-black bg-gradient-to-r from-[#ffd700] via-[#f39c12] to-[#b8860b] hover:from-[#ffe043] hover:to-[#d4af37] transition-all shadow-[0_0_30px_rgba(255,215,0,0.6)] transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wider cursor-pointer select-none"
               >
                 {loading ? 'TRANSMITTING MANIFEST...' : 'SUBMIT CREW REGISTRATION NOW'}
               </button>

@@ -29,9 +29,13 @@ const uploadFile = async (file, folder = 'uploads') => {
     try {
       const result = await cloudinary.uploader.upload(file.path, {
         folder: `codienych/${folder}`,
-        resource_type: 'auto',
+        resource_type: 'image',
+        transformation: [
+          { width: 1200, height: 1200, crop: 'limit', quality: 'auto:good' }
+        ],
+        timeout: 25000,
       });
-      // Optionally clean up local temp file
+      // Clean up local temp file immediately to conserve disk space
       if (fs.existsSync(file.path)) {
         fs.unlinkSync(file.path);
       }

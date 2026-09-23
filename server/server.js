@@ -3,6 +3,7 @@ const path = require('path');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const compression = require('compression');
 const connectDB = require('./config/db');
 const config = require('./config/env');
 
@@ -13,6 +14,14 @@ const app = express();
 
 // Trust proxy for Render / reverse proxies so express-rate-limit gets correct client IP
 app.set('trust proxy', 1);
+
+// Gzip & Deflate response compression for high throughput & low bandwidth latency
+app.use(
+  compression({
+    threshold: 1024,
+    level: 6,
+  })
+);
 
 // Security Middlewares
 app.use(
@@ -46,13 +55,13 @@ app.use(cors({
 // Explicit pre-flight response for all routes
 app.options('*', cors());
 
-// Rate Limiter for API endpoints
+// High-capacity Rate Limiter for API endpoints (accommodates shared campus Wi-Fi / carrier CGNAT IPs)
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 300,
+  max: 2500, // Generous limit so college campus IPs aren't blocked during hackathon bursts
   standardHeaders: true,
   legacyHeaders: false,
-  message: { success: false, message: 'Too many requests from this IP, please try again later.' },
+  message: { success: false, message: 'High traffic detected. Please wait a moment and try again.' },
 });
 
 app.use('/api', apiLimiter);
