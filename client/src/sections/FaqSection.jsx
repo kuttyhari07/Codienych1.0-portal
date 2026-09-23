@@ -97,7 +97,7 @@ const faqs = [
   },
   {
     q: 'Are there entertainment activities & music during the 24-hour hackathon?',
-    a: 'Yes! We have an electrifying Pirates Tavern featuring an exclusive Midnight DJ Night (12:00 AM - 02:00 AM) with EDM, mass bass drops & dance vibes, late-night Chess and Carrom board battles, complimentary midnight coffee & grog, and quick reflex mini-games that reward winners with instant surprise gifts and goodies!',
+    a: 'Yes! We have an exciting Pirates Tavern featuring an exclusive Midnight DJ Night (12:00 AM - 02:00 AM) with EDM, South Indian mass beats & dance vibes, late-night Chess and Carrom board battles, complimentary midnight hot coffee & snacks, and quick mini-games with instant surprise gifts and goodies!',
   },
   {
     q: 'How will projects be evaluated?',

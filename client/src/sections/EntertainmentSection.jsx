@@ -29,30 +29,30 @@ import RealisticDJDeck3D from '../components/RealisticDJDeck3D';
 const activities = [
   {
     icon: Moon,
-    title: 'Midnight Grog & Board Battles',
-    tag: 'ANTI-SLEEP TAVERN',
+    title: 'Late-Night Coffee & Board Games',
+    tag: 'CHILL & RECHARGE',
     description:
-      'Feeling sleepy or hitting a brain block during the midnight voyage? Take a quick break and challenge fellow pirates to intense Chess & Carrom board duels in the ship lounge!',
+      'Feeling sleepy or hitting a brain block at midnight? Take a quick break and play Chess & Carrom board matches in the lounge with hot coffee!',
     badge: 'Chess & Carrom Lounge',
     color: 'from-amber-900/20 to-yellow-900/5',
     borderColor: 'border-[#ffd700]/40',
   },
   {
     icon: Gift,
-    title: 'Surprise Spot Gifts & Pirate Swag',
-    tag: 'INSTANT PLUNDER',
+    title: 'Surprise Spot Gifts & Goodies',
+    tag: 'INSTANT REWARDS',
     description:
-      'Take part in quick mini-games, fun captain trivia, and mini tournaments. Winners of each activity get instant surprise gifts and cool pirate goodies!',
+      'Take part in quick mini-games, fun tech trivia, and mini tournaments. Winners of each activity get instant surprise gifts and cool goodies!',
     badge: 'Instant Rewards',
     color: 'from-yellow-600/20 to-amber-700/5',
     borderColor: 'border-[#e5c158]/40',
   },
   {
     icon: Gamepad2,
-    title: 'Sea Shanty Games & Mini Challenges',
+    title: 'Fun Mini Games & Challenges',
     tag: 'HIGH ENERGY',
     description:
-      'Short 5-minute lightning games, tech quizzes, typing speed duels, and fun crew-bonding challenges to keep the adrenaline high throughout the 24 hours!',
+      'Quick 5-minute lightning games, tech quizzes, typing speed duels, and fun team challenges to keep the excitement alive throughout the 24 hours!',
     badge: 'Mini Challenges',
     color: 'from-cyan-600/20 to-blue-700/5',
     borderColor: 'border-cyan-400/40',
@@ -142,7 +142,7 @@ const EntertainmentSection = () => {
             <div className="flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center space-x-1.5 bg-red-600/30 border border-red-500/60 px-3 py-1 rounded-full text-[11px] font-cinzel font-black text-red-300 tracking-wider uppercase">
                 <span className="w-2 h-2 rounded-full bg-red-500 animate-ping inline-block" />
-                <span>EXCLUSIVE HEADLINER NIGHT EVENT</span>
+                <span>🔥 SPECIAL NIGHT ATTRACTION</span>
               </span>
               <span className="inline-flex items-center space-x-1.5 bg-[#ffd700]/15 border border-[#ffd700]/50 px-3 py-1 rounded-full text-[11px] font-cinzel font-bold text-[#ffd700] uppercase">
                 <Clock className="w-3.5 h-3.5" />
@@ -152,7 +152,7 @@ const EntertainmentSection = () => {
 
             <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-cyan-950/80 to-blue-950/80 border border-cyan-400/40 px-3.5 py-1 rounded-full font-cinzel text-xs text-cyan-300 font-bold">
               <Flame className="w-3.5 h-3.5 text-[#ffd700] animate-bounce" />
-              <span>100% FREE FOR ALL HACKATHON PIRATES</span>
+              <span>100% FREE FOR ALL PARTICIPANTS</span>
             </div>
           </div>
 
@@ -162,18 +162,18 @@ const EntertainmentSection = () => {
             <div className="lg:col-span-7">
               <div className="inline-flex items-center space-x-2 text-[#ffd700] font-cinzel text-xs tracking-widest uppercase font-bold mb-2">
                 <Disc3 className="w-4 h-4 animate-spin [animation-duration:3s]" />
-                <span>// MIDNIGHT TAVERN STAGE TAKEOVER</span>
+                <span>// MIDNIGHT SPECIAL • LIVE MUSIC & DANCE //</span>
               </div>
 
               <h3 className="font-pirate text-3xl sm:text-5xl md:text-6xl text-white tracking-wide leading-tight mb-4">
-                PIRATE BASS REVOLUTION: <br className="hidden sm:inline" />
+                MIDNIGHT SPECIAL: <br className="hidden sm:inline" />
                 <span className="pirate-gold-title text-4xl sm:text-6xl md:text-7xl drop-shadow-[0_0_35px_rgba(255,215,0,0.8)]">
-                  NIGHT DJ EXTRAVAGANZA
+                  LIVE DJ NIGHT & DANCE PARTY
                 </span>
               </h3>
 
               <p className="font-cinzel text-xs sm:text-sm text-gray-200 leading-relaxed mb-6">
-                When the midnight bells chime across the dark high seas, the tavern lights flip to neon! Leave your bugs at the terminal and plunge into an explosive live DJ set. Pure bass, viral shanty remixes, synthwave, and electrifying beats to blast fatigue away and supercharge your crew for the dawn sprint!
+                Take a break from non-stop coding! Join our high-energy Midnight DJ Night (12:00 AM to 02:00 AM) featuring South Indian mass songs, EDM beats, and trending dance tracks. Enjoy free midnight hot coffee, dance with your friends, and recharge your energy for the hackathon!
               </p>
 
               {/* 4 Key Night DJ Perks Grid */}
@@ -183,8 +183,8 @@ const EntertainmentSection = () => {
                     <Headphones className="w-5 h-5 text-[#ffd700]" />
                   </div>
                   <div>
-                    <h4 className="font-pirate text-base text-white">Live Resident DJ</h4>
-                    <p className="font-cinzel text-[11px] text-gray-300">EDM, Trap, South Indian Mass Drops & Sea Shanty Remixes</p>
+                    <h4 className="font-pirate text-base text-white">Live DJ & Non-Stop Music</h4>
+                    <p className="font-cinzel text-[11px] text-gray-300">South Indian mass hits, trending dance tracks, EDM & party remixes</p>
                   </div>
                 </div>
 
@@ -193,8 +193,8 @@ const EntertainmentSection = () => {
                     <Zap className="w-5 h-5 text-cyan-300" />
                   </div>
                   <div>
-                    <h4 className="font-pirate text-base text-white">Zero Sleep Zone</h4>
-                    <p className="font-cinzel text-[11px] text-gray-300">130+ BPM high-octane bass to pulverize late-night exhaustion</p>
+                    <h4 className="font-pirate text-base text-white">Anti-Sleep Energy Zone</h4>
+                    <p className="font-cinzel text-[11px] text-gray-300">High-bass party tracks to beat midnight sleepiness and stay active</p>
                   </div>
                 </div>
 
@@ -203,8 +203,8 @@ const EntertainmentSection = () => {
                     <Coffee className="w-5 h-5 text-amber-300" />
                   </div>
                   <div>
-                    <h4 className="font-pirate text-base text-white">Midnight Grog & Bites</h4>
-                    <p className="font-cinzel text-[11px] text-gray-300">Hot coffee, tea, energy snacks & midnight drinks on the house</p>
+                    <h4 className="font-pirate text-base text-white">Free Midnight Coffee & Snacks</h4>
+                    <p className="font-cinzel text-[11px] text-gray-300">Complimentary hot coffee, tea, and late-night snacks on the house</p>
                   </div>
                 </div>
 
@@ -213,8 +213,8 @@ const EntertainmentSection = () => {
                     <PartyPopper className="w-5 h-5 text-purple-300" />
                   </div>
                   <div>
-                    <h4 className="font-pirate text-base text-white">Spot Dance Booty</h4>
-                    <p className="font-cinzel text-[11px] text-gray-300">Hype squads & dance-off victors win instant pirate merchandise</p>
+                    <h4 className="font-pirate text-base text-white">Dance Off & Spot Gifts</h4>
+                    <p className="font-cinzel text-[11px] text-gray-300">Energetic dancers and fun squads win instant surprise gifts & goodies</p>
                   </div>
                 </div>
               </div>
@@ -224,7 +224,7 @@ const EntertainmentSection = () => {
                 <div className="flex items-center justify-between mb-3">
                   <span className="font-cinzel text-[11px] uppercase tracking-wider text-[#ffd700] font-bold flex items-center space-x-1.5">
                     <Radio className="w-3.5 h-3.5 text-[#ffd700] animate-pulse" />
-                    <span>INTERACTIVE DJ SOUNDBOARD • TEST STAGE SFX:</span>
+                    <span>INTERACTIVE DJ SOUNDBOARD • CLICK TO PLAY SFX:</span>
                   </span>
                   {activeSoundFx && (
                     <span className="text-[10px] font-cinzel text-cyan-300 uppercase tracking-widest font-bold animate-pulse">

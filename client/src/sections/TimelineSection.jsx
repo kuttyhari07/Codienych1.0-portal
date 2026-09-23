@@ -115,7 +115,7 @@ const VOYAGE_STAGES = [
     y: 76,
     mx: 28,
     my: 85,
-    summary: 'High-octane overnight coding voyage fueled by the Tavern DJ energy surge, midnight grog, snacks, and tactical bug squashing.',
+    summary: 'High-octane overnight coding voyage fueled by the Midnight DJ energy surge, hot coffee, snacks, and tactical bug squashing.',
     icon: Ship,
     phase: 'NIGHT HIGH SEAS SURGE',
   },
