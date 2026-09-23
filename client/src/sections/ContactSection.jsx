@@ -42,11 +42,28 @@ const ContactSection = () => {
 
             <div className="flex items-start space-x-4">
               <Phone className="w-6 h-6 text-[#ffd700] flex-shrink-0 mt-1" />
-              <div>
-                <span className="font-cinzel text-xs text-[#cfb07a] block uppercase font-bold">HARBOR MASTER TELEPHONE</span>
-                <a href={`tel:${EVENT_CONFIG.PHONE_NUMBER.replace(/\s+/g, '')}`} className="font-mono text-sm text-gray-200 hover:text-[#ffd700] transition-colors">
-                  {EVENT_CONFIG.PHONE_NUMBER}
-                </a>
+              <div className="w-full">
+                <span className="font-cinzel text-xs text-[#cfb07a] block uppercase font-bold mb-2">
+                  ADMINS PHONE
+                </span>
+                <div className="space-y-2">
+                  {EVENT_CONFIG.ADMIN_CONTACTS.map((admin, idx) => (
+                    <div
+                      key={idx}
+                      className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-4 bg-[#140e06]/70 p-2.5 rounded-xl border border-[#ffd700]/25"
+                    >
+                      <span className="font-cinzel text-xs sm:text-sm text-white font-bold">
+                        {admin.name}
+                      </span>
+                      <a
+                        href={`tel:${admin.phone.replace(/[^0-9+]/g, '')}`}
+                        className="font-mono text-xs sm:text-sm text-[#ffd700] hover:text-white font-bold transition-colors whitespace-nowrap"
+                      >
+                        {admin.phone}
+                      </a>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

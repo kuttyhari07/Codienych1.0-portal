@@ -28,6 +28,10 @@ export const EVENT_CONFIG = {
   VENUE: 'ESEC CONVENTION CENTER, ERODE SENGUNTHAR ENGINEERING COLLEGE, ERODE, TAMILNADU',
   ORGANIZER_EMAIL: 'codienych@gmail.com',
   PHONE_NUMBER: '+91 63809 11912',
+  ADMIN_CONTACTS: [
+    { name: 'Hariharan G', phone: '+91 63809 11912' },
+    { name: 'Lingeswaran M', phone: '+91 97516 39673' },
+  ],
   ASSOCIATION_COORDINATOR: { name: 'Mr. M. Dhanapal, AP/IT', phone: '+91 99940 36446' },
   STAFF_COORDINATORS: [
     { name: 'Mr. S. Prabakaran, AP/IT', phone: '7904640937' },
