@@ -126,12 +126,12 @@ const StatusPage = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 font-mono text-sm mb-6">
               <div className="bg-[#04090f] p-4 rounded-xl border border-[#3a2e1d]">
                 <span className="text-gray-400 font-cinzel text-xs block mb-1">CREW SIZE</span>
-                <span className="text-white font-bold">{statusData.teamSize} Pirates</span>
+                <span className="text-[#f4e6c3] font-bold">{statusData.teamSize} Pirates</span>
               </div>
 
               <div className="bg-[#04090f] p-4 rounded-xl border border-[#3a2e1d]">
                 <span className="text-gray-400 font-cinzel text-xs block mb-1">SIGN-UP DATE</span>
-                <span className="text-white">{new Date(statusData.registrationDate).toLocaleDateString()}</span>
+                <span className="text-[#f4e6c3]">{new Date(statusData.registrationDate).toLocaleDateString()}</span>
               </div>
 
               <div className="bg-[#04090f] p-4 rounded-xl border border-[#3a2e1d]">
@@ -164,25 +164,33 @@ const StatusPage = () => {
             </div>
 
             {/* Overall Registration Status Banner */}
-            <div className={`p-4 rounded-xl border flex items-center space-x-4 ${
+            <div className={`p-4 sm:p-5 rounded-2xl border-2 flex items-center space-x-4 transition-all ${
               statusData.registrationStatus === 'REGISTRATION CONFIRMED'
-                ? 'bg-[#0b2416] border-[#25D366] text-[#25D366]'
+                ? 'bg-gradient-to-r from-[#140e06] via-[#1a1409] to-[#0a1724] border-[#ffd700] text-[#ffd700] shadow-[0_0_30px_rgba(255,215,0,0.25)]'
                 : statusData.registrationStatus === 'REJECTED'
                 ? 'bg-red-950/40 border-red-500/50 text-red-300'
-                : 'bg-amber-950/30 border-amber-500/40 text-amber-200'
+                : 'bg-gradient-to-r from-[#140e06] via-[#121922] to-[#04090f] border-amber-500/40 text-amber-200'
             }`}>
               {statusData.registrationStatus === 'REGISTRATION CONFIRMED' ? (
-                <CheckCircle className="w-8 h-8 flex-shrink-0" />
+                <div className="w-11 h-11 rounded-xl bg-[#ffd700]/15 border border-[#ffd700]/40 flex items-center justify-center flex-shrink-0 text-[#ffd700] shadow-[0_0_15px_rgba(255,215,0,0.3)]">
+                  <CheckCircle className="w-6 h-6" />
+                </div>
               ) : statusData.registrationStatus === 'REJECTED' ? (
-                <XCircle className="w-8 h-8 flex-shrink-0" />
+                <div className="w-11 h-11 rounded-xl bg-red-500/15 border border-red-500/40 flex items-center justify-center flex-shrink-0 text-red-400">
+                  <XCircle className="w-6 h-6" />
+                </div>
               ) : (
-                <Clock className="w-8 h-8 flex-shrink-0" />
+                <div className="w-11 h-11 rounded-xl bg-amber-500/15 border border-amber-500/40 flex items-center justify-center flex-shrink-0 text-amber-400">
+                  <Clock className="w-6 h-6" />
+                </div>
               )}
-              <div>
-                <span className="font-cinzel font-extrabold text-lg block uppercase tracking-wide">
+              <div className="flex-1">
+                <span className={`font-cinzel font-black text-lg sm:text-xl block uppercase tracking-wider ${
+                  statusData.registrationStatus === 'REGISTRATION CONFIRMED' ? 'text-[#ffd700] pirate-gold-glow' : ''
+                }`}>
                   {statusData.registrationStatus}
                 </span>
-                <p className="font-cinzel text-xs opacity-80 mt-0.5">
+                <p className="font-cinzel text-xs text-[#f4e6c3] opacity-90 mt-0.5">
                   {statusData.registrationStatus === 'REGISTRATION CONFIRMED'
                     ? 'Ahoy! Your fleet is officially confirmed and ready to sail for CODIENYCH 1.0!'
                     : statusData.registrationStatus === 'REJECTED'
@@ -194,17 +202,19 @@ const StatusPage = () => {
 
             {/* Approved Students: WhatsApp Group Join Card */}
             {statusData.registrationStatus === 'REGISTRATION CONFIRMED' && (
-              <div className="mt-6 bg-[#081c16] border-2 border-[#25D366] rounded-2xl p-6 shadow-[0_0_25px_rgba(37,211,102,0.3)] animate-pulse">
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <div className="flex items-center space-x-3 text-center sm:text-left">
-                    <div className="w-12 h-12 rounded-xl bg-[#25D366]/20 border border-[#25D366] flex items-center justify-center flex-shrink-0 text-[#25D366]">
+              <div className="mt-6 bg-gradient-to-r from-[#0d1e2e]/90 via-[#08121a]/95 to-[#140e06]/90 border-2 border-[#ffd700]/70 rounded-2xl p-6 sm:p-7 shadow-[0_0_35px_rgba(255,215,0,0.2)] relative overflow-hidden backdrop-blur-md">
+                <div className="absolute top-0 right-0 w-48 h-48 bg-[#ffd700]/5 rounded-full blur-3xl pointer-events-none" />
+
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-5 relative z-10">
+                  <div className="flex items-center space-x-4 text-center sm:text-left">
+                    <div className="w-12 h-12 rounded-xl bg-[#ffd700]/15 border border-[#ffd700]/50 flex items-center justify-center flex-shrink-0 text-[#ffd700] shadow-[0_0_20px_rgba(255,215,0,0.3)]">
                       <MessageCircle className="w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="font-cinzel font-bold text-base text-white">
-                        OFFICIAL CREW COMMUNITY (WHATSAPP)
+                      <h3 className="font-cinzel font-black text-base sm:text-lg text-white tracking-wide">
+                        OFFICIAL CREW COMMUNITY <span className="text-[#ffd700]">(WHATSAPP)</span>
                       </h3>
-                      <p className="font-cinzel text-xs text-gray-300 mt-0.5">
+                      <p className="font-cinzel text-xs text-[#cfb07a] mt-1 leading-relaxed">
                         Welcome aboard! Join the official WhatsApp crew for fleet dispatches, hackathon timeline, and announcements.
                       </p>
                     </div>
@@ -214,7 +224,7 @@ const StatusPage = () => {
                     href={EVENT_CONFIG.WHATSAPP_GROUP_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full sm:w-auto px-6 py-3.5 bg-[#25D366] hover:bg-[#1ebd59] text-black font-cinzel font-black text-xs sm:text-sm rounded-xl transition-all shadow-[0_0_20px_rgba(37,211,102,0.5)] flex items-center justify-center space-x-2 flex-shrink-0 uppercase tracking-wider"
+                    className="w-full sm:w-auto px-6 py-3.5 bg-gradient-to-r from-[#ffd700] via-[#f39c12] to-[#b8860b] hover:from-[#ffe66d] hover:to-[#ffd700] text-black font-cinzel font-black text-xs sm:text-sm rounded-xl transition-all shadow-[0_0_20px_rgba(255,215,0,0.4)] hover:shadow-[0_0_28px_rgba(255,215,0,0.65)] hover:scale-[1.02] flex items-center justify-center space-x-2.5 flex-shrink-0 uppercase tracking-wider cursor-pointer"
                   >
                     <MessageCircle className="w-4 h-4" />
                     <span>JOIN WHATSAPP CREW</span>
