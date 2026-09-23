@@ -77,19 +77,19 @@ const EventPortalPage = () => {
             <DomainsSection />
           </ScrollReveal>
 
-          {/* 4. Prizes & Bounties */}
+          {/* 4. Problem Statements (Revealed on Spot at Embarkation) */}
+          <ScrollReveal variant="scale-up">
+            <ProblemStatementSection />
+          </ScrollReveal>
+
+          {/* 5. Prizes & Bounties */}
           <ScrollReveal variant="fade-up">
             <PrizesSection />
           </ScrollReveal>
 
-          {/* 4. Tavern & Entertainment */}
+          {/* 6. Tavern & Entertainment */}
           <ScrollReveal variant="fade-up">
             <EntertainmentSection />
-          </ScrollReveal>
-
-          {/* 5. Problem Statements */}
-          <ScrollReveal variant="scale-up">
-            <ProblemStatementSection />
           </ScrollReveal>
 
           {/* 6. Pirate Code & Rules */}
