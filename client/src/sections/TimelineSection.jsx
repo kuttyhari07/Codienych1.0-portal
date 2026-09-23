@@ -145,7 +145,7 @@ const VOYAGE_STAGES = [
     y: 68,
     mx: 20,
     my: 37,
-    summary: 'Grand closing ceremony, top squad announcements, cash bounties, trophies, and certificate distribution.',
+    summary: 'Grand closing ceremony, top squad announcements, cash bounties, and certificate distribution.',
     icon: Award,
     phase: 'AZTEC GOLD PLUNDER',
   },
