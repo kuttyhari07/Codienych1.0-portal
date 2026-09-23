@@ -145,8 +145,11 @@ const registerTeam = async (req, res) => {
       });
     }
 
-    // 5. Calculate Fee server-side independently
-    const expectedAmount = numTeamSize * config.REGISTRATION_FEE;
+    // 5. Calculate Fee server-side independently (Strictly ₹350 per member: 4 -> 1400, 5 -> 1750, 6 -> 2100)
+    const feePerMember = (config.REGISTRATION_FEE && config.REGISTRATION_FEE !== 525 && config.REGISTRATION_FEE !== 567)
+      ? config.REGISTRATION_FEE
+      : 350;
+    const expectedAmount = numTeamSize * feePerMember;
 
     // Parallel Concurrent Uploads (Payment Screenshot + All ID Cards concurrently in 1-2 seconds)
     const [screenshotUrl, ...idCardUrls] = await Promise.all([
