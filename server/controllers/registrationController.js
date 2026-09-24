@@ -89,9 +89,9 @@ const registerTeam = async (req, res) => {
     }
 
     const numTeamSize = parseInt(teamSize, 10);
-    if (![4, 5, 6].includes(numTeamSize)) {
+    if (![3, 4, 5, 6].includes(numTeamSize)) {
       cleanUpTempFiles(req.files);
-      return res.status(400).json({ success: false, message: 'Team size must be 4, 5, or 6 members.' });
+      return res.status(400).json({ success: false, message: 'Team size must be 3, 4, 5, or 6 members.' });
     }
 
     if (!parsedParticipants || parsedParticipants.length !== numTeamSize) {
@@ -191,7 +191,7 @@ const registerTeam = async (req, res) => {
       });
     }
 
-    // 5. Calculate Fee server-side independently (Strictly ₹350 per member: 4 -> 1400, 5 -> 1750, 6 -> 2100)
+    // 5. Calculate Fee server-side independently (Strictly ₹350 per member: 3 -> 1050, 4 -> 1400, 5 -> 1750, 6 -> 2100)
     const feePerMember = (config.REGISTRATION_FEE && config.REGISTRATION_FEE !== 525 && config.REGISTRATION_FEE !== 567)
       ? config.REGISTRATION_FEE
       : 350;

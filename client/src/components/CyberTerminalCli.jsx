@@ -52,6 +52,7 @@ const CyberTerminalCli = ({ isOpen, onClose, onTriggerMatrix }) => {
         case 'fee':
           newHistory.push(
             { text: `ENTRY FEE: ₹${EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER} / Member`, type: 'highlight' },
+            { text: `  • 3 Members Squad: ₹${(3 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()}`, type: 'info' },
             { text: `  • 4 Members Squad: ₹${(4 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()}`, type: 'info' },
             { text: `  • 5 Members Squad: ₹${(5 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()}`, type: 'info' },
             { text: `  • 6 Members Squad: ₹${(6 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()}`, type: 'info' },
@@ -70,7 +71,7 @@ const CyberTerminalCli = ({ isOpen, onClose, onTriggerMatrix }) => {
         case 'rules':
           newHistory.push(
             { text: 'SQUAD DIRECTIVES:', type: 'highlight' },
-            { text: '  • Team Size: 4 to 6 members strictly', type: 'info' },
+            { text: '  • Team Size: 3 to 6 members (3 members can also register!)', type: 'info' },
             { text: '  • Eligibility: UG students from recognized colleges & ESEC (Limited slots for ESEC)', type: 'info' },
             { text: '  • One Leader registers the complete team', type: 'info' },
             { text: '  • College physical ID card mandatory for every participant', type: 'info' }

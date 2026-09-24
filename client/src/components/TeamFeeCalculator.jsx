@@ -10,6 +10,7 @@ const TeamFeeCalculator = () => {
   const [membersCount, setMembersCount] = useState(4);
 
   const teamSizes = [
+    { count: 3, fee: 3 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER, label: 'Tactical Privateer Trio', icon: '3' },
     { count: 4, fee: 4 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER, label: 'Standard Corsair Squad', icon: '4' },
     { count: 5, fee: 5 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER, label: 'Expanded Raiding Crew', icon: '5' },
     { count: 6, fee: 6 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER, label: 'Full Flagship Armada Unit', icon: '6' },
@@ -48,9 +49,9 @@ const TeamFeeCalculator = () => {
           {/* Selector buttons */}
           <div className="md:col-span-7 space-y-3">
             <div className="font-cinzel text-xs text-gray-400 mb-2">
-              SELECT NUMBER OF PIRATES IN YOUR CREW (4 TO 6):
+              SELECT NUMBER OF PIRATES IN YOUR CREW (3 TO 6):
             </div>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-4 gap-2.5 sm:gap-3">
               {teamSizes.map((item) => {
                 const isSelected = membersCount === item.count;
                 return (

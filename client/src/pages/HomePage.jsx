@@ -135,7 +135,7 @@ const HomePage = () => {
             </div>
           </div>
           <div className="hidden sm:flex items-center border-l border-[#ffd700]/30 pl-3 font-cinzel text-[11px] text-[#cfb07a] font-semibold">
-            (4 to 6 Pirates per Crew)
+            (3 to 6 Pirates per Crew)
           </div>
         </motion.div>
 

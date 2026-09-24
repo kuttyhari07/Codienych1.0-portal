@@ -16,7 +16,7 @@ const RegistrationSchema = new mongoose.Schema(
     teamSize: {
       type: Number,
       required: [true, 'Team size is required'],
-      enum: [4, 5, 6],
+      enum: [3, 4, 5, 6],
     },
     domain: {
       type: String,

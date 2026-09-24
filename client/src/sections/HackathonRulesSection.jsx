@@ -30,7 +30,7 @@ const rulesCategories = [
     numeral: 'III',
     title: 'Crew Formation & Size Rules',
     content: [
-      'Crews must consist of exactly 4, 5, or 6 pirate members.',
+      'Crews can consist of 3, 4, 5, or 6 pirate members (Teams of 3 members can also register!).',
       'Cross-college or cross-department crews are not permitted on the same ship.',
       'One pirate cannot belong to multiple crews.',
     ],

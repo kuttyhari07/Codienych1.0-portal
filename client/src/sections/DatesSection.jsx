@@ -67,7 +67,7 @@ const DatesSection = () => {
               </div>
             </div>
             <p className="font-cinzel text-xs text-[#f4e6c3]">
-              ₹{(4 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()} (4 crew) | ₹{(5 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()} (5 crew) | ₹{(6 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()} (6 crew)
+              ₹{(3 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()} (3 crew) | ₹{(4 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()} (4 crew) | ₹{(5 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()} (5 crew) | ₹{(6 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()} (6 crew)
             </p>
           </SpotlightCard>
         </div>

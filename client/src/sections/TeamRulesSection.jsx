@@ -3,7 +3,7 @@ import { Skull, Anchor, ShieldAlert, CheckCircle2 } from 'lucide-react';
 import AncientParchmentScroll from '../components/AncientParchmentScroll';
 
 const teamRulesList = [
-  'Each crew must consist of 4 to 6 pirate members.',
+  'Each crew can consist of 3 to 6 pirate members (Teams of 3 members can also register!).',
   'Exactly one Captain (Team Leader) per crew.',
   'Only the Captain registers the entire crew.',
   'Crew members do not register separately.',

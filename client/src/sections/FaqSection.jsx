@@ -6,11 +6,11 @@ import { playLaserBlip, speakIntelTransmission, stopIntelSpeech } from '../utils
 const quickChips = [
   {
     chip: 'Crew Fee & Bounty Pricing',
-    answer: `Entry fee is strictly ₹${EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER} per pirate participant (₹${(4 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()} for 4 members, ₹${(5 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()} for 5 members, ₹${(6 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()} for 6 members). UPI Payment ID: ${EVENT_CONFIG.UPI_ID}.`,
+    answer: `Entry fee is strictly ₹${EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER} per pirate participant (₹${(3 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()} for 3 members, ₹${(4 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()} for 4 members, ₹${(5 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()} for 5 members, ₹${(6 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()} for 6 members). UPI Payment ID: ${EVENT_CONFIG.UPI_ID}.`,
   },
   {
     chip: 'Crew Size & Gender Rule',
-    answer: 'Crews must consist of exactly 4, 5, or 6 pirate members. There is no gender restriction — any team combination is welcome aboard.',
+    answer: 'Crews can consist of 3, 4, 5, or 6 pirate members (Teams of 3 members can also register!). There is no gender restriction — any team combination is welcome aboard.',
   },
   {
     chip: 'Who Is Eligible?',
@@ -37,7 +37,7 @@ const faqs = [
   },
   {
     q: 'What is the required crew size?',
-    a: 'Crews must have exactly 4, 5, or 6 pirate members.',
+    a: 'Crews can have 3, 4, 5, or 6 pirate members (Teams of 3 members are also eligible to register!).',
   },
   {
     q: 'Who can participate in this voyage?',
@@ -45,7 +45,7 @@ const faqs = [
   },
   {
     q: 'What is the crew enlistment fee?',
-    a: `₹${EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER} per participant (₹${(4 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()} for 4 members, ₹${(5 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()} for 5 members, ₹${(6 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()} for 6 members).`,
+    a: `₹${EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER} per participant (₹${(3 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()} for 3 members, ₹${(4 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()} for 4 members, ₹${(5 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()} for 5 members, ₹${(6 * EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER).toLocaleString()} for 6 members).`,
   },
   {
     q: 'How can our crew register?',

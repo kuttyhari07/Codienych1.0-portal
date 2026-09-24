@@ -57,7 +57,7 @@ const AboutSection = () => {
                 <DecipherText text="PIRATE CREW SQUAD" />
               </h3>
               <p className="font-cinzel text-xs text-gray-300 leading-relaxed">
-                Form a tactical crew of 4 to 6 pirates led by a Captain to compete for glory, bounties, and eternal fame.
+                Form a tactical crew of 3 to 6 pirates led by a Captain to compete for glory, bounties, and eternal fame.
               </p>
             </SpotlightCard>
           </div>

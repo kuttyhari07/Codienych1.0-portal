@@ -25,7 +25,7 @@ const RegisterPage = () => {
 
   // Form State
   const [teamName, setTeamName] = useState('');
-  const [teamSize, setTeamSize] = useState(4); // default 4 (options: 4, 5, 6)
+  const [teamSize, setTeamSize] = useState(4); // default 4 (options: 3, 4, 5, 6)
   const [domain, setDomain] = useState(''); // Hackathon domain / track selection
 
   // Participant #1 (Leader / Captain)
@@ -171,8 +171,8 @@ const RegisterPage = () => {
         setErrorMessage('Please enter your Fleet / Team Name.');
         return false;
       }
-      if (![4, 5, 6].includes(teamSize)) {
-        setErrorMessage('Team size must be 4, 5, or 6 members.');
+      if (![3, 4, 5, 6].includes(teamSize)) {
+        setErrorMessage('Team size must be 3, 4, 5, or 6 members.');
         return false;
       }
       if (!domain) {
@@ -504,10 +504,10 @@ const RegisterPage = () => {
 
               <div>
                 <label className="block font-cinzel text-xs text-[#e5c158] mb-2 uppercase tracking-wider">
-                  SELECT CREW SIZE (4, 5, OR 6 PIRATES ALLOWED) *
+                  SELECT CREW SIZE (3, 4, 5, OR 6 PIRATES ALLOWED) *
                 </label>
-                <div className="grid grid-cols-3 gap-2.5 sm:gap-4">
-                  {[4, 5, 6].map((size) => (
+                <div className="grid grid-cols-4 gap-2 sm:gap-4">
+                  {[3, 4, 5, 6].map((size) => (
                     <button
                       key={size}
                       type="button"
