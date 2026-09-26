@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Users, CreditCard, CheckCircle, Clock, XCircle, DollarSign, FileCheck, Download, ShieldCheck, ArrowRight, Anchor } from 'lucide-react';
+import { Users, CreditCard, CheckCircle, Clock, XCircle, DollarSign, FileCheck, Download, ShieldCheck, ArrowRight, Anchor, Search } from 'lucide-react';
 import api, { apiUrl } from '../../services/api';
 import AdminNavbar from '../../components/admin/AdminNavbar';
 
@@ -9,6 +9,7 @@ const AdminDashboardPage = () => {
   const [loading, setLoading] = useState(true);
   const [downloading, setDownloading] = useState(false);
   const [error, setError] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -214,71 +215,116 @@ const AdminDashboardPage = () => {
           </div>
         )}
 
-        {/* Recent Registrations Table */}
-        <div className="bg-[#08121a] border border-[#3a2e1d] rounded-xl p-4 sm:p-6 shadow-xl">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-            <div>
-              <h2 className="font-cinzel font-bold text-base sm:text-lg text-white">RECENT MANIFEST LOGS</h2>
-              <p className="font-cinzel text-[11px] text-[#e5c158]">Review fleet tributes, verify payments and approve crew passes</p>
-            </div>
-            <Link to="/admin/registrations" className="font-cinzel text-xs text-[#ffd700] hover:underline flex items-center space-x-1">
-              <span>VIEW ALL FLEETS</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
+        {/* All Fleet Registrations Manifest Table */}
+        {(() => {
+          const allRegistrations = stats?.recentRegistrations || [];
+          const displayedRegistrations = allRegistrations.filter((reg) => {
+            if (!searchTerm.trim()) return true;
+            const term = searchTerm.toLowerCase().trim();
+            return (
+              (reg.registrationId && reg.registrationId.toLowerCase().includes(term)) ||
+              (reg.teamName && reg.teamName.toLowerCase().includes(term)) ||
+              (reg.status && reg.status.toLowerCase().includes(term))
+            );
+          });
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left font-mono text-xs whitespace-nowrap">
-              <thead>
-                <tr className="border-b border-[#3a2e1d] text-[#e5c158] uppercase bg-[#04090f] font-cinzel">
-                  <th className="py-3 px-4">REG ID</th>
-                  <th className="py-3 px-4">FLEET NAME</th>
-                  <th className="py-3 px-4">SIZE</th>
-                  <th className="py-3 px-4">STATUS</th>
-                  <th className="py-3 px-4">DATE</th>
-                  <th className="py-3 px-4 text-center">ACTION</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#3a2e1d]/60">
-                {stats && stats.recentRegistrations.length === 0 && (
-                  <tr>
-                    <td colSpan="6" className="py-6 text-center text-gray-400 font-cinzel">
-                      No fleet registrations recorded yet.
-                    </td>
-                  </tr>
-                )}
-                {stats && stats.recentRegistrations.map((reg) => (
-                  <tr key={reg._id} className="hover:bg-[#0c1e2d]/50 transition-colors">
-                    <td className="py-3.5 px-4 text-[#ffd700] font-bold">{reg.registrationId}</td>
-                    <td className="py-3.5 px-4 text-white font-bold">{reg.teamName}</td>
-                    <td className="py-3.5 px-4 text-gray-300">{reg.teamSize}</td>
-                    <td className="py-3.5 px-4">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-cinzel font-bold ${
-                        reg.status === 'REGISTRATION CONFIRMED'
-                          ? 'bg-[#ffd700]/20 text-[#ffd700] border border-[#ffd700]/30'
-                          : reg.status === 'REJECTED'
-                          ? 'bg-red-500/20 text-red-400 border border-red-500/30'
-                          : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
-                      }`}>
-                        {reg.status}
+          return (
+            <div className="bg-[#08121a] border border-[#3a2e1d] rounded-xl p-4 sm:p-6 shadow-xl">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4">
+                <div>
+                  <div className="flex items-center gap-2.5">
+                    <h2 className="font-cinzel font-bold text-base sm:text-lg text-white">FLEET MANIFEST LOGS</h2>
+                    {stats && stats.recentRegistrations && (
+                      <span className="px-2.5 py-0.5 text-[11px] font-bold font-mono rounded-full bg-[#ffd700]/20 text-[#ffd700] border border-[#ffd700]/40">
+                        {stats.recentRegistrations.length} {stats.recentRegistrations.length === 1 ? 'TEAM' : 'TEAMS'}
                       </span>
-                    </td>
-                    <td className="py-3.5 px-4 text-gray-400">{new Date(reg.createdAt).toLocaleDateString()}</td>
-                    <td className="py-3.5 px-4 text-center">
-                      <Link
-                        to={`/admin/registrations/${reg._id}`}
-                        className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#ffd700] via-[#f39c12] to-[#b8860b] hover:from-[#ffe043] hover:to-[#d4af37] text-black font-cinzel font-bold text-[11px] transition-all shadow-[0_0_10px_rgba(255,215,0,0.3)] cursor-pointer uppercase tracking-wider"
+                    )}
+                  </div>
+                  <p className="font-cinzel text-[11px] text-[#e5c158]">All registered fleets, tributes, and approval manifests</p>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <div className="relative">
+                    <Search className="w-3.5 h-3.5 text-gray-500 absolute left-3 top-2.5" />
+                    <input
+                      type="text"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      placeholder="Filter by name, ID, status..."
+                      className="bg-[#04090f] border border-[#3a2e1d] focus:border-[#ffd700] rounded-xl pl-9 pr-7 py-1.5 text-xs text-[#f4e6c3] font-mono outline-none w-48 sm:w-64 transition-all"
+                    />
+                    {searchTerm && (
+                      <button
+                        onClick={() => setSearchTerm('')}
+                        className="absolute right-2.5 top-1.5 text-xs text-gray-400 hover:text-white"
+                        title="Clear filter"
                       >
-                        <ShieldCheck className="w-3.5 h-3.5" />
-                        <span>REVIEW & VERIFY</span>
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+                        ✕
+                      </button>
+                    )}
+                  </div>
+
+                  <Link to="/admin/registrations" className="font-cinzel text-xs text-[#ffd700] hover:underline flex items-center space-x-1 whitespace-nowrap">
+                    <span>VIEW ALL FLEETS</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left font-mono text-xs whitespace-nowrap">
+                  <thead>
+                    <tr className="border-b border-[#3a2e1d] text-[#e5c158] uppercase bg-[#04090f] font-cinzel">
+                      <th className="py-3 px-4">REG ID</th>
+                      <th className="py-3 px-4">FLEET NAME</th>
+                      <th className="py-3 px-4">SIZE</th>
+                      <th className="py-3 px-4">STATUS</th>
+                      <th className="py-3 px-4">DATE</th>
+                      <th className="py-3 px-4 text-center">ACTION</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#3a2e1d]/60">
+                    {displayedRegistrations.length === 0 && (
+                      <tr>
+                        <td colSpan="6" className="py-6 text-center text-gray-400 font-cinzel">
+                          {searchTerm ? 'No fleet matches your search filter.' : 'No fleet registrations recorded yet.'}
+                        </td>
+                      </tr>
+                    )}
+                    {displayedRegistrations.map((reg) => (
+                      <tr key={reg._id} className="hover:bg-[#0c1e2d]/50 transition-colors">
+                        <td className="py-3.5 px-4 text-[#ffd700] font-bold">{reg.registrationId}</td>
+                        <td className="py-3.5 px-4 text-white font-bold">{reg.teamName}</td>
+                        <td className="py-3.5 px-4 text-gray-300">{reg.teamSize}</td>
+                        <td className="py-3.5 px-4">
+                          <span className={`px-2 py-0.5 rounded text-[10px] font-cinzel font-bold ${
+                            reg.status === 'REGISTRATION CONFIRMED'
+                              ? 'bg-[#ffd700]/20 text-[#ffd700] border border-[#ffd700]/30'
+                              : reg.status === 'REJECTED'
+                              ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                              : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                          }`}>
+                            {reg.status}
+                          </span>
+                        </td>
+                        <td className="py-3.5 px-4 text-gray-400">{new Date(reg.createdAt).toLocaleDateString()}</td>
+                        <td className="py-3.5 px-4 text-center">
+                          <Link
+                            to={`/admin/registrations/${reg._id}`}
+                            className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#ffd700] via-[#f39c12] to-[#b8860b] hover:from-[#ffe043] hover:to-[#d4af37] text-black font-cinzel font-bold text-[11px] transition-all shadow-[0_0_10px_rgba(255,215,0,0.3)] cursor-pointer uppercase tracking-wider"
+                          >
+                            <ShieldCheck className="w-3.5 h-3.5" />
+                            <span>REVIEW & VERIFY</span>
+                          </Link>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          );
+        })()}
       </main>
     </div>
   );

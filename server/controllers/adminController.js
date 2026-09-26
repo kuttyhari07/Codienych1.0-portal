@@ -123,8 +123,7 @@ const getDashboardStats = async (req, res) => {
     const totalCollection = verifiedPaymentsList.reduce((acc, p) => acc + (p.expectedAmount || 0), 0);
 
     let recentRegistrations = await Registration.find()
-      .sort({ registrationId: 1 })
-      .limit(10);
+      .sort({ registrationId: 1 });
 
     // Natural alphanumeric ascending sort safeguard
     recentRegistrations.sort((a, b) => (a.registrationId || '').localeCompare(b.registrationId || '', undefined, { numeric: true, sensitivity: 'base' }));
