@@ -132,8 +132,10 @@ const TreasureBox = ({ isOpen: propIsOpen, onOpenChange }) => {
               <h3 className="font-pirate text-3xl sm:text-5xl text-white tracking-wide">
                 CASH PRIZE <span className="text-[#ffd700] pirate-gold-title">UPTO ₹50,000+</span>
               </h3>
-              <p className="font-cinzel text-xs sm:text-sm text-[#e5c158] uppercase tracking-widest mt-2 font-bold">
-                + EXCLUSIVE FREE INTERNSHIP OPPORTUNITIES FOR TOP CREWS!
+              <p className="font-cinzel text-xs sm:text-sm text-[#e5c158] uppercase tracking-widest mt-2 font-bold flex items-center justify-center flex-wrap gap-1.5">
+                <span>+ EXCLUSIVE FREE INTERNSHIP OPPORTUNITIES BY</span>
+                <span className="text-[#00e5ff] font-extrabold tracking-wider">amasQIS.ai</span>
+                <span>FOR TOP CREWS!</span>
               </p>
             </motion.div>
 
@@ -142,29 +144,48 @@ const TreasureBox = ({ isOpen: propIsOpen, onOpenChange }) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.5 }}
-              className="bg-gradient-to-r from-[#ffd700]/20 via-[#1e2a18] to-[#00e5ff]/20 border-2 border-[#ffd700] rounded-2xl p-5 sm:p-6 shadow-[0_0_30px_rgba(229,193,88,0.3)] relative overflow-hidden mb-6"
+              className="bg-gradient-to-r from-[#ffd700]/20 via-[#102324] to-[#00e5ff]/25 border-2 border-[#ffd700] rounded-2xl p-5 sm:p-6 shadow-[0_0_35px_rgba(0,229,255,0.25)] relative overflow-hidden mb-6"
             >
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-[#08121a] border border-[#ffd700] flex items-center justify-center flex-shrink-0 shadow-[0_0_15px_rgba(229,193,88,0.4)]">
-                    <Briefcase className="w-6 h-6 sm:w-7 sm:h-7 text-[#ffd700]" />
+              <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5">
+                <div className="flex items-start sm:items-center space-x-4">
+                  <div className="w-13 h-13 sm:w-16 sm:h-16 rounded-2xl bg-[#08121a] border-2 border-[#00e5ff]/60 hover:border-[#00e5ff] p-2 flex items-center justify-center flex-shrink-0 shadow-[0_0_20px_rgba(0,229,255,0.35)] transition-all">
+                    <img 
+                      src="/amasqis-icon.png" 
+                      alt="amasQIS.ai" 
+                      className="w-full h-full object-contain filter drop-shadow-[0_0_8px_rgba(0,229,255,0.5)]" 
+                    />
                   </div>
                   <div>
-                    <div className="flex items-center space-x-2">
+                    <div className="flex flex-wrap items-center gap-2 mb-1">
                       <span className="font-cinzel text-[10px] sm:text-xs text-[#ffd700] font-bold uppercase tracking-wider">
                         👑 EXCLUSIVE PIRATE VAULT PERK
+                      </span>
+                      <span className="text-gray-500 text-xs hidden sm:inline">•</span>
+                      <span className="bg-[#00e5ff]/15 border border-[#00e5ff]/40 text-[#00e5ff] text-[10px] font-cinzel font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                        OFFERED BY amasQIS.ai
                       </span>
                     </div>
                     <h4 className="font-pirate text-2xl sm:text-3xl text-white">
                       FREE INTERNSHIP <span className="text-[#ffd700]">OPPORTUNITY</span>
                     </h4>
-                    <p className="font-cinzel text-xs text-gray-200 mt-0.5">
-                      Winning pirate crews & top performers receive direct Free Internship offers for real-world hands-on project experience!
+                    <p className="font-cinzel text-xs text-gray-200 mt-1 max-w-xl">
+                      Winning pirate crews & top performers receive direct Free Internship offers from <span className="text-[#00e5ff] font-bold">amasQIS.ai</span> (Official Jury Partner) for real-world hands-on project experience!
                     </p>
                   </div>
                 </div>
 
-                <div className="flex sm:flex-col gap-2 flex-shrink-0 w-full sm:w-auto">
+                <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-2.5 flex-shrink-0 w-full lg:w-auto pt-3 lg:pt-0 border-t lg:border-t-0 border-[#ffd700]/20">
+                  <div className="bg-[#08121a]/95 border border-[#00e5ff]/50 hover:border-[#00e5ff] px-3.5 py-2 rounded-xl flex items-center space-x-2.5 shadow-[0_0_25px_rgba(0,229,255,0.25)] transition-all">
+                    <div className="text-right">
+                      <span className="block font-cinzel text-[9px] text-[#00e5ff] font-bold uppercase tracking-widest leading-none">JURY PARTNER</span>
+                      <span className="block font-cinzel text-[10px] text-gray-300 tracking-wider">amasQIS.ai</span>
+                    </div>
+                    <img
+                      src="/amasqis-logo.png"
+                      alt="amasQIS.ai Logo"
+                      className="h-7 sm:h-8 w-auto object-contain rounded"
+                    />
+                  </div>
                   <div className="bg-[#08121a] border border-[#ffd700]/50 px-3 py-1.5 rounded-lg flex items-center space-x-1.5 font-cinzel text-[11px] text-[#ffd700]">
                     <GraduationCap className="w-3.5 h-3.5 text-[#ffd700]" />
                     <span>Real-World Projects</span>
