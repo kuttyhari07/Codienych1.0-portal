@@ -29,6 +29,10 @@ const AdminSchema = new mongoose.Schema(
       enum: ['SUPER_ADMIN', 'VERIFIER'],
       default: 'SUPER_ADMIN',
     },
+    tokenVersion: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );
@@ -45,9 +49,13 @@ AdminSchema.methods.matchPassword = async function (enteredPassword) {
 };
 
 AdminSchema.methods.getSignedJwtToken = function () {
-  return jwt.sign({ id: this._id, role: this.role }, config.JWT_SECRET, {
-    expiresIn: config.JWT_EXPIRES_IN,
-  });
+  return jwt.sign(
+    { id: this._id, role: this.role, tokenVersion: this.tokenVersion || 0 },
+    config.JWT_SECRET,
+    {
+      expiresIn: config.JWT_EXPIRES_IN,
+    }
+  );
 };
 
 module.exports = mongoose.model('Admin', AdminSchema);

@@ -30,6 +30,16 @@ const protectAdmin = async (req, res, next) => {
         message: 'Admin account not found or deactivated.',
       });
     }
+
+    // Invalidate tokens that don't match the current tokenVersion (logs out all older sessions)
+    const currentTokenVersion = req.admin.tokenVersion || 0;
+    if (decoded.tokenVersion === undefined || decoded.tokenVersion !== currentTokenVersion) {
+      return res.status(401).json({
+        success: false,
+        message: 'Session has expired or was revoked. Please log in again with your credentials.',
+      });
+    }
+
     next();
   } catch (error) {
     return res.status(401).json({

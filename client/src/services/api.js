@@ -39,4 +39,22 @@ api.interceptors.request.use((config) => {
   return Promise.reject(error);
 });
 
+// Auto logout on 401 Unauthorized for admin routes
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      if (
+        typeof window !== 'undefined' &&
+        window.location.pathname.startsWith('/admin') &&
+        !window.location.pathname.includes('/login')
+      ) {
+        localStorage.removeItem('adminToken');
+        window.location.href = '/admin/login';
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default api;
