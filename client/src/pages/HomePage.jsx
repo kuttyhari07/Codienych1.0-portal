@@ -11,7 +11,7 @@ import { playLaserBlip } from '../utils/cyberSound';
 import useRegistrationStatus from '../utils/useRegistrationStatus';
 
 const HomePage = () => {
-  const { isClosed } = useRegistrationStatus();
+  const { isClosed, isSpecialSlotOpen } = useRegistrationStatus();
   const [isLoading, setIsLoading] = useState(true);
   const [isEmbarking, setIsEmbarking] = useState(false);
   const compassRef = useRef(null);
@@ -194,7 +194,7 @@ const HomePage = () => {
             } transition-all duration-300 transform hover:-translate-y-1 active:scale-95 flex items-center justify-center space-x-2 cursor-pointer uppercase tracking-wider backdrop-blur-sm`}
           >
             {isClosed ? <Lock className="w-4 h-4 text-red-400" /> : <Swords className="w-4 h-4" />}
-            <span>{isClosed ? 'REGISTRATION CLOSED' : 'JOIN THE CREW (REGISTER)'}</span>
+            <span>{isClosed ? 'REGISTRATION CLOSED' : (isSpecialSlotOpen ? 'JOIN THE CREW (1 FINAL SLOT)' : 'JOIN THE CREW (REGISTER)')}</span>
           </button>
         </motion.div>
       </motion.main>

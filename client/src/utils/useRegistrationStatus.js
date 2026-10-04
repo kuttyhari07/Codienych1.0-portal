@@ -26,12 +26,14 @@ export const useRegistrationStatus = () => {
 
       return {
         isClosed: closed,
+        isSpecialSlotOpen: !!EVENT_CONFIG.ALLOW_ONE_FINAL_TEAM,
         remaining: { hours, minutes, seconds, totalMs: diff },
         deadlineDate: new Date(EVENT_CONFIG.REGISTRATION_DEADLINE),
       };
     } catch (e) {
       return {
         isClosed: false,
+        isSpecialSlotOpen: !!EVENT_CONFIG.ALLOW_ONE_FINAL_TEAM,
         remaining: { hours: 0, minutes: 0, seconds: 0, totalMs: 0 },
         deadlineDate: new Date(EVENT_CONFIG.REGISTRATION_DEADLINE),
       };

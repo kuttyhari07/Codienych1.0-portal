@@ -7,7 +7,7 @@ import useRegistrationStatus from '../utils/useRegistrationStatus';
 import Cyber3dReactorCanvas from '../components/Cyber3dReactorCanvas';
 
 const HeroSection = () => {
-  const { isClosed } = useRegistrationStatus();
+  const { isClosed, isSpecialSlotOpen } = useRegistrationStatus();
   const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -174,7 +174,7 @@ const HeroSection = () => {
             className="w-full sm:w-auto px-7 py-3.5 sm:px-9 sm:py-4 rounded-xl font-pirate text-xl sm:text-2xl text-black bg-gradient-to-r from-[#ffd700] via-[#e5c158] to-[#b8860b] hover:from-[#fff2a3] hover:to-[#ffd700] transition-all duration-300 shadow-[0_0_25px_rgba(229,193,88,0.6)] hover:shadow-[0_0_40px_rgba(255,215,0,0.9)] transform hover:-translate-y-1 active:scale-95 flex items-center justify-center space-x-2.5 font-bold"
           >
             <Swords className="w-5 h-5 text-black" />
-            <span>JOIN THE CREW (REGISTER)</span>
+            <span>{isSpecialSlotOpen ? 'JOIN THE CREW (1 FINAL SLOT)' : 'JOIN THE CREW (REGISTER)'}</span>
           </Link>
         )}
 

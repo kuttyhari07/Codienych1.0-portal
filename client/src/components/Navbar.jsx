@@ -17,7 +17,7 @@ const navItems = [
 ];
 
 const Navbar = () => {
-  const { isClosed } = useRegistrationStatus();
+  const { isClosed, isSpecialSlotOpen } = useRegistrationStatus();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('about');
@@ -143,7 +143,7 @@ const Navbar = () => {
               className="relative px-5 py-2 rounded-lg text-xs font-pirate text-base text-black bg-gradient-to-r from-[#ffd700] to-[#e5c158] hover:from-[#fff2a3] hover:to-[#ffd700] transition-all shadow-[0_0_15px_rgba(229,193,88,0.5)] hover:shadow-[0_0_25px_rgba(255,215,0,0.8)] transform hover:-translate-y-0.5 active:translate-y-0 font-bold flex items-center space-x-1.5"
             >
               <Swords className="w-4 h-4 text-black" />
-              <span>JOIN THE CREW</span>
+              <span>{isSpecialSlotOpen ? 'JOIN CREW (1 FINAL SLOT)' : 'JOIN THE CREW'}</span>
             </Link>
           )}
         </div>
@@ -161,9 +161,9 @@ const Navbar = () => {
           ) : (
             <Link
               to="/register"
-              className="px-3 py-1.5 rounded text-xs font-pirate text-sm font-bold text-black bg-[#ffd700] shadow-[0_0_10px_#ffd700] uppercase"
+              className="px-2.5 py-1.5 rounded text-xs font-pirate font-bold text-black bg-[#ffd700] shadow-[0_0_10px_#ffd700] uppercase"
             >
-              JOIN CREW
+              {isSpecialSlotOpen ? '1 SLOT' : 'JOIN CREW'}
             </Link>
           )}
           <button

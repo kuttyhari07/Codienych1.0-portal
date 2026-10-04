@@ -575,6 +575,29 @@ const RegisterPage = () => {
           </div>
         )}
 
+        {/* Special Admiralty 1 Final Team Slot Banner */}
+        {EVENT_CONFIG.ALLOW_ONE_FINAL_TEAM && (
+          <div className="mb-6 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#2a1705] via-[#3a1d04] to-[#2a1705] border-2 border-[#ffd700] text-[#f4e6c3] flex flex-col sm:flex-row items-center justify-between gap-4 shadow-[0_0_35px_rgba(255,215,0,0.35)]">
+            <div className="flex items-center space-x-3.5 text-center sm:text-left">
+              <div className="w-12 h-12 rounded-xl bg-black/60 border-2 border-[#ffd700] flex items-center justify-center flex-shrink-0 shadow-[0_0_15px_rgba(255,215,0,0.5)]">
+                <ShieldAlert className="w-6 h-6 text-[#ffd700]" />
+              </div>
+              <div>
+                <div className="font-cinzel font-black text-xs sm:text-sm text-[#ffd700] uppercase tracking-wider flex items-center space-x-2 justify-center sm:justify-start">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#39ff14] animate-ping inline-block" />
+                  <span>SPECIAL ADMIRALTY DISPATCH: 1 FINAL CREW SLOT UNLOCKED</span>
+                </div>
+                <p className="text-xs text-gray-200 font-sans mt-0.5">
+                  Registration is currently open for <strong>1 team only</strong>. As soon as your manifest is submitted, enlistment will permanently seal!
+                </p>
+              </div>
+            </div>
+            <div className="bg-[#ffd700]/15 border-2 border-[#ffd700] px-4 py-2 rounded-xl font-cinzel font-black text-xs text-[#ffd700] whitespace-nowrap shadow-[0_0_15px_rgba(255,215,0,0.3)]">
+              AVAILABLE: 1 TEAM ONLY
+            </div>
+          </div>
+        )}
+
         {/* Wizard Progress Indicator */}
         <div className="mb-10 overflow-x-auto pb-2">
           <div className="flex items-center justify-between min-w-[650px] border-b border-[#3a2e1d] pb-4">

@@ -7,7 +7,7 @@ import TeamFeeCalculator from '../components/TeamFeeCalculator';
 import useRegistrationStatus from '../utils/useRegistrationStatus';
 
 const DatesSection = () => {
-  const { isClosed } = useRegistrationStatus();
+  const { isClosed, isSpecialSlotOpen } = useRegistrationStatus();
   return (
     <section id="dates" className="relative py-20 px-4 z-10">
       <div className="max-w-5xl mx-auto text-center">
@@ -36,6 +36,11 @@ const DatesSection = () => {
                   <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
                   <span>REGISTRATION CLOSED (10:30 PM)</span>
                 </div>
+              ) : isSpecialSlotOpen ? (
+                <div className="inline-flex items-center space-x-1.5 px-3.5 py-1 rounded-full bg-emerald-950/90 border border-emerald-500/80 text-emerald-300 text-xs font-mono font-bold mb-3 shadow-[0_0_15px_rgba(16,185,129,0.5)]">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
+                  <span>1 FINAL CREW SLOT UNLOCKED</span>
+                </div>
               ) : (
                 <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-amber-950/80 border border-amber-500/70 text-[#ffd700] text-xs font-mono font-bold mb-3">
                   <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
@@ -46,6 +51,8 @@ const DatesSection = () => {
             <p className="font-cinzel text-xs text-gray-300">
               {isClosed
                 ? 'Port manifest sealed at 10:30 PM IST. No late crew recruits admitted.'
+                : isSpecialSlotOpen
+                ? 'Special Admiralty Dispatch: 1 final fleet slot opened. Claim before it seals!'
                 : 'Port manifest seals strictly at 10:30 PM IST. No late crew recruits admitted.'}
             </p>
           </SpotlightCard>
