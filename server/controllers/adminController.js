@@ -500,33 +500,116 @@ const exportReport = async (req, res) => {
       return res.status(200).send(csvRows.join('\n'));
     }
 
+    const totalTeams = rows.length;
+    const totalMembers = rows.reduce((sum, r) => sum + (Number(r.teamSize) || 0), 0);
+    const verifiedPaymentsCount = rows.filter((r) => r.paymentStatus === 'VERIFIED').length;
+    const totalCollection = rows
+      .filter((r) => r.paymentStatus === 'VERIFIED')
+      .reduce((sum, r) => sum + (Number(String(r.amount).replace(/[^0-9]/g, '')) || 0), 0);
+
     const htmlContent = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>CODIENYCH 1.0 - Team Master Sheet</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
       margin: 12px;
       color: #000;
       background: #fff;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
     }
     .header-box {
-      border-bottom: 2px solid #000;
-      padding-bottom: 8px;
-      margin-bottom: 12px;
+      border-bottom: 2px solid #0f172a;
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+    }
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
     }
     h2 {
-      margin: 0 0 4px 0;
-      font-size: 15px;
-      letter-spacing: 0.5px;
-    }
-    p {
       margin: 0;
-      font-size: 11px;
-      color: #333;
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: #0f172a;
     }
+    .meta-time {
+      font-size: 11px;
+      color: #475569;
+    }
+
+    /* BIG PROMINENT STATS METRICS CARDS */
+    .summary-metrics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .metric-card {
+      flex: 1;
+      min-width: 150px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 2px solid #cbd5e1;
+      box-sizing: border-box;
+      background: #ffffff;
+    }
+    .metric-card.teams-card {
+      background: #eff6ff;
+      border-color: #2563eb;
+    }
+    .metric-card.members-card {
+      background: #ecfdf5;
+      border-color: #059669;
+    }
+    .metric-card.verified-card {
+      background: #fffbeb;
+      border-color: #d97706;
+    }
+    .metric-card.collection-card {
+      background: #f5f3ff;
+      border-color: #7c3aed;
+    }
+
+    .metric-label {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+    }
+    .teams-card .metric-label { color: #1e40af; }
+    .members-card .metric-label { color: #065f46; }
+    .verified-card .metric-label { color: #92400e; }
+    .collection-card .metric-label { color: #5b21b6; }
+
+    .metric-value {
+      font-size: 30px;
+      font-weight: 900;
+      line-height: 1.1;
+    }
+    .teams-card .metric-value { color: #1d4ed8; }
+    .members-card .metric-value { color: #047857; }
+    .verified-card .metric-value { color: #b45309; }
+    .collection-card .metric-value { color: #6d28d9; }
+
+    .metric-sub {
+      font-size: 10.5px;
+      color: #64748b;
+      margin-top: 3px;
+      font-weight: 600;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -554,6 +637,9 @@ const exportReport = async (req, res) => {
     .text-center {
       text-align: center;
     }
+    .text-right {
+      text-align: right;
+    }
     .nowrap {
       white-space: nowrap;
     }
@@ -571,14 +657,52 @@ const exportReport = async (req, res) => {
       }
       body {
         margin: 0;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .summary-metrics {
+        gap: 8px;
+        margin-top: 8px;
+      }
+      .metric-card {
+        padding: 6px 10px;
+        border-width: 1.5px;
+      }
+      .metric-value {
+        font-size: 22px;
       }
     }
   </style>
 </head>
 <body>
   <div class="header-box">
-    <h2>CODIENYCH 1.0 - TEAM REGISTRATION & PAYMENT MASTER SHEET</h2>
-    <p><strong>Generated On:</strong> ${new Date().toLocaleString()} | <strong>Total Teams:</strong> ${rows.length}</p>
+    <div class="header-top">
+      <h2>CODIENYCH 1.0 - TEAM REGISTRATION &amp; PAYMENT MASTER SHEET</h2>
+      <div class="meta-time"><strong>Generated On:</strong> ${new Date().toLocaleString()}</div>
+    </div>
+
+    <div class="summary-metrics">
+      <div class="metric-card teams-card">
+        <div class="metric-label">TOTAL TEAMS</div>
+        <div class="metric-value">${totalTeams}</div>
+        <div class="metric-sub">Registered Fleets</div>
+      </div>
+      <div class="metric-card members-card">
+        <div class="metric-label">TOTAL MEMBERS</div>
+        <div class="metric-value">${totalMembers}</div>
+        <div class="metric-sub">Total Pirates / Participants</div>
+      </div>
+      <div class="metric-card verified-card">
+        <div class="metric-label">VERIFIED TEAMS</div>
+        <div class="metric-value">${verifiedPaymentsCount} <span style="font-size: 14px; font-weight: 700; color: #78350f;">/ ${totalTeams}</span></div>
+        <div class="metric-sub">Confirmed &amp; Approved</div>
+      </div>
+      <div class="metric-card collection-card">
+        <div class="metric-label">TOTAL COLLECTION</div>
+        <div class="metric-value">₹${totalCollection.toLocaleString('en-IN')}</div>
+        <div class="metric-sub">Verified Treasury</div>
+      </div>
+    </div>
   </div>
 
   <table>
@@ -610,7 +734,7 @@ const exportReport = async (req, res) => {
           <td class="nowrap"><strong>${r.registrationId}</strong></td>
           <td><strong>${r.teamName}</strong></td>
           <td class="nowrap"><span class="domain-tag">${r.domain}</span></td>
-          <td class="text-center">${r.teamSize}</td>
+          <td class="text-center"><strong>${r.teamSize}</strong></td>
           <td>${r.teamLeader}</td>
           <td>${r.leaderEmail}</td>
           <td class="nowrap">${r.leaderPhone}</td>
@@ -623,6 +747,14 @@ const exportReport = async (req, res) => {
               .join('')
       }
     </tbody>
+    <tfoot>
+      <tr style="background-color: #f1f5f9; font-weight: bold; border-top: 2px solid #000;">
+        <td colspan="4" class="text-right" style="padding: 6px 8px; font-size: 10px;"><strong>OVERALL SUMMARY:</strong></td>
+        <td class="text-center" style="font-size: 13px; font-weight: 900; color: #047857; background-color: #d1fae5;"><strong>${totalMembers}</strong></td>
+        <td colspan="6" style="font-size: 10px; color: #1e3a8a; padding: 6px 8px;"><strong>${totalTeams}</strong> Total Teams (${verifiedPaymentsCount} Verified)</td>
+        <td class="text-center nowrap" style="font-size: 11px; font-weight: 800; color: #6d28d9; background-color: #ede9fe;">₹${totalCollection.toLocaleString('en-IN')}</td>
+      </tr>
+    </tfoot>
   </table>
 </body>
 </html>`;
