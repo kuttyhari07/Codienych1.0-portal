@@ -502,10 +502,6 @@ const exportReport = async (req, res) => {
 
     const totalTeams = rows.length;
     const totalMembers = rows.reduce((sum, r) => sum + (Number(r.teamSize) || 0), 0);
-    const verifiedPaymentsCount = rows.filter((r) => r.paymentStatus === 'VERIFIED').length;
-    const totalCollection = rows
-      .filter((r) => r.paymentStatus === 'VERIFIED')
-      .reduce((sum, r) => sum + (Number(String(r.amount).replace(/[^0-9]/g, '')) || 0), 0);
 
     const htmlContent = `<!DOCTYPE html>
 <html lang="en">
@@ -548,7 +544,7 @@ const exportReport = async (req, res) => {
       color: #475569;
     }
 
-    /* BIG PROMINENT STATS METRICS CARDS */
+    /* BIG PROMINENT STATS METRICS CARDS (TOTAL TEAMS & TOTAL MEMBERS ONLY) */
     .summary-metrics {
       display: flex;
       flex-wrap: wrap;
@@ -556,9 +552,9 @@ const exportReport = async (req, res) => {
       margin-top: 12px;
     }
     .metric-card {
-      flex: 1;
-      min-width: 150px;
-      padding: 10px 14px;
+      flex: 0 1 240px;
+      min-width: 160px;
+      padding: 10px 16px;
       border-radius: 8px;
       border: 2px solid #cbd5e1;
       box-sizing: border-box;
@@ -572,14 +568,6 @@ const exportReport = async (req, res) => {
       background: #ecfdf5;
       border-color: #059669;
     }
-    .metric-card.verified-card {
-      background: #fffbeb;
-      border-color: #d97706;
-    }
-    .metric-card.collection-card {
-      background: #f5f3ff;
-      border-color: #7c3aed;
-    }
 
     .metric-label {
       font-size: 11px;
@@ -590,8 +578,6 @@ const exportReport = async (req, res) => {
     }
     .teams-card .metric-label { color: #1e40af; }
     .members-card .metric-label { color: #065f46; }
-    .verified-card .metric-label { color: #92400e; }
-    .collection-card .metric-label { color: #5b21b6; }
 
     .metric-value {
       font-size: 30px;
@@ -600,8 +586,6 @@ const exportReport = async (req, res) => {
     }
     .teams-card .metric-value { color: #1d4ed8; }
     .members-card .metric-value { color: #047857; }
-    .verified-card .metric-value { color: #b45309; }
-    .collection-card .metric-value { color: #6d28d9; }
 
     .metric-sub {
       font-size: 10.5px;
@@ -692,16 +676,6 @@ const exportReport = async (req, res) => {
         <div class="metric-value">${totalMembers}</div>
         <div class="metric-sub">Total Pirates / Participants</div>
       </div>
-      <div class="metric-card verified-card">
-        <div class="metric-label">VERIFIED TEAMS</div>
-        <div class="metric-value">${verifiedPaymentsCount} <span style="font-size: 14px; font-weight: 700; color: #78350f;">/ ${totalTeams}</span></div>
-        <div class="metric-sub">Confirmed &amp; Approved</div>
-      </div>
-      <div class="metric-card collection-card">
-        <div class="metric-label">TOTAL COLLECTION</div>
-        <div class="metric-value">₹${totalCollection.toLocaleString('en-IN')}</div>
-        <div class="metric-sub">Verified Treasury</div>
-      </div>
     </div>
   </div>
 
@@ -747,14 +721,6 @@ const exportReport = async (req, res) => {
               .join('')
       }
     </tbody>
-    <tfoot>
-      <tr style="background-color: #f1f5f9; font-weight: bold; border-top: 2px solid #000;">
-        <td colspan="4" class="text-right" style="padding: 6px 8px; font-size: 10px;"><strong>OVERALL SUMMARY:</strong></td>
-        <td class="text-center" style="font-size: 13px; font-weight: 900; color: #047857; background-color: #d1fae5;"><strong>${totalMembers}</strong></td>
-        <td colspan="6" style="font-size: 10px; color: #1e3a8a; padding: 6px 8px;"><strong>${totalTeams}</strong> Total Teams (${verifiedPaymentsCount} Verified)</td>
-        <td class="text-center nowrap" style="font-size: 11px; font-weight: 800; color: #6d28d9; background-color: #ede9fe;">₹${totalCollection.toLocaleString('en-IN')}</td>
-      </tr>
-    </tfoot>
   </table>
 </body>
 </html>`;
