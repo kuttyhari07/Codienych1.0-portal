@@ -72,24 +72,6 @@ const generateRegistrationId = async () => {
  */
 const registerTeam = async (req, res) => {
   try {
-    // Check Registration Deadline with support for 1 final unlocked crew slot
-    const deadline = new Date(config.REGISTRATION_DEADLINE || '2026-10-04T22:30:00+05:30');
-    const extraSlots = config.EXTRA_SLOTS !== undefined ? config.EXTRA_SLOTS : 1;
-
-    if (Date.now() >= deadline.getTime()) {
-      const lateRegistrationsCount = await Registration.countDocuments({
-        createdAt: { $gte: deadline },
-      });
-
-      if (lateRegistrationsCount >= extraSlots) {
-        cleanUpTempFiles(req.files);
-        return res.status(403).json({
-          success: false,
-          message: 'Registration is officially closed. The final crew slot has already been claimed.',
-        });
-      }
-    }
-
     const { teamName, teamSize, domain, transactionId, participants } = req.body;
 
     if (!domain || !domain.trim()) {
@@ -393,28 +375,11 @@ const getPublicStatus = async (req, res) => {
  */
 const checkDeadlineStatus = async (req, res) => {
   try {
-    const deadline = new Date(config.REGISTRATION_DEADLINE || '2026-10-04T22:30:00+05:30');
-    const now = Date.now();
-    const extraSlots = config.EXTRA_SLOTS !== undefined ? config.EXTRA_SLOTS : 1;
-
-    let isClosed = now >= deadline.getTime();
-    let remainingSlots = 0;
-
-    if (isClosed && extraSlots > 0) {
-      const lateCount = await Registration.countDocuments({ createdAt: { $gte: deadline } });
-      remainingSlots = Math.max(0, extraSlots - lateCount);
-      if (remainingSlots > 0) {
-        isClosed = false; // Still 1 slot open!
-      }
-    }
-
     return res.status(200).json({
       success: true,
-      isClosed,
-      remainingSlots,
+      isClosed: false,
       deadline: config.REGISTRATION_DEADLINE,
       serverTime: new Date().toISOString(),
-      remainingMs: Math.max(0, deadline.getTime() - now),
     });
   } catch (error) {
     return res.status(500).json({ success: false, message: 'Error checking deadline status' });
