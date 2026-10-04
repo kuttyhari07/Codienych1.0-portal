@@ -72,6 +72,13 @@ const generateRegistrationId = async () => {
  */
 const registerTeam = async (req, res) => {
   try {
+    // Registration is officially closed
+    cleanUpTempFiles(req.files);
+    return res.status(403).json({
+      success: false,
+      message: 'Registration is officially closed. No further registrations can be accepted.',
+    });
+
     const { teamName, teamSize, domain, transactionId, participants } = req.body;
 
     if (!domain || !domain.trim()) {
@@ -377,7 +384,7 @@ const checkDeadlineStatus = async (req, res) => {
   try {
     return res.status(200).json({
       success: true,
-      isClosed: false,
+      isClosed: true,
       deadline: config.REGISTRATION_DEADLINE,
       serverTime: new Date().toISOString(),
     });
