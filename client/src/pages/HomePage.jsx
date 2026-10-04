@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import LoadingScreen from '../components/LoadingScreen';
 import CinematicBackground from '../components/CinematicBackground';
@@ -17,6 +17,10 @@ const HomePage = () => {
   const compassRef = useRef(null);
   const navigate = useNavigate();
 
+  const handleFinishLoading = useCallback(() => {
+    setIsLoading(false);
+  }, []);
+
   const handleExplorePortal = () => {
     if (isEmbarking) return;
     setIsEmbarking(true);
@@ -34,7 +38,7 @@ const HomePage = () => {
     <div className="relative min-h-screen bg-[#020508] text-[#f4e6c3] overflow-x-hidden selection:bg-[#ffd700] selection:text-black flex flex-col justify-between">
       {/* Loading Screen Overlay */}
       <AnimatePresence>
-        {isLoading && <LoadingScreen onFinish={() => setIsLoading(false)} />}
+        {isLoading && <LoadingScreen onFinish={handleFinishLoading} />}
       </AnimatePresence>
 
       {/* Interactive Ambient Cursor */}

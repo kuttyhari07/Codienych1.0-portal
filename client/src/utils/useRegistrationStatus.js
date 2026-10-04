@@ -41,11 +41,18 @@ export const useRegistrationStatus = () => {
   const [status, setStatus] = useState(computeStatus);
 
   useEffect(() => {
+    // If already closed, no need for ticking intervals
+    if (status.isClosed) return;
+
     const interval = setInterval(() => {
-      setStatus(computeStatus());
+      const next = computeStatus();
+      setStatus(next);
+      if (next.isClosed) {
+        clearInterval(interval);
+      }
     }, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [status.isClosed]);
 
   return status;
 };

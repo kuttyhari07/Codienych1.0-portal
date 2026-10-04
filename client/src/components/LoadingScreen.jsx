@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 const LoadingScreen = ({ onFinish }) => {
   const [progress, setProgress] = useState(0);
   const [isFading, setIsFading] = useState(false);
+  const onFinishRef = useRef(onFinish);
+  onFinishRef.current = onFinish;
 
   useEffect(() => {
-    // Total duration ~4.5 seconds
     const startTime = Date.now();
-    const duration = 4500;
+    const duration = 2500;
 
     const timer = setInterval(() => {
       const elapsed = Date.now() - startTime;
@@ -20,14 +21,14 @@ const LoadingScreen = ({ onFinish }) => {
         setTimeout(() => {
           setIsFading(true);
           setTimeout(() => {
-            if (onFinish) onFinish();
-          }, 600);
-        }, 300);
+            if (onFinishRef.current) onFinishRef.current();
+          }, 500);
+        }, 200);
       }
-    }, 40);
+    }, 30);
 
     return () => clearInterval(timer);
-  }, [onFinish]);
+  }, []);
 
   return (
     <div
