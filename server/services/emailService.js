@@ -507,10 +507,118 @@ Please contact the organizing team at ${config.ORGANIZER_EMAIL} for assistance.
   });
 };
 
+/**
+ * 5. Send WhatsApp Fleet Invitation Reminder to Participant (Leaders & Members)
+ */
+const sendWhatsAppFleetInvitation = async ({
+  email,
+  fullName,
+  role,
+  teamName,
+  registrationId,
+  college,
+}) => {
+  const whatsappUrl = (process.env.WHATSAPP_GROUP_URL || config.WHATSAPP_GROUP_URL || 'https://chat.whatsapp.com/J8wJdNPam0j7cJIOGnPXHy').trim();
+  const roleDisplay = role === 'LEADER' ? 'Team Captain ⚓' : 'Crew Member ⚔️';
+
+  const contentHtml = `
+    <h2 style="color: #ffd700; margin-top: 0; font-size: 22px;">⚡ ACTION REQUIRED: Board the WhatsApp Fleet!</h2>
+    <p>Ahoy <strong style="color: #fff;">${fullName}</strong> (${roleDisplay}),</p>
+    <p>
+      Registration for <strong style="color: #ffd700;">CODIENYCH 1.0</strong> is officially closed and 
+      final voyage preparations are underway for your crew <strong style="color: #fff;">${teamName}</strong> (ID: <span style="color:#ffd700; font-weight: bold;">${registrationId}</span>).
+    </p>
+
+    <div style="background: rgba(239, 68, 68, 0.12); border-left: 4px solid #ef4444; border-radius: 6px; padding: 14px 16px; margin: 18px 0;">
+      <p style="margin: 0; color: #fca5a5; font-size: 13px; line-height: 1.6;">
+        ⚠️ <strong style="color: #ffffff;">IMPORTANT NOTICE:</strong> While many participants have already joined our official WhatsApp community, 
+        several crew mates and captains have not yet boarded. If you haven't joined yet, you <strong>must join immediately</strong>!
+      </p>
+    </div>
+
+    <!-- Official WhatsApp Fleet Community Box -->
+    <div style="background: linear-gradient(180deg, #071f14 0%, #03120c 100%); border: 2px solid #25D366; border-radius: 12px; padding: 24px 20px; margin: 25px 0; text-align: center; box-shadow: 0 0 30px rgba(37,211,102,0.3);">
+      <div style="font-size: 36px; line-height: 1; margin-bottom: 12px;">📲 🏴‍☠️</div>
+      <h3 style="color: #25D366; margin: 0 0 8px 0; font-size: 20px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px;">
+        OFFICIAL CODIENYCH 1.0 WHATSAPP FLEET
+      </h3>
+      <p style="color: #e2e8f0; font-size: 13px; line-height: 1.6; margin: 0 0 20px 0;">
+        All vital voyage dispatches will be shared <strong>EXCLUSIVELY</strong> in this group:
+      </p>
+
+      <div style="text-align: left; display: inline-block; margin: 0 auto 20px auto; background: rgba(0,0,0,0.4); border: 1px solid rgba(37,211,102,0.3); border-radius: 8px; padding: 12px 18px; font-size: 12.5px; color: #cbd5e1; line-height: 1.8;">
+        <div>📌 <strong>Hackathon Problem Statements & Track Briefs</strong></div>
+        <div>⏰ <strong>Official Schedule, Reporting Time & Stage Checkpoints</strong></div>
+        <div>📶 <strong>Campus Wi-Fi Credentials & Table/Cabin Allocations</strong></div>
+        <div>🍕 <strong>Food, Refreshment & Midnight Energy Station Passes</strong></div>
+        <div>🏆 <strong>Judging Rounds & Grand Prize Ceremonies</strong></div>
+      </div>
+
+      <div>
+        <a href="${whatsappUrl}" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); color: #020508; font-weight: 900; font-size: 15px; text-decoration: none; padding: 16px 36px; border-radius: 30px; text-transform: uppercase; letter-spacing: 1.2px; box-shadow: 0 6px 20px rgba(37,211,102,0.5);">
+          👉 JOIN OFFICIAL WHATSAPP GROUP NOW 👈
+        </a>
+      </div>
+      <p style="margin: 16px 0 0 0; font-size: 12px; color: #86efac; word-break: break-all;">
+        Direct Link: <a href="${whatsappUrl}" style="color: #25D366; text-decoration: underline; font-weight: bold;">${whatsappUrl}</a>
+      </p>
+    </div>
+
+    <div style="background: #0d1a24; border: 1px solid #6b5321; border-radius: 10px; padding: 18px; margin: 20px 0;">
+      <h4 style="color: #ffd700; margin: 0 0 10px 0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Voyage Check-in Checklist:</h4>
+      <ul style="margin: 0; padding-left: 20px; color: #cbd5e1; font-size: 13px; line-height: 1.8;">
+        <li><strong>Physical Student ID Card:</strong> Mandatory for campus security check-in at ESEC.</li>
+        <li><strong>Hardware:</strong> Bring your laptops, chargers, and spike-busters / power extension strips.</li>
+        <li><strong>Team Coordination:</strong> Please ensure all members of <strong>${teamName}</strong> join the WhatsApp Fleet via the link above.</li>
+      </ul>
+    </div>
+
+    <p style="margin-top: 25px; color: #ffd700; font-weight: bold; text-align: center; font-size: 14px;">
+      May the winds be in your sails! See you at the high seas of CODIENYCH 1.0! ⚔️
+    </p>
+  `;
+
+  const html = wrapEmailTemplate(
+    'Action Required: Join Official WhatsApp Fleet',
+    { text: 'URGENT FLEET DISPATCH', type: 'badge-warning' },
+    contentHtml
+  );
+
+  const text = `
+⚔️ ACTION REQUIRED: Join Official CODIENYCH 1.0 WhatsApp Fleet!
+
+Ahoy ${fullName} (${roleDisplay}),
+Registration for CODIENYCH 1.0 is closed and final voyage preparations are underway for Crew ${teamName} (ID: ${registrationId}).
+
+While many participants have already joined our official WhatsApp group, several participants have not yet boarded. If you haven't joined yet, please join immediately!
+
+============================================================
+📲 JOIN OFFICIAL WHATSAPP FLEET:
+${whatsappUrl}
+============================================================
+
+All problem statements, Wi-Fi keys, cabin seatings, and live schedules are posted exclusively in the WhatsApp group.
+
+Date: October 8-9, 2026
+Venue: ${config.VENUE}
+Helpline: ${config.PHONE_NUMBER} | ${config.ORGANIZER_EMAIL}
+  `.trim();
+
+  return await sendUniversalMail({
+    to: email,
+    replyTo: (process.env.ORGANIZER_EMAIL || config.ORGANIZER_EMAIL || 'codienych@gmail.com').trim(),
+    subject: `⚔️ ACTION REQUIRED: Join Official CODIENYCH 1.0 WhatsApp Fleet! (${teamName})`,
+    text,
+    html,
+  });
+};
+
 module.exports = {
   sendOrganizerNewRegistrationAlert,
   sendRegistrationReceivedToLeader,
   sendRegistrationConfirmation,
   sendRegistrationRejection,
+  sendWhatsAppFleetInvitation,
 };
+
 

@@ -16,6 +16,8 @@ const {
   verifyParticipant,
   rejectParticipant,
   exportReport,
+  getWhatsAppBroadcastStatus,
+  triggerWhatsAppBroadcast,
 } = require('../controllers/adminController');
 
 // Public admin routes
@@ -27,6 +29,10 @@ router.use(protectAdmin);
 
 router.get('/dashboard', getDashboardStats);
 router.get('/export-report', exportReport);
+
+// WhatsApp Fleet Broadcast
+router.get('/whatsapp-broadcast/status', getWhatsAppBroadcastStatus);
+router.post('/whatsapp-broadcast/send', triggerWhatsAppBroadcast);
 
 router.get('/registrations', getRegistrations);
 router.get('/registrations/:id', getRegistrationById);
@@ -42,3 +48,4 @@ router.patch('/participants/:id/verify', verifyParticipant);
 router.patch('/participants/:id/reject', rejectParticipant);
 
 module.exports = router;
+

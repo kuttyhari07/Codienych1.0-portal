@@ -843,6 +843,42 @@ const rejectTeamRegistration = async (req, res) => {
   }
 };
 
+const {
+  getBroadcastStatus,
+  executeBroadcast,
+} = require('../services/whatsappBroadcastService');
+
+/**
+ * GET /api/admin/whatsapp-broadcast/status
+ */
+const getWhatsAppBroadcastStatus = async (req, res) => {
+  try {
+    const status = await getBroadcastStatus();
+    return res.status(200).json({ success: true, data: status });
+  } catch (error) {
+    console.error('[Admin WhatsApp Broadcast Status Error]', error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+/**
+ * POST /api/admin/whatsapp-broadcast/send
+ */
+const triggerWhatsAppBroadcast = async (req, res) => {
+  try {
+    const { target = 'all', limit = null } = req.body;
+    const result = await executeBroadcast({
+      target,
+      limit: limit ? parseInt(limit, 10) : null,
+      delayMs: 350,
+    });
+    return res.status(200).json({ success: true, data: result });
+  } catch (error) {
+    console.error('[Admin WhatsApp Broadcast Trigger Error]', error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 module.exports = {
   loginAdmin,
   logoutAdmin,
@@ -858,5 +894,8 @@ module.exports = {
   verifyParticipant,
   rejectParticipant,
   exportReport,
+  getWhatsAppBroadcastStatus,
+  triggerWhatsAppBroadcast,
 };
+
 

@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Users, CreditCard, CheckCircle, Clock, XCircle, DollarSign, FileCheck, Download, ShieldCheck, ArrowRight, Anchor, Search } from 'lucide-react';
+import { 
+  Users, CreditCard, CheckCircle, Clock, XCircle, DollarSign, FileCheck, 
+  Download, ShieldCheck, ArrowRight, Anchor, Search, Send, MessageSquare, 
+  AlertTriangle, Check, Loader2, Sparkles, X 
+} from 'lucide-react';
 import api, { apiUrl } from '../../services/api';
 import AdminNavbar from '../../components/admin/AdminNavbar';
 
@@ -10,6 +14,15 @@ const AdminDashboardPage = () => {
   const [downloading, setDownloading] = useState(false);
   const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  
+  // WhatsApp Broadcast Modal State
+  const [showBroadcastModal, setShowBroadcastModal] = useState(false);
+  const [broadcastStatus, setBroadcastStatus] = useState(null);
+  const [broadcastLoading, setBroadcastLoading] = useState(false);
+  const [broadcasting, setBroadcasting] = useState(false);
+  const [broadcastTarget, setBroadcastTarget] = useState('all');
+  const [broadcastLimit, setBroadcastLimit] = useState('240');
+  const [broadcastResult, setBroadcastResult] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -94,6 +107,50 @@ const AdminDashboardPage = () => {
     }
   };
 
+  const fetchBroadcastStatus = async () => {
+    try {
+      setBroadcastLoading(true);
+      const res = await api.get('/admin/whatsapp-broadcast/status');
+      if (res.data.success) {
+        setBroadcastStatus(res.data.data);
+      }
+    } catch (err) {
+      console.error('Failed to load broadcast status:', err);
+    } finally {
+      setBroadcastLoading(false);
+    }
+  };
+
+  const handleStartBroadcast = async () => {
+    const targetLabel = broadcastTarget === 'members' 
+      ? 'TEAM MEMBERS ONLY' 
+      : broadcastTarget === 'leaders' 
+      ? 'TEAM LEADERS ONLY' 
+      : 'ALL PARTICIPANTS (LEADERS + MEMBERS)';
+      
+    if (!window.confirm(`Are you sure you want to broadcast the WhatsApp Fleet link to ${targetLabel}?`)) {
+      return;
+    }
+
+    try {
+      setBroadcasting(true);
+      setBroadcastResult(null);
+      const res = await api.post('/admin/whatsapp-broadcast/send', {
+        target: broadcastTarget,
+        limit: broadcastLimit ? parseInt(broadcastLimit, 10) : null,
+      });
+
+      if (res.data.success) {
+        setBroadcastResult(res.data.data);
+        await fetchBroadcastStatus();
+      }
+    } catch (err) {
+      alert('Broadcast dispatch failed: ' + (err.response?.data?.message || err.message));
+    } finally {
+      setBroadcasting(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#03070b] text-[#ffd700] flex items-center justify-center font-cinzel tracking-wider text-sm">
@@ -119,6 +176,18 @@ const AdminDashboardPage = () => {
           </div>
 
           <div className="flex flex-wrap gap-2.5">
+            <button
+              onClick={() => {
+                setShowBroadcastModal(true);
+                fetchBroadcastStatus();
+              }}
+              className="inline-flex items-center justify-center space-x-2 px-4 py-2.5 bg-gradient-to-r from-[#25D366] via-[#128C7E] to-[#075E54] hover:from-[#2ef075] hover:to-[#17ad9b] text-white font-cinzel font-black text-xs rounded-xl shadow-[0_0_20px_rgba(37,211,102,0.4)] transition-all cursor-pointer flex-shrink-0 uppercase tracking-wider"
+              title="Broadcast WhatsApp link to all participants"
+            >
+              <Send className="w-4 h-4 text-white" />
+              <span>BROADCAST WHATSAPP LINK</span>
+            </button>
+
             <button
               onClick={handleDownloadCsvReport}
               disabled={downloading}
@@ -326,8 +395,234 @@ const AdminDashboardPage = () => {
           );
         })()}
       </main>
+
+      {/* WhatsApp Fleet Broadcast Modal */}
+      {showBroadcastModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-[#08121a] border-2 border-[#25D366]/50 rounded-2xl w-full max-w-2xl overflow-hidden shadow-[0_0_50px_rgba(37,211,102,0.25)] flex flex-col max-h-[90vh]">
+            {/* Modal Header */}
+            <div className="bg-[#0b1b13] px-6 py-4 border-b border-[#25D366]/30 flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-full bg-[#25D366]/20 border border-[#25D366] flex items-center justify-center">
+                  <Send className="w-5 h-5 text-[#25D366]" />
+                </div>
+                <div>
+                  <h3 className="font-cinzel font-black text-lg text-white tracking-wider flex items-center space-x-2">
+                    <span>WHATSAPP FLEET BROADCAST</span>
+                    <span className="text-[10px] px-2 py-0.5 rounded bg-[#25D366]/20 text-[#25D366] border border-[#25D366]/40 uppercase font-mono">
+                      LEADERS + MEMBERS
+                    </span>
+                  </h3>
+                  <p className="text-xs text-gray-400">
+                    Dispatch official WhatsApp community join invitation to all participants
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowBroadcastModal(false)}
+                className="text-gray-400 hover:text-white p-1 rounded-lg transition-colors cursor-pointer"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 overflow-y-auto space-y-5 flex-1">
+              {broadcastLoading ? (
+                <div className="py-12 flex flex-col items-center justify-center space-y-3">
+                  <Loader2 className="w-8 h-8 text-[#25D366] animate-spin" />
+                  <p className="text-xs font-cinzel text-gray-400">Scanning fleet manifest & Brevo quota...</p>
+                </div>
+              ) : broadcastStatus ? (
+                <>
+                  {/* Status Metric Grid */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div className="bg-[#04090e] border border-[#243447] rounded-xl p-3 text-center">
+                      <span className="text-[11px] font-cinzel text-gray-400 uppercase block">Total Pirates</span>
+                      <span className="text-xl font-pirate font-black text-[#ffd700] mt-1 block">
+                        {broadcastStatus.totalParticipants}
+                      </span>
+                      <span className="text-[10px] text-gray-500">
+                        {broadcastStatus.totalLeaders} Lead / {broadcastStatus.totalMembers} Mem
+                      </span>
+                    </div>
+
+                    <div className="bg-[#04090e] border border-green-500/30 rounded-xl p-3 text-center">
+                      <span className="text-[11px] font-cinzel text-green-400 uppercase block">Already Sent</span>
+                      <span className="text-xl font-pirate font-black text-green-400 mt-1 block">
+                        {broadcastStatus.sentCount}
+                      </span>
+                      <span className="text-[10px] text-gray-500">Zero Duplicates</span>
+                    </div>
+
+                    <div className="bg-[#04090e] border border-amber-500/30 rounded-xl p-3 text-center">
+                      <span className="text-[11px] font-cinzel text-amber-400 uppercase block">Pending Members</span>
+                      <span className="text-xl font-pirate font-black text-amber-400 mt-1 block">
+                        {broadcastStatus.pendingMembers}
+                      </span>
+                      <span className="text-[10px] text-amber-500/70 font-semibold">Priority Target</span>
+                    </div>
+
+                    <div className="bg-[#04090e] border border-[#00e5ff]/30 rounded-xl p-3 text-center">
+                      <span className="text-[11px] font-cinzel text-[#00e5ff] uppercase block">Brevo Credits</span>
+                      <span className="text-xl font-pirate font-black text-[#00e5ff] mt-1 block">
+                        {broadcastStatus.brevoCredits}
+                      </span>
+                      <span className="text-[10px] text-gray-500">Daily Free Limit</span>
+                    </div>
+                  </div>
+
+                  {/* Target Selector */}
+                  <div className="bg-[#04090e] border border-[#243447] rounded-xl p-4 space-y-3">
+                    <label className="text-xs font-cinzel font-bold text-[#ffd700] uppercase tracking-wider block">
+                      Select Broadcast Target:
+                    </label>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+                      <label className={`flex items-center space-x-2 p-2.5 rounded-lg border cursor-pointer transition-all ${
+                        broadcastTarget === 'all' 
+                          ? 'bg-[#25D366]/15 border-[#25D366] text-white font-bold' 
+                          : 'bg-[#08121a] border-[#1e293b] text-gray-400 hover:border-gray-600'
+                      }`}>
+                        <input
+                          type="radio"
+                          name="target"
+                          value="all"
+                          checked={broadcastTarget === 'all'}
+                          onChange={() => setBroadcastTarget('all')}
+                          className="text-[#25D366] focus:ring-0"
+                        />
+                        <span>All Pirates ({broadcastStatus.pendingTotal})</span>
+                      </label>
+
+                      <label className={`flex items-center space-x-2 p-2.5 rounded-lg border cursor-pointer transition-all ${
+                        broadcastTarget === 'members' 
+                          ? 'bg-[#25D366]/15 border-[#25D366] text-white font-bold' 
+                          : 'bg-[#08121a] border-[#1e293b] text-gray-400 hover:border-gray-600'
+                      }`}>
+                        <input
+                          type="radio"
+                          name="target"
+                          value="members"
+                          checked={broadcastTarget === 'members'}
+                          onChange={() => setBroadcastTarget('members')}
+                          className="text-[#25D366] focus:ring-0"
+                        />
+                        <span>Members Only ({broadcastStatus.pendingMembers})</span>
+                      </label>
+
+                      <label className={`flex items-center space-x-2 p-2.5 rounded-lg border cursor-pointer transition-all ${
+                        broadcastTarget === 'leaders' 
+                          ? 'bg-[#25D366]/15 border-[#25D366] text-white font-bold' 
+                          : 'bg-[#08121a] border-[#1e293b] text-gray-400 hover:border-gray-600'
+                      }`}>
+                        <input
+                          type="radio"
+                          name="target"
+                          value="leaders"
+                          checked={broadcastTarget === 'leaders'}
+                          onChange={() => setBroadcastTarget('leaders')}
+                          className="text-[#25D366] focus:ring-0"
+                        />
+                        <span>Leaders Only ({broadcastStatus.pendingLeaders})</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Batch Limit & Quota Advisory */}
+                  <div className="bg-[#04090e] border border-[#243447] rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                      <label className="text-xs font-cinzel font-bold text-gray-300 uppercase tracking-wider block">
+                        Batch Dispatch Limit:
+                      </label>
+                      <p className="text-[11px] text-gray-500 mt-0.5">
+                        Set max emails to send in this run (safely controlled)
+                      </p>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <select
+                        value={broadcastLimit}
+                        onChange={(e) => setBroadcastLimit(e.target.value)}
+                        className="bg-[#08121a] border border-[#3b4b5e] text-white text-xs rounded-lg px-3 py-2 font-mono focus:border-[#25D366] outline-none cursor-pointer"
+                      >
+                        <option value="50">50 emails</option>
+                        <option value="100">100 emails</option>
+                        <option value="200">200 emails</option>
+                        <option value="240">240 emails (Full Daily Quota)</option>
+                        <option value="">All Pending</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Broadcast Result Banner */}
+                  {broadcastResult && (
+                    <div className={`p-4 rounded-xl border text-xs leading-relaxed ${
+                      broadcastResult.quotaHit 
+                        ? 'bg-amber-950/40 border-amber-500/50 text-amber-200' 
+                        : 'bg-green-950/40 border-green-500/50 text-green-200'
+                    }`}>
+                      <div className="font-bold font-cinzel text-sm mb-1 flex items-center space-x-2">
+                        {broadcastResult.quotaHit ? <AlertTriangle className="w-4 h-4 text-amber-400" /> : <CheckCircle className="w-4 h-4 text-green-400" />}
+                        <span>{broadcastResult.quotaHit ? 'DAILY BREVO QUOTA REACHED' : 'BROADCAST BATCH COMPLETED'}</span>
+                      </div>
+                      <p>
+                        Successfully delivered: <strong>{broadcastResult.sentCount}</strong> emails. 
+                        Failed/Skipped: <strong>{broadcastResult.failedCount}</strong>. 
+                        Remaining in queue: <strong>{broadcastResult.totalRemaining}</strong> participants.
+                      </p>
+                      {broadcastResult.quotaHit && (
+                        <p className="text-amber-400 mt-1.5 font-sans">
+                          💡 The Brevo daily free limit has been reached for today. Quota resets daily at 00:00 UTC (5:30 AM IST). You can click Broadcast again tomorrow and it will seamlessly finish the rest without duplicating!
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Terminal CLI hint */}
+                  <div className="p-3 bg-[#03070b] border border-gray-800 rounded-lg text-[11px] text-gray-400 font-mono">
+                    <span className="text-[#ffd700]">💻 Terminal Alternative:</span>
+                    <span className="ml-2 text-gray-300">node server/scripts/broadcastWhatsAppInvite.js --target=members</span>
+                  </div>
+                </>
+              ) : (
+                <p className="text-xs text-red-400">Failed to load broadcast information.</p>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="bg-[#0b1b13] px-6 py-4 border-t border-[#25D366]/30 flex items-center justify-between">
+              <button
+                type="button"
+                onClick={() => setShowBroadcastModal(false)}
+                className="px-4 py-2 bg-[#0c1e2d] hover:bg-[#152e46] text-gray-300 font-cinzel font-bold text-xs rounded-xl border border-gray-700 cursor-pointer"
+              >
+                CLOSE
+              </button>
+
+              <button
+                type="button"
+                disabled={broadcasting || broadcastLoading || (broadcastStatus?.pendingTotal === 0)}
+                onClick={handleStartBroadcast}
+                className="inline-flex items-center space-x-2 px-6 py-2.5 bg-gradient-to-r from-[#25D366] via-[#128C7E] to-[#075E54] hover:from-[#2ef075] hover:to-[#17ad9b] disabled:opacity-50 disabled:cursor-not-allowed text-white font-cinzel font-black text-xs rounded-xl shadow-[0_0_20px_rgba(37,211,102,0.4)] transition-all cursor-pointer uppercase tracking-wider"
+              >
+                {broadcasting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>TRANSMITTING DISPATCHES...</span>
+                  </>
+                ) : (
+                  <>
+                    <Send className="w-4 h-4" />
+                    <span>LAUNCH BROADCAST NOW</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default AdminDashboardPage;
+
