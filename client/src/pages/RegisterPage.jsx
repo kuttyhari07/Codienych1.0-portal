@@ -499,7 +499,7 @@ const RegisterPage = () => {
               <div className="font-cinzel text-xs text-[#cfb07a] uppercase tracking-wider mb-3">
                 ADMIRALTY EMERGENCY DIRECTIVES & CONTACTS
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono text-gray-300 mb-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono text-gray-300">
                 <div className="bg-black/50 p-2.5 rounded-lg border border-[#3a2020]">
                   <span className="text-[#ffd700] font-bold">Hariharan G (Lead):</span><br />
                   <a href="tel:+916380911912" className="text-gray-300 hover:text-[#ffd700]">+91 63809 11912</a>
@@ -509,18 +509,6 @@ const RegisterPage = () => {
                   <a href="tel:+919751639673" className="text-gray-300 hover:text-[#ffd700]">+91 97516 39673</a>
                 </div>
               </div>
-
-              {EVENT_CONFIG.WHATSAPP_GROUP_URL && (
-                <a
-                  href={EVENT_CONFIG.WHATSAPP_GROUP_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-[#25D366]/20 border border-[#25D366]/60 text-[#25D366] hover:bg-[#25D366]/30 font-cinzel text-xs font-bold transition-all"
-                >
-                  <MessageSquare className="w-4 h-4" />
-                  <span>JOIN OFFICIAL WHATSAPP FLEET</span>
-                </a>
-              )}
             </div>
           </div>
         </div>
