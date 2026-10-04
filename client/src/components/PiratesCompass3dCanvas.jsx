@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as THREE from 'three';
-import { Compass, Sparkles, Navigation, ArrowRight, Eye, Swords, RotateCcw } from 'lucide-react';
+import { Compass, Sparkles, Navigation, ArrowRight, Eye, Swords, RotateCcw, Lock } from 'lucide-react';
 import { playLaserBlip, playChirp } from '../utils/cyberSound';
+import useRegistrationStatus from '../utils/useRegistrationStatus';
 
 /**
  * Photorealistic 3D Ancient Pirate Compass (Jack Sparrow's Cursed Compass)
@@ -14,6 +15,7 @@ import { playLaserBlip, playChirp } from '../utils/cyberSound';
  * - Full 3D tilt & rotation via drag or touch
  */
 const PiratesCompass3dCanvas = () => {
+  const { isClosed } = useRegistrationStatus();
   const containerRef = useRef(null);
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
@@ -662,10 +664,14 @@ const PiratesCompass3dCanvas = () => {
 
         <button
           onClick={() => navigate('/register')}
-          className="w-full sm:w-auto px-6 py-3.5 rounded-xl font-cinzel font-bold text-xs sm:text-sm text-[#ffd700] bg-[#120a04] border border-[#ffd700]/60 hover:bg-[#ffd700] hover:text-black transition-all shadow-md flex items-center justify-center space-x-2 cursor-pointer uppercase tracking-wider"
+          className={`w-full sm:w-auto px-6 py-3.5 rounded-xl font-cinzel font-bold text-xs sm:text-sm ${
+            isClosed
+              ? 'text-red-400 bg-[#1c0808] border border-red-500/60 hover:bg-[#2c0e0e]'
+              : 'text-[#ffd700] bg-[#120a04] border border-[#ffd700]/60 hover:bg-[#ffd700] hover:text-black'
+          } transition-all shadow-md flex items-center justify-center space-x-2 cursor-pointer uppercase tracking-wider`}
         >
-          <Swords className="w-4 h-4" />
-          <span>JOIN THE CREW (REGISTER)</span>
+          {isClosed ? <Lock className="w-4 h-4 text-red-400" /> : <Swords className="w-4 h-4" />}
+          <span>{isClosed ? 'REGISTRATION CLOSED' : 'JOIN THE CREW (REGISTER)'}</span>
         </button>
       </div>
     </div>

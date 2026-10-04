@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronDown, Compass, Skull, Anchor, Sparkles, Swords, Trophy } from 'lucide-react';
+import { ChevronDown, Compass, Skull, Anchor, Sparkles, Swords, Trophy, Lock } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { EVENT_CONFIG } from '../utils/config';
+import useRegistrationStatus from '../utils/useRegistrationStatus';
 import Cyber3dReactorCanvas from '../components/Cyber3dReactorCanvas';
 
 const HeroSection = () => {
+  const { isClosed } = useRegistrationStatus();
   const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -158,13 +160,23 @@ const HeroSection = () => {
         transition={{ duration: 0.7, delay: 0.8 }}
         className="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-6 w-full max-w-sm sm:max-w-lg mx-auto px-2"
       >
-        <Link
-          to="/register"
-          className="w-full sm:w-auto px-7 py-3.5 sm:px-9 sm:py-4 rounded-xl font-pirate text-xl sm:text-2xl text-black bg-gradient-to-r from-[#ffd700] via-[#e5c158] to-[#b8860b] hover:from-[#fff2a3] hover:to-[#ffd700] transition-all duration-300 shadow-[0_0_25px_rgba(229,193,88,0.6)] hover:shadow-[0_0_40px_rgba(255,215,0,0.9)] transform hover:-translate-y-1 active:scale-95 flex items-center justify-center space-x-2.5 font-bold"
-        >
-          <Swords className="w-5 h-5 text-black" />
-          <span>JOIN THE CREW (REGISTER)</span>
-        </Link>
+        {isClosed ? (
+          <Link
+            to="/register"
+            className="w-full sm:w-auto px-7 py-3.5 sm:px-9 sm:py-4 rounded-xl font-pirate text-xl sm:text-2xl text-red-300 bg-gradient-to-r from-[#2f0c0c] via-[#481212] to-[#240808] hover:from-[#3a1212] hover:to-[#2f0c0c] border border-red-500/60 shadow-[0_0_25px_rgba(239,68,68,0.4)] flex items-center justify-center space-x-2.5 font-bold transition-all"
+          >
+            <Lock className="w-5 h-5 text-red-400" />
+            <span>REGISTRATION CLOSED</span>
+          </Link>
+        ) : (
+          <Link
+            to="/register"
+            className="w-full sm:w-auto px-7 py-3.5 sm:px-9 sm:py-4 rounded-xl font-pirate text-xl sm:text-2xl text-black bg-gradient-to-r from-[#ffd700] via-[#e5c158] to-[#b8860b] hover:from-[#fff2a3] hover:to-[#ffd700] transition-all duration-300 shadow-[0_0_25px_rgba(229,193,88,0.6)] hover:shadow-[0_0_40px_rgba(255,215,0,0.9)] transform hover:-translate-y-1 active:scale-95 flex items-center justify-center space-x-2.5 font-bold"
+          >
+            <Swords className="w-5 h-5 text-black" />
+            <span>JOIN THE CREW (REGISTER)</span>
+          </Link>
+        )}
 
         <a
           href="#about"

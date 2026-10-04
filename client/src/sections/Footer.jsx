@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Compass, Skull, Swords, Anchor, Scroll } from 'lucide-react';
+import { Compass, Skull, Swords, Anchor, Scroll, Lock } from 'lucide-react';
 import { EVENT_CONFIG } from '../utils/config';
+import useRegistrationStatus from '../utils/useRegistrationStatus';
 
 const Footer = () => {
+  const { isClosed } = useRegistrationStatus();
   return (
     <footer className="relative bg-[#020508] border-t border-[#4a381e] pt-16 pb-12 px-4 z-10">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
@@ -44,7 +46,14 @@ const Footer = () => {
             <li><a href="#prizes" className="hover:text-[#ffd700] transition-colors">TREASURE BOUNTIES</a></li>
             <li><a href="#faq" className="hover:text-[#ffd700] transition-colors">CAPTAIN FAQ</a></li>
             <li><a href="#contact" className="hover:text-[#ffd700] transition-colors">ADMIRALTY COMMS</a></li>
-            <li><Link to="/register" className="text-[#ffd700] hover:underline font-bold">JOIN THE CREW</Link></li>
+            <li>
+              <Link
+                to="/register"
+                className={`${isClosed ? 'text-red-400 hover:text-red-300' : 'text-[#ffd700]'} hover:underline font-bold flex items-center space-x-1`}
+              >
+                {isClosed ? <span>REGISTRATION CLOSED</span> : <span>JOIN THE CREW</span>}
+              </Link>
+            </li>
           </ul>
         </div>
 

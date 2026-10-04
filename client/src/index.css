@@ -8,8 +8,13 @@
     color: #f4e6c3;
     font-family: 'Cinzel', 'Rajdhani', serif;
   }
-  
-  h1, h2, h3, h4, .font-orbitron, .font-pirate-title {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  .font-orbitron,
+  .font-pirate-title {
     font-family: 'Cinzel Decorative', 'Pirata One', 'Cinzel', serif;
     letter-spacing: 0.04em;
   }
@@ -19,15 +24,18 @@
 ::-webkit-scrollbar {
   width: 9px;
 }
+
 ::-webkit-scrollbar-track {
   background: #03070b;
   border-left: 1px solid #1c150c;
 }
+
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(to bottom, #8a6d1b, #d4af37, #8a6d1b);
   border: 1px solid #e5c158;
   border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #ffd700;
   box-shadow: 0 0 10px #ffd700;
@@ -35,12 +43,10 @@
 
 /* Caribbean Ocean Fog Gradient */
 .fog-layer {
-  background: radial-gradient(
-    ellipse at 50% 50%,
-    rgba(14, 45, 66, 0.35) 0%,
-    rgba(6, 20, 32, 0.75) 60%,
-    rgba(3, 7, 11, 0.95) 100%
-  );
+  background: radial-gradient(ellipse at 50% 50%,
+      rgba(14, 45, 66, 0.35) 0%,
+      rgba(6, 20, 32, 0.75) 60%,
+      rgba(3, 7, 11, 0.95) 100%);
 }
 
 /* Cursed Aztec Gold Glowing Text & 3D Bevel Title */
@@ -60,7 +66,8 @@
   filter: drop-shadow(0 0 12px rgba(229, 193, 88, 0.6));
 }
 
-.neon-glow-green, .pirate-gold-glow {
+.neon-glow-green,
+.pirate-gold-glow {
   text-shadow: 0 0 10px rgba(229, 193, 88, 0.8), 0 0 25px rgba(212, 175, 55, 0.6), 0 0 40px rgba(0, 229, 255, 0.3);
 }
 
@@ -68,7 +75,8 @@
   text-shadow: 0 0 10px rgba(0, 229, 255, 0.8), 0 0 25px rgba(14, 165, 233, 0.6);
 }
 
-.border-neon-glow, .border-pirate-gold {
+.border-neon-glow,
+.border-pirate-gold {
   box-shadow: 0 0 15px rgba(229, 193, 88, 0.35), inset 0 0 15px rgba(229, 193, 88, 0.1);
 }
 
@@ -80,10 +88,13 @@
 }
 
 /* Ornate Pirate Corner Brackets */
-.hud-corner-box, .pirate-corner-box {
+.hud-corner-box,
+.pirate-corner-box {
   position: relative;
 }
-.hud-corner-box::before, .pirate-corner-box::before {
+
+.hud-corner-box::before,
+.pirate-corner-box::before {
   content: '';
   position: absolute;
   top: -1px;
@@ -95,7 +106,9 @@
   pointer-events: none;
   filter: drop-shadow(0 0 4px #e5c158);
 }
-.hud-corner-box::after, .pirate-corner-box::after {
+
+.hud-corner-box::after,
+.pirate-corner-box::after {
   content: '';
   position: absolute;
   bottom: -1px;
@@ -109,8 +122,9 @@
 }
 
 /* Nautical Grid Chart Overlay */
-.hex-grid-overlay, .nautical-chart-overlay {
-  background-image: 
+.hex-grid-overlay,
+.nautical-chart-overlay {
+  background-image:
     radial-gradient(rgba(229, 193, 88, 0.12) 1px, transparent 1px),
     linear-gradient(to right, rgba(0, 229, 255, 0.03) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
@@ -119,9 +133,12 @@
 
 /* Ancient Compass Rose Needle Pulse */
 @keyframes compassFloat {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0px) rotate(0deg);
   }
+
   50% {
     transform: translateY(-8px) rotate(2deg);
   }
@@ -136,6 +153,7 @@
   0% {
     background-position: -200% 0;
   }
+
   100% {
     background-position: 200% 0;
   }
@@ -151,13 +169,11 @@
 
 /* Scanline Effect tuned to Caribbean Deep Sea */
 .scanline-bg {
-  background: linear-gradient(
-    to bottom,
-    rgba(255,255,255,0),
-    rgba(255,255,255,0) 50%,
-    rgba(0, 229, 255, 0.02) 50%,
-    rgba(0, 229, 255, 0.02)
-  );
+  background: linear-gradient(to bottom,
+      rgba(255, 255, 255, 0),
+      rgba(255, 255, 255, 0) 50%,
+      rgba(0, 229, 255, 0.02) 50%,
+      rgba(0, 229, 255, 0.02));
   background-size: 100% 4px;
 }
 
@@ -170,9 +186,12 @@
 
 /* Equalizer Audio Waveform Bars */
 @keyframes eqBar {
-  0%, 100% {
+
+  0%,
+  100% {
     height: 4px;
   }
+
   50% {
     height: 16px;
   }
@@ -181,13 +200,15 @@
 .animate-eq-1 {
   animation: eqBar 0.8s ease-in-out infinite;
 }
+
 .animate-eq-2 {
   animation: eqBar 0.6s ease-in-out 0.2s infinite;
 }
+
 .animate-eq-3 {
   animation: eqBar 0.9s ease-in-out 0.4s infinite;
 }
+
 .animate-eq-4 {
   animation: eqBar 0.7s ease-in-out 0.15s infinite;
 }
-

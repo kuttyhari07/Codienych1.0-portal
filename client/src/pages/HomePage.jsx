@@ -5,11 +5,13 @@ import CinematicBackground from '../components/CinematicBackground';
 import InteractiveCursor from '../components/InteractiveCursor';
 import RealisticCompass3D from '../components/RealisticCompass3D';
 import { EVENT_CONFIG } from '../utils/config';
-import { Compass, Sparkles, Swords, ArrowRight } from 'lucide-react';
+import { Compass, Sparkles, Swords, ArrowRight, Lock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { playLaserBlip } from '../utils/cyberSound';
+import useRegistrationStatus from '../utils/useRegistrationStatus';
 
 const HomePage = () => {
+  const { isClosed } = useRegistrationStatus();
   const [isLoading, setIsLoading] = useState(true);
   const [isEmbarking, setIsEmbarking] = useState(false);
   const compassRef = useRef(null);
@@ -181,10 +183,14 @@ const HomePage = () => {
               playLaserBlip();
               navigate('/register');
             }}
-            className="w-full sm:w-auto px-7 py-4 rounded-2xl font-cinzel font-bold text-xs sm:text-sm text-[#ffd700] bg-[#120a04]/90 hover:bg-[#ffd700] hover:text-black border-2 border-[#ffd700]/70 hover:border-[#ffd700] transition-all duration-300 shadow-[0_0_20px_rgba(0,0,0,0.8)] hover:shadow-[0_0_30px_rgba(255,215,0,0.5)] transform hover:-translate-y-1 active:scale-95 flex items-center justify-center space-x-2 cursor-pointer uppercase tracking-wider backdrop-blur-sm"
+            className={`w-full sm:w-auto px-7 py-4 rounded-2xl font-cinzel font-bold text-xs sm:text-sm ${
+              isClosed
+                ? 'text-red-400 bg-[#1c0808]/90 hover:bg-[#2c0e0e] border-2 border-red-500/70 hover:border-red-400 shadow-[0_0_20px_rgba(239,68,68,0.4)]'
+                : 'text-[#ffd700] bg-[#120a04]/90 hover:bg-[#ffd700] hover:text-black border-2 border-[#ffd700]/70 hover:border-[#ffd700] shadow-[0_0_20px_rgba(0,0,0,0.8)] hover:shadow-[0_0_30px_rgba(255,215,0,0.5)]'
+            } transition-all duration-300 transform hover:-translate-y-1 active:scale-95 flex items-center justify-center space-x-2 cursor-pointer uppercase tracking-wider backdrop-blur-sm`}
           >
-            <Swords className="w-4 h-4" />
-            <span>JOIN THE CREW (REGISTER)</span>
+            {isClosed ? <Lock className="w-4 h-4 text-red-400" /> : <Swords className="w-4 h-4" />}
+            <span>{isClosed ? 'REGISTRATION CLOSED' : 'JOIN THE CREW (REGISTER)'}</span>
           </button>
         </motion.div>
       </motion.main>

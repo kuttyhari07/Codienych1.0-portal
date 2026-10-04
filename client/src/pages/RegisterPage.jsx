@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Shield, ChevronRight, ChevronLeft, Upload, Check, AlertCircle, QrCode, Copy, CheckCircle2, ArrowRight, Anchor, Compass, Cpu, Globe, ShieldAlert, Wifi, Cloud } from 'lucide-react';
+import { Shield, ChevronRight, ChevronLeft, Upload, Check, AlertCircle, QrCode, Copy, CheckCircle2, ArrowRight, Anchor, Compass, Cpu, Globe, ShieldAlert, Wifi, Cloud, Lock, Clock, Phone, Mail, MessageSquare, AlertTriangle } from 'lucide-react';
 import api from '../services/api';
 import { EVENT_CONFIG, HACKATHON_DOMAINS } from '../utils/config';
+import useRegistrationStatus from '../utils/useRegistrationStatus';
 
 const steps = [
   '1. CREW INFO',
@@ -16,6 +17,7 @@ const steps = [
 ];
 
 const RegisterPage = () => {
+  const { isClosed, remaining } = useRegistrationStatus();
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -248,6 +250,10 @@ const RegisterPage = () => {
   // Submit Registration
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isClosed) {
+      setErrorMessage('Registration is officially closed. The 10:30 PM deadline has passed.');
+      return;
+    }
     if (loading) return; // Prevent double clicks during transmission
     if (!validateStep(7)) return;
 
@@ -418,6 +424,110 @@ const RegisterPage = () => {
     );
   }
 
+  if (isClosed) {
+    return (
+      <div className="min-h-screen bg-[#03070b] text-[#f4e6c3] pt-24 pb-20 px-4 relative overflow-hidden flex flex-col items-center justify-center">
+        {/* Ambient Glows */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(80,15,15,0.45)_0%,rgba(3,7,11,0.98)_100%)] pointer-events-none" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-red-600/15 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-2xl w-full mx-auto relative z-10 text-center">
+          <Link
+            to="/"
+            className="inline-flex items-center space-x-2 text-xs font-cinzel text-[#ffd700] mb-6 hover:underline"
+          >
+            <ChevronLeft className="w-4 h-4" />
+            <span>RETURN TO FLAGSHIP</span>
+          </Link>
+
+          {/* Main Card */}
+          <div className="bg-gradient-to-b from-[#1c0a0a] via-[#120606] to-[#050202] border-2 border-red-500/70 rounded-3xl p-6 sm:p-10 shadow-[0_0_60px_rgba(239,68,68,0.35)] relative backdrop-blur-xl">
+            {/* Top Seal Tag */}
+            <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-red-950/90 border border-red-500/70 text-red-400 font-cinzel font-bold text-xs uppercase tracking-widest mb-6 shadow-inner">
+              <Lock className="w-3.5 h-3.5 text-red-400" />
+              <span>PORT MANIFEST SEALED • 10:30 PM DEADLINE REACHED</span>
+            </div>
+
+            {/* Glowing Centerpiece Icon */}
+            <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-6 rounded-3xl bg-gradient-to-tr from-red-950 via-[#350a0a] to-[#140404] border-2 border-red-500 flex items-center justify-center shadow-[0_0_40px_rgba(239,68,68,0.6)]">
+              <ShieldAlert className="w-10 h-10 sm:w-12 sm:h-12 text-red-400" />
+            </div>
+
+            {/* Title */}
+            <h1 className="font-pirate font-black text-4xl sm:text-6xl text-white tracking-wide mb-3">
+              REGISTRATION <span className="text-red-400" style={{ textShadow: '0 0 25px rgba(239,68,68,0.8)' }}>CLOSED</span>
+            </h1>
+
+            <p className="font-cinzel text-xs sm:text-sm text-gray-300 max-w-lg mx-auto leading-relaxed mb-6">
+              The official enlistment portal for <strong className="text-[#ffd700]">CODIENYCH 1.0</strong> closed at <strong className="text-white">10:30 PM IST on October 4, 2026</strong>.
+              In accordance with hackathon rules, no new fleet manifests or crew additions can be accepted.
+            </p>
+
+            {/* Status Announcement Box */}
+            <div className="p-4 bg-[#240c0c]/80 border border-red-500/40 rounded-2xl mb-8 text-left space-y-2">
+              <div className="flex items-center space-x-2 text-red-400 font-cinzel font-bold text-xs uppercase">
+                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                <span>VOYAGE ROSTER LOCKED</span>
+              </div>
+              <p className="text-gray-300 text-xs font-sans leading-relaxed">
+                Thank you to all pirate crews from colleges across the region who submitted their manifests!
+                If your captain already completed registration before 10:30 PM, your tribute and credentials are being reviewed by the Admiralty.
+              </p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-8">
+              <Link
+                to="/status"
+                className="py-3.5 px-5 rounded-xl font-cinzel font-bold text-xs uppercase bg-gradient-to-r from-[#ffd700] via-[#f39c12] to-[#b8860b] hover:from-[#ffe043] hover:to-[#d4af37] text-black shadow-[0_0_20px_rgba(255,215,0,0.5)] flex items-center justify-center space-x-2 transition-all cursor-pointer"
+              >
+                <Compass className="w-4 h-4 text-black" />
+                <span>TRACK CREW VOYAGE STATUS</span>
+              </Link>
+
+              <Link
+                to="/portal"
+                className="py-3.5 px-5 rounded-xl font-cinzel font-bold text-xs uppercase bg-[#081724] border border-[#00e5ff]/60 hover:border-[#00e5ff] text-[#00e5ff] shadow-[0_0_15px_rgba(0,229,255,0.25)] flex items-center justify-center space-x-2 transition-all cursor-pointer"
+              >
+                <Anchor className="w-4 h-4 text-[#00e5ff]" />
+                <span>EXPLORE EVENT PORTAL</span>
+              </Link>
+            </div>
+
+            {/* Admiralty Helpline Info */}
+            <div className="pt-6 border-t border-[#3a1a1a] text-center">
+              <div className="font-cinzel text-xs text-[#cfb07a] uppercase tracking-wider mb-3">
+                ADMIRALTY EMERGENCY DIRECTIVES & CONTACTS
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono text-gray-300 mb-4">
+                <div className="bg-black/50 p-2.5 rounded-lg border border-[#3a2020]">
+                  <span className="text-[#ffd700] font-bold">Hariharan G (Lead):</span><br />
+                  <a href="tel:+916380911912" className="text-gray-300 hover:text-[#ffd700]">+91 63809 11912</a>
+                </div>
+                <div className="bg-black/50 p-2.5 rounded-lg border border-[#3a2020]">
+                  <span className="text-[#ffd700] font-bold">Lingeswaran M:</span><br />
+                  <a href="tel:+919751639673" className="text-gray-300 hover:text-[#ffd700]">+91 97516 39673</a>
+                </div>
+              </div>
+
+              {EVENT_CONFIG.WHATSAPP_GROUP_URL && (
+                <a
+                  href={EVENT_CONFIG.WHATSAPP_GROUP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-[#25D366]/20 border border-[#25D366]/60 text-[#25D366] hover:bg-[#25D366]/30 font-cinzel text-xs font-bold transition-all"
+                >
+                  <MessageSquare className="w-4 h-4" />
+                  <span>JOIN OFFICIAL WHATSAPP FLEET</span>
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#03070b] text-[#f4e6c3] pt-24 pb-20 px-4 relative overflow-hidden">
       {/* Ambient Ocean Gradient */}
@@ -437,6 +547,33 @@ const RegisterPage = () => {
             OFFICIAL FLEET ENTRY • ₹{EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER} TRIBUTE PER PIRATE
           </p>
         </div>
+
+        {/* Urgent Live Countdown Notice (Active before 10:30 PM) */}
+        {!isClosed && remaining.totalMs > 0 && (
+          <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-[#2e1404] via-[#3f1e05] to-[#261003] border-2 border-[#ffd700]/70 text-[#f4e6c3] flex flex-col sm:flex-row items-center justify-between gap-3 shadow-[0_0_25px_rgba(255,215,0,0.25)]">
+            <div className="flex items-center space-x-3 text-center sm:text-left">
+              <div className="w-10 h-10 rounded-xl bg-black/40 border border-[#ffd700]/40 flex items-center justify-center flex-shrink-0">
+                <Clock className="w-5 h-5 text-[#ffd700] animate-spin" style={{ animationDuration: '4s' }} />
+              </div>
+              <div>
+                <div className="font-cinzel font-bold text-xs text-[#ffd700] uppercase tracking-wider flex items-center space-x-1.5 justify-center sm:justify-start">
+                  <span className="w-2 h-2 rounded-full bg-red-500 animate-ping inline-block" />
+                  <span>REGISTRATION CLOSING TONIGHT AT 10:30 PM IST</span>
+                </div>
+                <p className="text-[11px] text-gray-300 font-sans mt-0.5">
+                  Port manifest permanently seals at 10:30 PM IST. Enlist your crew before the timer runs out!
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-2 bg-black/70 px-4 py-2 rounded-xl border border-[#ffd700]/50 flex-shrink-0">
+              <span className="font-cinzel text-[10px] text-gray-400 uppercase tracking-widest">CLOSING IN:</span>
+              <span className="font-mono font-black text-sm sm:text-base text-[#ffd700]">
+                {remaining.hours > 0 ? `${remaining.hours}h ` : ''}
+                {String(remaining.minutes).padStart(2, '0')}m {String(remaining.seconds).padStart(2, '0')}s
+              </span>
+            </div>
+          </div>
+        )}
 
         {/* Wizard Progress Indicator */}
         <div className="mb-10 overflow-x-auto pb-2">

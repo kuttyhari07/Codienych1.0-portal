@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const upload = require('../middleware/upload');
-const { registerTeam, getPublicStatus } = require('../controllers/registrationController');
+const { registerTeam, getPublicStatus, checkDeadlineStatus } = require('../controllers/registrationController');
 
 /**
  * Multi-part upload handler accepting:
@@ -13,6 +13,7 @@ const registrationUpload = upload.fields([
   { name: 'idCards', maxCount: 6 },
 ]);
 
+router.get('/deadline-status', checkDeadlineStatus);
 router.post('/', registrationUpload, registerTeam);
 router.get('/:registrationId', getPublicStatus);
 

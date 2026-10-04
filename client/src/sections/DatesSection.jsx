@@ -1,11 +1,13 @@
 import React from 'react';
-import { Calendar, Clock, AlertTriangle, Coins, Compass } from 'lucide-react';
+import { Calendar, Clock, AlertTriangle, Coins, Compass, Lock } from 'lucide-react';
 import { EVENT_CONFIG } from '../utils/config';
 import SpotlightCard from '../components/SpotlightCard';
 import DecipherText from '../components/DecipherText';
 import TeamFeeCalculator from '../components/TeamFeeCalculator';
+import useRegistrationStatus from '../utils/useRegistrationStatus';
 
 const DatesSection = () => {
+  const { isClosed } = useRegistrationStatus();
   return (
     <section id="dates" className="relative py-20 px-4 z-10">
       <div className="max-w-5xl mx-auto text-center">
@@ -29,9 +31,22 @@ const DatesSection = () => {
               <div className="font-pirate text-3xl sm:text-4xl text-[#ffd700] pirate-gold-title mb-3">
                 {EVENT_CONFIG.REGISTRATION_DEADLINE_DISPLAY}
               </div>
+              {isClosed ? (
+                <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-red-950/80 border border-red-500/70 text-red-400 text-xs font-mono font-bold mb-3 shadow-[0_0_10px_rgba(239,68,68,0.4)]">
+                  <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                  <span>REGISTRATION CLOSED (10:30 PM)</span>
+                </div>
+              ) : (
+                <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-amber-950/80 border border-amber-500/70 text-[#ffd700] text-xs font-mono font-bold mb-3">
+                  <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                  <span>CLOSES TONIGHT 10:30 PM</span>
+                </div>
+              )}
             </div>
             <p className="font-cinzel text-xs text-gray-300">
-              Port manifest seals at 11:59 PM. No late crew recruits admitted.
+              {isClosed
+                ? 'Port manifest sealed at 10:30 PM IST. No late crew recruits admitted.'
+                : 'Port manifest seals strictly at 10:30 PM IST. No late crew recruits admitted.'}
             </p>
           </SpotlightCard>
 

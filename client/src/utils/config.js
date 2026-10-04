@@ -4,8 +4,8 @@ export const EVENT_CONFIG = {
   TAGLINE: '24 Hours of Coding, Creativity and Innovation.',
   MISSION_MOTTO: 'ONE HACKATHON. 24 HOURS. BUILD THE FUTURE.',
   
-  REGISTRATION_DEADLINE: '2026-10-04',
-  REGISTRATION_DEADLINE_DISPLAY: 'October 4, 2026',
+  REGISTRATION_DEADLINE: '2026-10-04T22:30:00+05:30',
+  REGISTRATION_DEADLINE_DISPLAY: 'October 4, 2026, 10:30 PM IST',
   
   HACKATHON_START_DATE: '2026-10-08T09:00:00',
   HACKATHON_DATES_DISPLAY: 'October 8 – 9, 2026',
@@ -85,3 +85,19 @@ export const HACKATHON_DOMAINS = [
   },
 ];
 
+/**
+ * Check if the registration deadline (10:30 PM IST, Oct 4, 2026) has passed.
+ * Also supports URL preview override ?closed=true for administrative testing.
+ */
+export const isRegistrationClosed = () => {
+  try {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('closed') === 'true') return true;
+    }
+    const deadline = new Date(EVENT_CONFIG.REGISTRATION_DEADLINE).getTime();
+    return Date.now() >= deadline;
+  } catch (e) {
+    return false;
+  }
+};

@@ -72,6 +72,16 @@ const generateRegistrationId = async () => {
  */
 const registerTeam = async (req, res) => {
   try {
+    // Enforce strict 10:30 PM Registration Deadline
+    const deadline = new Date(config.REGISTRATION_DEADLINE || '2026-10-04T22:30:00+05:30').getTime();
+    if (Date.now() >= deadline) {
+      cleanUpTempFiles(req.files);
+      return res.status(403).json({
+        success: false,
+        message: 'Registration is officially closed. The 10:30 PM deadline has passed. No further registrations can be accepted.',
+      });
+    }
+
     const { teamName, teamSize, domain, transactionId, participants } = req.body;
 
     if (!domain || !domain.trim()) {
@@ -369,7 +379,30 @@ const getPublicStatus = async (req, res) => {
   }
 };
 
+/**
+ * Public Endpoint: Check Deadline Status
+ * GET /api/registrations/deadline-status
+ */
+const checkDeadlineStatus = async (req, res) => {
+  try {
+    const deadline = new Date(config.REGISTRATION_DEADLINE || '2026-10-04T22:30:00+05:30').getTime();
+    const now = Date.now();
+    const isClosed = now >= deadline;
+
+    return res.status(200).json({
+      success: true,
+      isClosed,
+      deadline: config.REGISTRATION_DEADLINE,
+      serverTime: new Date().toISOString(),
+      remainingMs: Math.max(0, deadline - now),
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: 'Error checking deadline status' });
+  }
+};
+
 module.exports = {
   registerTeam,
   getPublicStatus,
+  checkDeadlineStatus,
 };

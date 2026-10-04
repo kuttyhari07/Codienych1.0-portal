@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { Users, Calculator, Sparkles, Check, ArrowRight, ShieldCheck, Coins } from 'lucide-react';
+import { Users, Calculator, Sparkles, Check, ArrowRight, ShieldCheck, Coins, Lock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { EVENT_CONFIG } from '../utils/config';
 import { playChirp } from '../utils/cyberSound';
 import SpotlightCard from './SpotlightCard';
+import useRegistrationStatus from '../utils/useRegistrationStatus';
 
 const TeamFeeCalculator = () => {
+  const { isClosed } = useRegistrationStatus();
   const [membersCount, setMembersCount] = useState(4);
 
   const teamSizes = [
@@ -103,10 +105,15 @@ const TeamFeeCalculator = () => {
 
             <Link
               to="/register"
-              className="inline-flex items-center justify-center space-x-2 w-full py-2.5 rounded-xl font-cinzel font-bold text-xs uppercase bg-gradient-to-r from-[#ffd700] via-[#f39c12] to-[#b8860b] text-black hover:from-[#ffe043] hover:to-[#d4af37] transition-all shadow-[0_0_15px_rgba(255,215,0,0.5)] active:scale-95"
+              className={`inline-flex items-center justify-center space-x-2 w-full py-2.5 rounded-xl font-cinzel font-bold text-xs uppercase ${
+                isClosed
+                  ? 'bg-[#220a0a] border border-red-500/50 text-red-400 hover:bg-[#300e0e] shadow-[0_0_15px_rgba(239,68,68,0.3)]'
+                  : 'bg-gradient-to-r from-[#ffd700] via-[#f39c12] to-[#b8860b] text-black hover:from-[#ffe043] hover:to-[#d4af37] shadow-[0_0_15px_rgba(255,215,0,0.5)]'
+              } transition-all active:scale-95`}
             >
-              <span>REGISTER CREW</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              {isClosed ? <Lock className="w-3.5 h-3.5 text-red-400" /> : null}
+              <span>{isClosed ? 'REGISTRATION CLOSED' : 'REGISTER CREW'}</span>
+              {!isClosed && <ArrowRight className="w-3.5 h-3.5" />}
             </Link>
           </div>
         </div>
