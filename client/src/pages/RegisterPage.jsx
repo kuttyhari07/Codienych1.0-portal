@@ -251,7 +251,7 @@ const RegisterPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isClosed) {
-      setErrorMessage('Registration is officially closed. The 10:30 PM deadline has passed.');
+      setErrorMessage(`Registration is officially closed. The deadline (${EVENT_CONFIG.REGISTRATION_DEADLINE_DISPLAY}) has passed.`);
       return;
     }
     if (loading) return; // Prevent double clicks during transmission
@@ -445,7 +445,7 @@ const RegisterPage = () => {
             {/* Top Seal Tag */}
             <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-red-950/90 border border-red-500/70 text-red-400 font-cinzel font-bold text-xs uppercase tracking-widest mb-6 shadow-inner">
               <Lock className="w-3.5 h-3.5 text-red-400" />
-              <span>PORT MANIFEST SEALED • 10:30 PM DEADLINE REACHED</span>
+              <span>PORT MANIFEST SEALED • DEADLINE REACHED</span>
             </div>
 
             {/* Glowing Centerpiece Icon */}
@@ -459,7 +459,7 @@ const RegisterPage = () => {
             </h1>
 
             <p className="font-cinzel text-xs sm:text-sm text-gray-300 max-w-lg mx-auto leading-relaxed mb-6">
-              The official enlistment portal for <strong className="text-[#ffd700]">CODIENYCH 1.0</strong> closed at <strong className="text-white">10:30 PM IST on October 4, 2026</strong>.
+              The official enlistment portal for <strong className="text-[#ffd700]">CODIENYCH 1.0</strong> closed at <strong className="text-white">{EVENT_CONFIG.REGISTRATION_DEADLINE_DISPLAY}</strong>.
               In accordance with hackathon rules, no new fleet manifests or crew additions can be accepted.
             </p>
 
@@ -471,7 +471,7 @@ const RegisterPage = () => {
               </div>
               <p className="text-gray-300 text-xs font-sans leading-relaxed">
                 Thank you to all pirate crews from colleges across the region who submitted their manifests!
-                If your captain already completed registration before 10:30 PM, your tribute and credentials are being reviewed by the Admiralty.
+                If your captain already completed registration before the deadline, your tribute and credentials are being reviewed by the Admiralty.
               </p>
             </div>
 

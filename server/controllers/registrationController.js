@@ -375,7 +375,7 @@ const getPublicStatus = async (req, res) => {
  */
 const checkDeadlineStatus = async (req, res) => {
   try {
-    const deadline = new Date(config.REGISTRATION_DEADLINE || '2026-10-05T23:59:59+05:30');
+    const deadline = new Date(config.REGISTRATION_DEADLINE || '2026-10-06T23:59:59+05:30');
     const now = Date.now();
     const isClosed = now >= deadline.getTime();
     return res.status(200).json({

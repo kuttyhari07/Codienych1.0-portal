@@ -34,7 +34,7 @@ const DatesSection = () => {
               {isClosed ? (
                 <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-red-950/80 border border-red-500/70 text-red-400 text-xs font-mono font-bold mb-3 shadow-[0_0_10px_rgba(239,68,68,0.4)]">
                   <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                  <span>REGISTRATION CLOSED (10:30 PM)</span>
+                  <span>REGISTRATION CLOSED</span>
                 </div>
               ) : isSpecialSlotOpen ? (
                 <div className="inline-flex items-center space-x-1.5 px-3.5 py-1 rounded-full bg-emerald-950/90 border border-emerald-500/80 text-emerald-300 text-xs font-mono font-bold mb-3 shadow-[0_0_15px_rgba(16,185,129,0.5)]">

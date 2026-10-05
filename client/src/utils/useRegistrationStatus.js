@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { EVENT_CONFIG, isRegistrationClosed } from './config';
 
 /**
- * Custom hook to monitor registration deadline live (10:30 PM IST, Oct 4, 2026).
+ * Custom hook to monitor registration deadline live.
  * Automatically updates every second so state transitions cleanly.
  */
 export const useRegistrationStatus = () => {

@@ -4,8 +4,9 @@ export const EVENT_CONFIG = {
   TAGLINE: '24 Hours of Coding, Creativity and Innovation.',
   MISSION_MOTTO: 'ONE HACKATHON. 24 HOURS. BUILD THE FUTURE.',
   
-  REGISTRATION_DEADLINE: '2026-10-05T23:59:59+05:30',
-  REGISTRATION_DEADLINE_DISPLAY: 'October 5, 2026, 11:59 PM IST',
+  REGISTRATION_DEADLINE: '2026-10-06T23:59:59+05:30',
+  REGISTRATION_DEADLINE_DISPLAY: 'October 6, 2026, 11:59 PM IST',
+  FORCE_REGISTRATION_CLOSED: false, // Set to true if coordinator wants to close manually
   ALLOW_ONE_FINAL_TEAM: false, // Registration reopened
   
   HACKATHON_START_DATE: '2026-10-08T09:00:00',
@@ -87,7 +88,7 @@ export const HACKATHON_DOMAINS = [
 ];
 
 /**
- * Check if the registration deadline (10:30 PM IST, Oct 4, 2026) has passed.
+ * Check if the registration deadline has passed or if manually closed.
  * Also supports URL preview override ?closed=true for administrative testing.
  */
 export const isRegistrationClosed = () => {
@@ -96,6 +97,10 @@ export const isRegistrationClosed = () => {
       const params = new URLSearchParams(window.location.search);
       if (params.get('closed') === 'true') return true;
       if (params.get('open') === 'true') return false;
+    }
+    // If coordinator manually closed registrations:
+    if (EVENT_CONFIG.FORCE_REGISTRATION_CLOSED) {
+      return true;
     }
     // If coordinator explicitly opened 1 final team slot:
     if (EVENT_CONFIG.ALLOW_ONE_FINAL_TEAM) {
