@@ -18,4 +18,4 @@ services:
       - key: ENABLE_EMAIL
         value: "true"
       - key: REGISTRATION_FEE
-        value: "350"
+        value: "500"

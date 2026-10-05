@@ -72,13 +72,6 @@ const generateRegistrationId = async () => {
  */
 const registerTeam = async (req, res) => {
   try {
-    // Registration is officially closed
-    cleanUpTempFiles(req.files);
-    return res.status(403).json({
-      success: false,
-      message: 'Registration is officially closed. No further registrations can be accepted.',
-    });
-
     const { teamName, teamSize, domain, transactionId, participants } = req.body;
 
     if (!domain || !domain.trim()) {
@@ -198,10 +191,10 @@ const registerTeam = async (req, res) => {
       });
     }
 
-    // 5. Calculate Fee server-side independently (Strictly ₹350 per member: 3 -> 1050, 4 -> 1400, 5 -> 1750, 6 -> 2100)
-    const feePerMember = (config.REGISTRATION_FEE && config.REGISTRATION_FEE !== 525 && config.REGISTRATION_FEE !== 567)
+    // 5. Calculate Fee server-side independently (Strictly ₹500 per member: 3 -> 1500, 4 -> 2000, 5 -> 2500, 6 -> 3000)
+    const feePerMember = (config.REGISTRATION_FEE && config.REGISTRATION_FEE !== 525 && config.REGISTRATION_FEE !== 567 && config.REGISTRATION_FEE !== 350)
       ? config.REGISTRATION_FEE
-      : 350;
+      : 500;
     const expectedAmount = numTeamSize * feePerMember;
 
     // Parallel Concurrent Uploads (Payment Screenshot + All ID Cards concurrently)
@@ -382,11 +375,15 @@ const getPublicStatus = async (req, res) => {
  */
 const checkDeadlineStatus = async (req, res) => {
   try {
+    const deadline = new Date(config.REGISTRATION_DEADLINE || '2026-10-07T23:59:59+05:30');
+    const now = Date.now();
+    const isClosed = now >= deadline.getTime();
     return res.status(200).json({
       success: true,
-      isClosed: true,
+      isClosed,
       deadline: config.REGISTRATION_DEADLINE,
       serverTime: new Date().toISOString(),
+      remainingMs: Math.max(0, deadline.getTime() - now),
     });
   } catch (error) {
     return res.status(500).json({ success: false, message: 'Error checking deadline status' });

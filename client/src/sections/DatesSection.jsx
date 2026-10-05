@@ -42,18 +42,18 @@ const DatesSection = () => {
                   <span>1 FINAL CREW SLOT UNLOCKED</span>
                 </div>
               ) : (
-                <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-amber-950/80 border border-amber-500/70 text-[#ffd700] text-xs font-mono font-bold mb-3">
-                  <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-                  <span>CLOSES TONIGHT 10:30 PM</span>
+                <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/70 text-emerald-400 text-xs font-mono font-bold mb-3 shadow-[0_0_12px_rgba(16,185,129,0.3)]">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                  <span>REGISTRATION OPEN NOW</span>
                 </div>
               )}
             </div>
             <p className="font-cinzel text-xs text-gray-300">
               {isClosed
-                ? 'Port manifest sealed at 10:30 PM IST. No late crew recruits admitted.'
+                ? 'Port manifest sealed. No late crew recruits admitted.'
                 : isSpecialSlotOpen
                 ? 'Special Admiralty Dispatch: 1 final fleet slot opened. Claim before it seals!'
-                : 'Port manifest seals strictly at 10:30 PM IST. No late crew recruits admitted.'}
+                : `Port manifest seals strictly on ${EVENT_CONFIG.REGISTRATION_DEADLINE_DISPLAY}. No late crew recruits admitted.`}
             </p>
           </SpotlightCard>
 

@@ -546,10 +546,10 @@ const RegisterPage = () => {
               <div>
                 <div className="font-cinzel font-bold text-xs text-[#ffd700] uppercase tracking-wider flex items-center space-x-1.5 justify-center sm:justify-start">
                   <span className="w-2 h-2 rounded-full bg-red-500 animate-ping inline-block" />
-                  <span>REGISTRATION CLOSING TONIGHT AT 10:30 PM IST</span>
+                  <span>REGISTRATION CLOSING SOON</span>
                 </div>
                 <p className="text-[11px] text-gray-300 font-sans mt-0.5">
-                  Port manifest permanently seals at 10:30 PM IST. Enlist your crew before the timer runs out!
+                  Port manifest closes on {EVENT_CONFIG.REGISTRATION_DEADLINE_DISPLAY}. Enlist your crew before the timer runs out!
                 </p>
               </div>
             </div>

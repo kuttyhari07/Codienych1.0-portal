@@ -11,17 +11,16 @@ module.exports = {
 
   EVENT_NAME: process.env.EVENT_NAME || 'CODIENYCH 1.0',
   EVENT_TYPE: process.env.EVENT_TYPE || '24-HOUR HACKATHON',
-  REGISTRATION_DEADLINE: process.env.REGISTRATION_DEADLINE || '2026-10-04T22:30:00+05:30',
+  REGISTRATION_DEADLINE: process.env.REGISTRATION_DEADLINE || '2026-10-07T23:59:59+05:30',
   EXTRA_SLOTS: parseInt(process.env.EXTRA_SLOTS || '1', 10),
   HACKATHON_START_DATE: process.env.HACKATHON_START_DATE || '2026-10-08T09:00:00',
-  // Registration fee per participant is strictly 350 (3 members: 1050, 4 members: 1400, 5 members: 1750, 6 members: 2100).
-  // Overrides legacy values (525, 567) if lingering in deployment environment variables.
+  // Registration fee per participant is strictly 500 (3 members: 1500, 4 members: 2000, 5 members: 2500, 6 members: 3000).
   REGISTRATION_FEE: (() => {
     const parsed = parseInt(process.env.REGISTRATION_FEE, 10);
-    if (!isNaN(parsed) && parsed > 0 && parsed !== 525 && parsed !== 567) {
+    if (!isNaN(parsed) && parsed > 0 && parsed !== 525 && parsed !== 567 && parsed !== 350) {
       return parsed;
     }
-    return 350;
+    return 500;
   })(),
 
   UPI_ID: process.env.UPI_ID || '',
