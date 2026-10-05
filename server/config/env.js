@@ -11,7 +11,7 @@ module.exports = {
 
   EVENT_NAME: process.env.EVENT_NAME || 'CODIENYCH 1.0',
   EVENT_TYPE: process.env.EVENT_TYPE || '24-HOUR HACKATHON',
-  REGISTRATION_DEADLINE: process.env.REGISTRATION_DEADLINE || '2026-10-07T23:59:59+05:30',
+  REGISTRATION_DEADLINE: process.env.REGISTRATION_DEADLINE || '2026-10-05T23:59:59+05:30',
   EXTRA_SLOTS: parseInt(process.env.EXTRA_SLOTS || '1', 10),
   HACKATHON_START_DATE: process.env.HACKATHON_START_DATE || '2026-10-08T09:00:00',
   // Registration fee per participant is strictly 500 (3 members: 1500, 4 members: 2000, 5 members: 2500, 6 members: 3000).
