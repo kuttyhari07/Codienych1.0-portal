@@ -439,6 +439,30 @@ const exportReport = async (req, res) => {
       const members = participants.filter((p) => p.role !== 'LEADER');
       const memberNames = members.map((m) => m.fullName).filter(Boolean).join(', ') || 'None';
 
+      const paymentDateRaw = payment?.submittedAt || payment?.createdAt || reg.registrationDate || reg.createdAt;
+      let dateFormatted = 'N/A';
+      let timeFormatted = '';
+      let fullDateTimeText = 'N/A';
+
+      if (paymentDateRaw) {
+        const d = new Date(paymentDateRaw);
+        if (!isNaN(d.getTime())) {
+          dateFormatted = d.toLocaleDateString('en-IN', {
+            timeZone: 'Asia/Kolkata',
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+          });
+          timeFormatted = d.toLocaleTimeString('en-IN', {
+            timeZone: 'Asia/Kolkata',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true,
+          });
+          fullDateTimeText = `${dateFormatted}, ${timeFormatted}`;
+        }
+      }
+
       rows.push({
         sNo: sNo++,
         registrationId: reg.registrationId,
@@ -454,7 +478,9 @@ const exportReport = async (req, res) => {
         amount: payment ? `₹${payment.expectedAmount}` : 'N/A',
         paymentStatus: payment ? payment.status : 'N/A',
         registrationStatus: reg.status,
-        registeredAt: reg.createdAt ? new Date(reg.createdAt).toLocaleDateString() : 'N/A',
+        dateFormatted,
+        timeFormatted,
+        registeredAt: fullDateTimeText,
       });
     }
 
@@ -473,6 +499,7 @@ const exportReport = async (req, res) => {
         'Team Members',
         'Transaction ID',
         'Fee Amount',
+        'Payment / Reg Date',
       ];
 
       const csvRows = [
@@ -491,6 +518,7 @@ const exportReport = async (req, res) => {
             `"${r.memberNames.replace(/"/g, '""')}"`,
             `"${r.transactionId.replace(/"/g, '""')}"`,
             `"${r.amount}"`,
+            `"${r.registeredAt}"`,
           ].join(',')
         ),
       ];
@@ -694,12 +722,13 @@ const exportReport = async (req, res) => {
         <th>Members</th>
         <th>UTR / Tx ID</th>
         <th class="text-center">Fee</th>
+        <th class="text-center nowrap">Payment / Reg Date</th>
       </tr>
     </thead>
     <tbody>
       ${
         rows.length === 0
-          ? '<tr><td colspan="12" class="text-center" style="padding: 20px;">No registered teams found.</td></tr>'
+          ? '<tr><td colspan="13" class="text-center" style="padding: 20px;">No registered teams found.</td></tr>'
           : rows
               .map(
                 (r) => `
@@ -716,6 +745,10 @@ const exportReport = async (req, res) => {
           <td>${r.memberNames}</td>
           <td class="nowrap"><strong>${r.transactionId}</strong></td>
           <td class="text-center nowrap">${r.amount}</td>
+          <td class="text-center nowrap">
+            <div style="font-weight: 600; color: #0f172a;">${r.dateFormatted}</div>
+            ${r.timeFormatted ? `<div style="font-size: 8.5px; color: #64748b; margin-top: 1px;">${r.timeFormatted}</div>` : ''}
+          </td>
         </tr>`
               )
               .join('')

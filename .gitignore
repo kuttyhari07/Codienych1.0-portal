@@ -48,4 +48,5 @@ Desktop.ini
 server/scripts/check_colleges.cjs
 server/scripts/export_kr_details.cjs
 server/scripts/generate_ksr_pdf.cjs
+server/data/
 
