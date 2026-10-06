@@ -192,33 +192,6 @@ const HomePage = () => {
           “{EVENT_CONFIG.TAGLINE}”
         </motion.p>
 
-        {/* Registration Fee & Team Enlistment Badge */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.92 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="my-3 inline-flex flex-col sm:flex-row items-center gap-2 sm:gap-4 px-5 sm:px-6 py-2.5 rounded-2xl bg-gradient-to-r from-[#1c1208]/95 via-[#2b1709]/95 to-[#1c1208]/95 border-2 border-[#ffd700] shadow-[0_0_30px_rgba(255,215,0,0.4)] backdrop-blur-md select-none"
-        >
-          <div className="flex items-center space-x-3">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-[#ffd700] via-[#f39c12] to-[#b8860b] flex items-center justify-center text-black font-black text-xs sm:text-sm shadow-md flex-shrink-0">
-              ₹
-            </div>
-            <div className="text-left">
-              <div className="font-cinzel text-[9px] sm:text-[10px] text-[#ffd700] tracking-widest uppercase font-bold leading-none">
-                VOYAGE ENLISTMENT FEE
-              </div>
-              <div className="font-cinzel text-xs sm:text-sm text-white font-extrabold tracking-wider mt-0.5">
-                <span className="text-[#ffd700] font-black text-sm sm:text-base">₹{EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER}</span>{' '}
-                <span className="text-gray-300 font-medium text-[11px] sm:text-xs">/ Member</span>
-                <span className="text-gray-400 font-sans text-[11px] ml-1.5">(3–6 Crew: ₹1,500 – ₹3,000)</span>
-              </div>
-            </div>
-          </div>
-          <div className="border-t sm:border-t-0 sm:border-l border-[#ffd700]/30 pt-1 sm:pt-0 sm:pl-3 font-cinzel text-[10px] sm:text-[11px] text-[#ff4d4d] font-black animate-pulse flex items-center space-x-1">
-            <span>⏰</span>
-            <span>CLOSES TONIGHT AT 11:59 PM</span>
-          </div>
-        </motion.div>
 
         {/* Realistic 3D Interactive Rotating Pirate Compass (Inspired by Captain Jack Sparrow Reference) */}
         <motion.div
