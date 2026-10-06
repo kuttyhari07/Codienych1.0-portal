@@ -65,7 +65,7 @@ const AdminDashboardPage = () => {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `CODIENYCH_1.0_Student_Payment_Details_${new Date().toISOString().slice(0, 10)}.html`;
+      a.download = `CODIENYCH_1.0_Attendance_Master_Sheet_${new Date().toISOString().slice(0, 10)}.html`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
@@ -95,7 +95,7 @@ const AdminDashboardPage = () => {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `CODIENYCH_1.0_Student_Details_${new Date().toISOString().slice(0, 10)}.csv`;
+      a.download = `CODIENYCH_1.0_Attendance_Sheet_${new Date().toISOString().slice(0, 10)}.csv`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);

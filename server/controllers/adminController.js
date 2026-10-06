@@ -513,14 +513,10 @@ const exportReport = async (req, res) => {
         'Domain / Track',
         'Team Size',
         'Leader Name',
-        'Leader Email',
         'Leader Phone',
         'College',
         'Team Members (Name & Phone)',
-        'Member Phone Numbers',
-        'Transaction ID',
-        'Fee Amount',
-        'Payment / Reg Date',
+        'Signature',
       ];
 
       const csvRows = [
@@ -533,20 +529,16 @@ const exportReport = async (req, res) => {
             `"${r.domain.replace(/"/g, '""')}"`,
             r.teamSize,
             `"${r.teamLeader.replace(/"/g, '""')}"`,
-            `"${r.leaderEmail.replace(/"/g, '""')}"`,
             `"${r.leaderPhone.replace(/"/g, '""')}"`,
             `"${r.college.replace(/"/g, '""')}"`,
             `"${r.memberNames.replace(/"/g, '""')}"`,
-            `"${r.memberPhones.replace(/"/g, '""')}"`,
-            `"${r.transactionId.replace(/"/g, '""')}"`,
-            `"${r.amount}"`,
-            `"${r.registeredAt}"`,
+            '""',
           ].join(',')
         ),
       ];
 
       res.setHeader('Content-Type', 'text/csv; charset=utf-8');
-      res.setHeader('Content-Disposition', `attachment; filename="CODIENYCH_1.0_Student_Details_${Date.now()}.csv"`);
+      res.setHeader('Content-Disposition', `attachment; filename="CODIENYCH_1.0_Attendance_Sheet_${Date.now()}.csv"`);
       return res.status(200).send(csvRows.join('\n'));
     }
 
@@ -557,7 +549,7 @@ const exportReport = async (req, res) => {
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>CODIENYCH 1.0 - Team Master Sheet</title>
+  <title>CODIENYCH 1.0 - Team Attendance & Master Sheet</title>
   <style>
     * {
       box-sizing: border-box;
@@ -652,7 +644,7 @@ const exportReport = async (req, res) => {
     }
     th, td {
       border: 1px solid #000;
-      padding: 4px 6px;
+      padding: 5px 6px;
       text-align: left;
       vertical-align: middle;
       word-break: break-word;
@@ -711,7 +703,7 @@ const exportReport = async (req, res) => {
 <body>
   <div class="header-box">
     <div class="header-top">
-      <h2>CODIENYCH 1.0 - TEAM REGISTRATION &amp; PAYMENT MASTER SHEET</h2>
+      <h2>CODIENYCH 1.0 - TEAM REGISTRATION &amp; ATTENDANCE MASTER SHEET</h2>
       <div class="meta-time"><strong>Generated On:</strong> ${new Date().toLocaleString()}</div>
     </div>
 
@@ -732,25 +724,22 @@ const exportReport = async (req, res) => {
   <table>
     <thead>
       <tr>
-        <th class="text-center">#</th>
-        <th>Reg ID</th>
+        <th class="text-center" style="width: 35px;">#</th>
+        <th class="nowrap" style="width: 140px;">Reg ID</th>
         <th>Team Name</th>
-        <th>Domain / Track</th>
-        <th class="text-center">Size</th>
+        <th class="nowrap">Domain / Track</th>
+        <th class="text-center" style="width: 45px;">Size</th>
         <th>Leader</th>
-        <th>Email</th>
-        <th>Phone</th>
+        <th class="nowrap">Phone</th>
         <th>College</th>
         <th>Members (Name &amp; Phone)</th>
-        <th>UTR / Tx ID</th>
-        <th class="text-center">Fee</th>
-        <th class="text-center nowrap">Payment / Reg Date</th>
+        <th class="text-center nowrap" style="width: 140px; min-width: 120px;">Signature</th>
       </tr>
     </thead>
     <tbody>
       ${
         rows.length === 0
-          ? '<tr><td colspan="13" class="text-center" style="padding: 20px;">No registered teams found.</td></tr>'
+          ? '<tr><td colspan="10" class="text-center" style="padding: 20px;">No registered teams found.</td></tr>'
           : rows
               .map(
                 (r) => `
@@ -761,16 +750,10 @@ const exportReport = async (req, res) => {
           <td class="nowrap"><span class="domain-tag">${r.domain}</span></td>
           <td class="text-center"><strong>${r.teamSize}</strong></td>
           <td>${r.teamLeader}</td>
-          <td>${r.leaderEmail}</td>
           <td class="nowrap">${r.leaderPhone}</td>
           <td>${r.college}</td>
           <td>${r.memberHtml}</td>
-          <td class="nowrap"><strong>${r.transactionId}</strong></td>
-          <td class="text-center nowrap">${r.amount}</td>
-          <td class="text-center nowrap">
-            <div style="font-weight: 600; color: #0f172a;">${r.dateFormatted}</div>
-            ${r.timeFormatted ? `<div style="font-size: 8.5px; color: #64748b; margin-top: 1px;">${r.timeFormatted}</div>` : ''}
-          </td>
+          <td class="text-center" style="min-width: 120px; height: 36px;"></td>
         </tr>`
               )
               .join('')
