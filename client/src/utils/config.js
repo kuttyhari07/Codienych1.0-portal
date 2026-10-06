@@ -6,8 +6,8 @@ export const EVENT_CONFIG = {
   
   REGISTRATION_DEADLINE: '2026-10-06T23:59:59+05:30',
   REGISTRATION_DEADLINE_DISPLAY: 'October 6, 2026, 11:59 PM IST',
-  FORCE_REGISTRATION_CLOSED: false, // Set to true if coordinator wants to close manually
-  ALLOW_ONE_FINAL_TEAM: false, // Registration reopened
+  FORCE_REGISTRATION_CLOSED: true, // Manually closed by coordinator
+  ALLOW_ONE_FINAL_TEAM: false, // Closed
   
   HACKATHON_START_DATE: '2026-10-08T09:00:00',
   HACKATHON_DATES_DISPLAY: 'October 8 – 9, 2026',
@@ -93,14 +93,14 @@ export const HACKATHON_DOMAINS = [
  */
 export const isRegistrationClosed = () => {
   try {
+    // If coordinator manually closed registrations:
+    if (EVENT_CONFIG.FORCE_REGISTRATION_CLOSED) {
+      return true;
+    }
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       if (params.get('closed') === 'true') return true;
       if (params.get('open') === 'true') return false;
-    }
-    // If coordinator manually closed registrations:
-    if (EVENT_CONFIG.FORCE_REGISTRATION_CLOSED) {
-      return true;
     }
     // If coordinator explicitly opened 1 final team slot:
     if (EVENT_CONFIG.ALLOW_ONE_FINAL_TEAM) {
@@ -109,6 +109,6 @@ export const isRegistrationClosed = () => {
     const deadline = new Date(EVENT_CONFIG.REGISTRATION_DEADLINE).getTime();
     return Date.now() >= deadline;
   } catch (e) {
-    return false;
+    return true;
   }
 };

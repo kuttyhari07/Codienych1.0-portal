@@ -17,7 +17,7 @@ export const useRegistrationStatus = () => {
       let minutes = 0;
       let seconds = 0;
 
-      if (diff > 0) {
+      if (!closed && diff > 0) {
         const totalSeconds = Math.floor(diff / 1000);
         hours = Math.floor(totalSeconds / 3600);
         minutes = Math.floor((totalSeconds % 3600) / 60);
@@ -26,14 +26,14 @@ export const useRegistrationStatus = () => {
 
       return {
         isClosed: closed,
-        isSpecialSlotOpen: !!EVENT_CONFIG.ALLOW_ONE_FINAL_TEAM,
-        remaining: { hours, minutes, seconds, totalMs: diff },
+        isSpecialSlotOpen: !closed && !!EVENT_CONFIG.ALLOW_ONE_FINAL_TEAM,
+        remaining: { hours, minutes, seconds, totalMs: closed ? 0 : Math.max(0, diff) },
         deadlineDate: new Date(EVENT_CONFIG.REGISTRATION_DEADLINE),
       };
     } catch (e) {
       return {
-        isClosed: false,
-        isSpecialSlotOpen: !!EVENT_CONFIG.ALLOW_ONE_FINAL_TEAM,
+        isClosed: true,
+        isSpecialSlotOpen: false,
         remaining: { hours: 0, minutes: 0, seconds: 0, totalMs: 0 },
         deadlineDate: new Date(EVENT_CONFIG.REGISTRATION_DEADLINE),
       };

@@ -72,6 +72,16 @@ const generateRegistrationId = async () => {
  */
 const registerTeam = async (req, res) => {
   try {
+    const deadline = new Date(config.REGISTRATION_DEADLINE || '2026-10-06T23:59:59+05:30');
+    const isClosed = config.FORCE_REGISTRATION_CLOSED === true || Date.now() >= deadline.getTime();
+    if (isClosed) {
+      cleanUpTempFiles(req.files);
+      return res.status(403).json({
+        success: false,
+        message: 'Registration is officially closed. No new crew manifests can be accepted.',
+      });
+    }
+
     const { teamName, teamSize, domain, transactionId, participants } = req.body;
 
     if (!domain || !domain.trim()) {
@@ -377,13 +387,13 @@ const checkDeadlineStatus = async (req, res) => {
   try {
     const deadline = new Date(config.REGISTRATION_DEADLINE || '2026-10-06T23:59:59+05:30');
     const now = Date.now();
-    const isClosed = now >= deadline.getTime();
+    const isClosed = config.FORCE_REGISTRATION_CLOSED === true || now >= deadline.getTime();
     return res.status(200).json({
       success: true,
       isClosed,
       deadline: config.REGISTRATION_DEADLINE,
       serverTime: new Date().toISOString(),
-      remainingMs: Math.max(0, deadline.getTime() - now),
+      remainingMs: isClosed ? 0 : Math.max(0, deadline.getTime() - now),
     });
   } catch (error) {
     return res.status(500).json({ success: false, message: 'Error checking deadline status' });
