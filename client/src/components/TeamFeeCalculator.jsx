@@ -112,7 +112,7 @@ const TeamFeeCalculator = () => {
               } transition-all active:scale-95`}
             >
               {isClosed ? <Lock className="w-3.5 h-3.5 text-red-400" /> : null}
-              <span>{isClosed ? 'REGISTRATION CLOSED' : 'REGISTER CREW'}</span>
+              <span>{isClosed ? 'REGISTRATION CLOSED' : 'REGISTER CREW • CLOSES 11:59 PM'}</span>
               {!isClosed && <ArrowRight className="w-3.5 h-3.5" />}
             </Link>
           </div>

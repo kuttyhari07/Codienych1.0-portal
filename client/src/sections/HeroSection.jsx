@@ -151,6 +151,18 @@ const HeroSection = () => {
           <span className="font-pirate text-lg sm:text-2xl text-[#ffd700]">₹{EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER}</span>
           <span className="text-gray-300 font-mono text-xs">/ MEMBER</span>
         </div>
+
+        {/* Urgent Deadline Highlight Pill */}
+        {!isClosed && (
+          <Link
+            to="/register"
+            className="inline-flex items-center space-x-2 bg-gradient-to-r from-[#2c0808] via-[#48120c] to-[#2c0808] border-2 border-red-500 px-4 py-2 sm:px-6 sm:py-2.5 rounded-2xl text-xs sm:text-sm font-cinzel text-white shadow-[0_0_25px_rgba(239,68,68,0.5)] hover:shadow-[0_0_40px_rgba(239,68,68,0.8)] transition-all cursor-pointer animate-pulse"
+          >
+            <span className="text-base">⏰</span>
+            <span className="text-red-400 font-black tracking-wider uppercase">CLOSES TONIGHT:</span>
+            <span className="font-mono font-bold text-sm sm:text-base text-white">11:59 PM IST</span>
+          </Link>
+        )}
       </motion.div>
 
       {/* CTA Buttons */}
@@ -171,10 +183,10 @@ const HeroSection = () => {
         ) : (
           <Link
             to="/register"
-            className="w-full sm:w-auto px-7 py-3.5 sm:px-9 sm:py-4 rounded-xl font-pirate text-xl sm:text-2xl text-black bg-gradient-to-r from-[#ffd700] via-[#e5c158] to-[#b8860b] hover:from-[#fff2a3] hover:to-[#ffd700] transition-all duration-300 shadow-[0_0_25px_rgba(229,193,88,0.6)] hover:shadow-[0_0_40px_rgba(255,215,0,0.9)] transform hover:-translate-y-1 active:scale-95 flex items-center justify-center space-x-2.5 font-bold"
+            className="w-full sm:w-auto px-7 py-3.5 sm:px-9 sm:py-4 rounded-xl font-pirate text-xl sm:text-2xl text-black bg-gradient-to-r from-[#ffd700] via-[#ffe066] to-[#ffd700] hover:brightness-110 transition-all duration-300 shadow-[0_0_30px_rgba(255,215,0,0.7)] hover:shadow-[0_0_50px_rgba(255,215,0,0.95)] transform hover:-translate-y-1 active:scale-95 flex items-center justify-center space-x-2.5 font-bold border-2 border-[#ffd700]"
           >
             <Swords className="w-5 h-5 text-black" />
-            <span>{isSpecialSlotOpen ? 'JOIN THE CREW (1 FINAL SLOT)' : 'JOIN THE CREW (REGISTER)'}</span>
+            <span>{isSpecialSlotOpen ? 'JOIN THE CREW (1 FINAL SLOT)' : 'JOIN THE CREW • CLOSES TONIGHT 11:59 PM'}</span>
           </Link>
         )}
 

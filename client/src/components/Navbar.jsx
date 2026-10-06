@@ -155,10 +155,10 @@ const Navbar = () => {
           ) : (
             <Link
               to="/register"
-              className="relative px-5 py-2 rounded-lg text-xs font-pirate text-base text-black bg-gradient-to-r from-[#ffd700] to-[#e5c158] hover:from-[#fff2a3] hover:to-[#ffd700] transition-all shadow-[0_0_15px_rgba(229,193,88,0.5)] hover:shadow-[0_0_25px_rgba(255,215,0,0.8)] transform hover:-translate-y-0.5 active:translate-y-0 font-bold flex items-center space-x-1.5"
+              className="relative px-4 py-2 rounded-lg text-xs font-pirate text-sm xl:text-base text-black bg-gradient-to-r from-[#ffd700] via-[#ffe066] to-[#ffd700] hover:brightness-110 transition-all shadow-[0_0_20px_rgba(255,215,0,0.6)] hover:shadow-[0_0_30px_rgba(255,215,0,0.9)] transform hover:-translate-y-0.5 active:translate-y-0 font-bold flex items-center space-x-1.5 border border-[#ffd700]"
             >
               <Swords className="w-4 h-4 text-black" />
-              <span>{isSpecialSlotOpen ? 'JOIN CREW (1 FINAL SLOT)' : 'JOIN THE CREW'}</span>
+              <span>{isSpecialSlotOpen ? 'JOIN CREW (1 FINAL SLOT)' : 'JOIN CREW • CLOSES 11:59 PM'}</span>
             </Link>
           )}
         </div>
@@ -185,9 +185,9 @@ const Navbar = () => {
           ) : (
             <Link
               to="/register"
-              className="px-2.5 py-1.5 rounded text-xs font-pirate font-bold text-black bg-[#ffd700] shadow-[0_0_10px_#ffd700] uppercase"
+              className="px-2.5 py-1.5 rounded text-[11px] font-pirate font-bold text-black bg-[#ffd700] shadow-[0_0_12px_#ffd700] uppercase"
             >
-              {isSpecialSlotOpen ? '1 SLOT' : 'JOIN CREW'}
+              {isSpecialSlotOpen ? '1 SLOT' : 'JOIN (CLOSES 11:59 PM)'}
             </Link>
           )}
           <button
@@ -203,6 +203,21 @@ const Navbar = () => {
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
         <div className="lg:hidden bg-[#03070b]/98 backdrop-blur-xl border-b border-[#8a6d1b]/60 px-4 pt-4 pb-6 mt-2 space-y-1.5 animate-fadeIn">
+          {/* Urgent Registration Alert in Mobile Menu */}
+          {!isClosed && (
+            <Link
+              to="/register"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full mb-2 px-3.5 py-2.5 rounded-xl text-xs font-cinzel font-black bg-gradient-to-r from-[#2c0808] via-[#48120c] to-[#2c0808] text-[#ffd700] border-2 border-red-500 flex items-center justify-between shadow-[0_0_15px_rgba(239,68,68,0.4)]"
+            >
+              <div className="flex items-center space-x-2">
+                <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
+                <span>⚡ CLOSES TONIGHT AT 11:59 PM (₹500/MEMBER)</span>
+              </div>
+              <span className="text-white font-bold">JOIN →</span>
+            </Link>
+          )}
+
           {/* Prominent Important Schedule Banner in Mobile Menu */}
           <button
             onClick={() => handleNavClick('#refreshments')}

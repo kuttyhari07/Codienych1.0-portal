@@ -536,27 +536,33 @@ const RegisterPage = () => {
           </p>
         </div>
 
-        {/* Urgent Live Countdown Notice (Active before 10:30 PM) */}
+        {/* Urgent Live Countdown Notice */}
         {!isClosed && remaining.totalMs > 0 && (
-          <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-[#2e1404] via-[#3f1e05] to-[#261003] border-2 border-[#ffd700]/70 text-[#f4e6c3] flex flex-col sm:flex-row items-center justify-between gap-3 shadow-[0_0_25px_rgba(255,215,0,0.25)]">
-            <div className="flex items-center space-x-3 text-center sm:text-left">
-              <div className="w-10 h-10 rounded-xl bg-black/40 border border-[#ffd700]/40 flex items-center justify-center flex-shrink-0">
-                <Clock className="w-5 h-5 text-[#ffd700] animate-spin" style={{ animationDuration: '4s' }} />
+          <div className="mb-6 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#2c0808] via-[#48120c] to-[#2c0808] border-2 border-[#ff3b3b] text-[#f4e6c3] flex flex-col sm:flex-row items-center justify-between gap-4 shadow-[0_0_35px_rgba(255,59,59,0.4)]">
+            <div className="flex items-center space-x-3.5 text-center sm:text-left min-w-0">
+              <div className="w-12 h-12 rounded-xl bg-black/60 border-2 border-red-500/80 flex items-center justify-center flex-shrink-0 shadow-[0_0_20px_rgba(239,68,68,0.5)]">
+                <Clock className="w-6 h-6 text-[#ffd700] animate-spin" style={{ animationDuration: '6s' }} />
               </div>
-              <div>
-                <div className="font-cinzel font-bold text-xs text-[#ffd700] uppercase tracking-wider flex items-center space-x-1.5 justify-center sm:justify-start">
-                  <span className="w-2 h-2 rounded-full bg-red-500 animate-ping inline-block" />
-                  <span>REGISTRATION CLOSING SOON</span>
+              <div className="min-w-0">
+                <div className="font-cinzel font-black text-xs sm:text-sm text-[#ffd700] uppercase tracking-wider flex items-center space-x-2 justify-center sm:justify-start">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping inline-block" />
+                  <span>URGENT: REGISTRATION CLOSES TONIGHT AT 11:59 PM SHARP!</span>
                 </div>
-                <p className="text-[11px] text-gray-300 font-sans mt-0.5">
-                  Port manifest closes on {EVENT_CONFIG.REGISTRATION_DEADLINE_DISPLAY}. Enlist your crew before the timer runs out!
+                <p className="text-xs text-gray-200 font-sans mt-0.5">
+                  The portal will <strong>automatically close tonight at 11:59:59 PM IST (October 6, 2026)</strong>. Complete your submission before midnight!
                 </p>
+                <div className="mt-1.5 inline-flex items-center space-x-2 px-3 py-1 rounded-lg bg-black/50 border border-[#ffd700]/50 text-[11px] font-cinzel text-[#ffd700]">
+                  <span>💰 Fee: Strictly ₹{EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER} / member (3 = ₹1,500 | 4 = ₹2,000 | 5 = ₹2,500 | 6 = ₹3,000)</span>
+                </div>
               </div>
             </div>
-            <div className="flex items-center space-x-2 bg-black/70 px-4 py-2 rounded-xl border border-[#ffd700]/50 flex-shrink-0">
-              <span className="font-cinzel text-[10px] text-gray-400 uppercase tracking-widest">CLOSING IN:</span>
-              <span className="font-mono font-black text-sm sm:text-base text-[#ffd700]">
-                {remaining.hours > 0 ? `${remaining.hours}h ` : ''}
+            <div className="flex flex-col items-center bg-black/80 px-5 py-3 rounded-2xl border-2 border-[#ffd700] flex-shrink-0 shadow-[0_0_20px_rgba(255,215,0,0.3)]">
+              <span className="font-cinzel text-[10px] text-gray-300 uppercase tracking-widest mb-1 flex items-center space-x-1">
+                <span>⏳</span>
+                <span>TIME REMAINING:</span>
+              </span>
+              <span className="font-mono font-black text-base sm:text-xl text-[#ffd700]">
+                {remaining.hours > 0 ? `${remaining.hours}h ` : '0h '}
                 {String(remaining.minutes).padStart(2, '0')}m {String(remaining.seconds).padStart(2, '0')}s
               </span>
             </div>
@@ -675,9 +681,19 @@ const RegisterPage = () => {
                     </button>
                   ))}
                 </div>
-                <p className="font-cinzel text-xs text-gray-400 mt-2.5">
-                  Total Gold Tribute: <span className="text-[#ffd700] font-bold">₹{calculatedFee}</span> (₹{EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER} × {teamSize} pirates)
-                </p>
+                <div className="mt-3 p-3.5 rounded-xl bg-gradient-to-r from-[#091522] to-[#04090f] border border-[#ffd700]/60 flex items-center justify-between shadow-[0_0_15px_rgba(255,215,0,0.15)]">
+                  <div>
+                    <span className="font-cinzel text-xs text-[#cfb07a] font-bold block">
+                      CREW REGISTRATION TRIBUTE:
+                    </span>
+                    <span className="text-[11px] text-gray-300 font-sans">
+                      ₹{EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER} per member × {teamSize} pirates
+                    </span>
+                  </div>
+                  <span className="font-pirate text-2xl sm:text-3xl text-[#ffd700] font-black pirate-gold-glow">
+                    ₹{calculatedFee}
+                  </span>
+                </div>
               </div>
 
               {/* HACKATHON DOMAIN / TRACK SELECTION (1 of 5) */}
