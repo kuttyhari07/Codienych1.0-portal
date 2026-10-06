@@ -23,14 +23,7 @@ module.exports = {
     }
     return envDeadline;
   })(),
-  FORCE_REGISTRATION_CLOSED: (() => {
-    // Keep registrations open until tonight's deadline 11:59:59 PM IST
-    const tonightMs = new Date('2026-10-06T23:59:59+05:30').getTime();
-    if (Date.now() < tonightMs) {
-      return false;
-    }
-    return process.env.FORCE_REGISTRATION_CLOSED === 'true';
-  })(),
+  FORCE_REGISTRATION_CLOSED: true,
   EXTRA_SLOTS: parseInt(process.env.EXTRA_SLOTS || '1', 10),
   HACKATHON_START_DATE: process.env.HACKATHON_START_DATE || '2026-10-08T09:00:00',
   // Registration fee per participant is strictly 500 (3 members: 1500, 4 members: 2000, 5 members: 2500, 6 members: 3000).

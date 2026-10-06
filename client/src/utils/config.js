@@ -6,7 +6,7 @@ export const EVENT_CONFIG = {
   
   REGISTRATION_DEADLINE: '2026-10-06T23:59:59+05:30',
   REGISTRATION_DEADLINE_DISPLAY: 'Tonight, 11:59 PM IST (October 6, 2026)',
-  FORCE_REGISTRATION_CLOSED: false, // Open until 11:59 PM tonight (auto-closes at midnight)
+  FORCE_REGISTRATION_CLOSED: true, // Officially closed
   ALLOW_ONE_FINAL_TEAM: false,
   
   HACKATHON_START_DATE: '2026-10-08T09:00:00',
