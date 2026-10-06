@@ -95,6 +95,7 @@ const AdminParticipantsPage = () => {
                       <td className="py-3.5 px-4">
                         <div className="font-bold text-white">{p.fullName}</div>
                         <div className="text-[10px] text-[#e5c158]">{p.email}</div>
+                        <div className="text-[10px] text-[#00e5ff] font-mono">{p.phone}</div>
                       </td>
                       <td className="py-3.5 px-4 font-bold text-[#ffd700] font-cinzel">{p.role}</td>
                       <td className="py-3.5 px-4 font-bold text-gray-200">{p.studentId}</td>

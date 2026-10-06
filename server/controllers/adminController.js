@@ -437,7 +437,25 @@ const exportReport = async (req, res) => {
 
       const leader = participants.find((p) => p.role === 'LEADER') || participants[0];
       const members = participants.filter((p) => p.role !== 'LEADER');
-      const memberNames = members.map((m) => m.fullName).filter(Boolean).join(', ') || 'None';
+      
+      const memberNamesWithPhones = members.length > 0
+        ? members.map((m) => `${m.fullName}${m.phone ? ` (${m.phone})` : ''}`).join(', ')
+        : 'None';
+
+      const memberPhonesOnly = members.length > 0
+        ? members.map((m) => m.phone || 'N/A').filter(Boolean).join(', ')
+        : 'None';
+
+      const memberHtml = members.length > 0
+        ? members
+            .map(
+              (m) =>
+                `<div style="margin-bottom: 2px;"><strong>${m.fullName}</strong>${
+                  m.phone ? ` <span style="color: #0369a1; font-weight: 700;">(${m.phone})</span>` : ''
+                }</div>`
+            )
+            .join('')
+        : '<span style="color: #94a3b8;">None</span>';
 
       const paymentDateRaw = payment?.submittedAt || payment?.createdAt || reg.registrationDate || reg.createdAt;
       let dateFormatted = 'N/A';
@@ -473,7 +491,9 @@ const exportReport = async (req, res) => {
         leaderEmail: leader ? leader.email : 'N/A',
         leaderPhone: leader ? leader.phone : 'N/A',
         college: leader ? leader.college : 'N/A',
-        memberNames: memberNames,
+        memberNames: memberNamesWithPhones,
+        memberPhones: memberPhonesOnly,
+        memberHtml: memberHtml,
         transactionId: payment ? payment.transactionId : 'N/A',
         amount: payment ? `₹${payment.expectedAmount}` : 'N/A',
         paymentStatus: payment ? payment.status : 'N/A',
@@ -496,7 +516,8 @@ const exportReport = async (req, res) => {
         'Leader Email',
         'Leader Phone',
         'College',
-        'Team Members',
+        'Team Members (Name & Phone)',
+        'Member Phone Numbers',
         'Transaction ID',
         'Fee Amount',
         'Payment / Reg Date',
@@ -516,6 +537,7 @@ const exportReport = async (req, res) => {
             `"${r.leaderPhone.replace(/"/g, '""')}"`,
             `"${r.college.replace(/"/g, '""')}"`,
             `"${r.memberNames.replace(/"/g, '""')}"`,
+            `"${r.memberPhones.replace(/"/g, '""')}"`,
             `"${r.transactionId.replace(/"/g, '""')}"`,
             `"${r.amount}"`,
             `"${r.registeredAt}"`,
@@ -719,7 +741,7 @@ const exportReport = async (req, res) => {
         <th>Email</th>
         <th>Phone</th>
         <th>College</th>
-        <th>Members</th>
+        <th>Members (Name &amp; Phone)</th>
         <th>UTR / Tx ID</th>
         <th class="text-center">Fee</th>
         <th class="text-center nowrap">Payment / Reg Date</th>
@@ -742,7 +764,7 @@ const exportReport = async (req, res) => {
           <td>${r.leaderEmail}</td>
           <td class="nowrap">${r.leaderPhone}</td>
           <td>${r.college}</td>
-          <td>${r.memberNames}</td>
+          <td>${r.memberHtml}</td>
           <td class="nowrap"><strong>${r.transactionId}</strong></td>
           <td class="text-center nowrap">${r.amount}</td>
           <td class="text-center nowrap">
