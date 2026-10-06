@@ -77,27 +77,28 @@ const HomePage = () => {
             transition={{ duration: 0.6, delay: 0.12 }}
             className="mb-3.5 w-full max-w-2xl px-2"
           >
-            <div className="relative overflow-hidden p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-[#2c0808]/95 via-[#4a1208]/95 to-[#2c0808]/95 border-2 border-[#ff3b3b] shadow-[0_0_35px_rgba(255,59,59,0.5)] backdrop-blur-md">
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-                <div className="flex items-center space-x-3 min-w-0">
-                  <div className="w-10 h-10 rounded-xl bg-red-600/30 border border-red-500/80 flex items-center justify-center flex-shrink-0 animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.6)]">
-                    <Clock className="w-5 h-5 text-[#ffd700]" />
+            <div className="relative overflow-hidden p-3 sm:p-4 rounded-2xl bg-gradient-to-r from-[#2c0808]/95 via-[#4a1208]/95 to-[#2c0808]/95 border-2 border-[#ff3b3b] shadow-[0_0_35px_rgba(255,59,59,0.5)] backdrop-blur-md">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3 text-left">
+                <div className="flex items-center space-x-2.5 sm:space-x-3 min-w-0">
+                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-red-600/30 border border-red-500/80 flex items-center justify-center flex-shrink-0 animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.6)]">
+                    <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-[#ffd700]" />
                   </div>
-                  <div className="min-w-0">
-                    <div className="font-cinzel font-black text-xs sm:text-sm text-[#ffd700] uppercase tracking-wider flex items-center justify-center sm:justify-start space-x-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping inline-block" />
+                  <div className="min-w-0 flex-1">
+                    <div className="font-cinzel font-black text-xs sm:text-sm text-[#ffd700] uppercase tracking-wider flex items-center space-x-1.5 flex-wrap">
+                      <span className="w-2 h-2 rounded-full bg-red-500 animate-ping inline-block" />
                       <span>REGISTRATION CLOSES TONIGHT AT 11:59 PM!</span>
                     </div>
-                    <p className="text-[11px] sm:text-xs text-gray-200 font-sans mt-0.5">
+                    <p className="text-[11px] sm:text-xs text-gray-200 font-sans mt-0.5 leading-snug">
                       Portal seals automatically at <strong className="text-white">11:59 PM IST tonight</strong> • Fee: <strong className="text-[#ffd700]">₹{EVENT_CONFIG.REGISTRATION_FEE_PER_MEMBER} / Member</strong>
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center space-x-2 flex-shrink-0">
+                <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto mt-1 sm:mt-0 pt-2 sm:pt-0 border-t border-white/10 sm:border-0 flex-shrink-0">
                   {remaining && remaining.totalMs > 0 && (
-                    <div className="bg-black/80 border border-[#ffd700]/70 px-3 py-1.5 rounded-xl font-mono font-black text-xs text-[#ffd700] shadow-sm">
-                      {remaining.hours > 0 ? `${remaining.hours}h ` : '0h '}
-                      {String(remaining.minutes).padStart(2, '0')}m {String(remaining.seconds).padStart(2, '0')}s
+                    <div className="bg-black/80 border border-[#ffd700]/70 px-2.5 sm:px-3 py-1.5 rounded-xl font-mono font-black text-xs text-[#ffd700] shadow-sm flex items-center space-x-1">
+                      <span>{remaining.hours > 0 ? `${remaining.hours}h ` : '0h '}</span>
+                      <span>{String(remaining.minutes).padStart(2, '0')}m </span>
+                      <span>{String(remaining.seconds).padStart(2, '0')}s</span>
                     </div>
                   )}
                   <button
@@ -106,7 +107,7 @@ const HomePage = () => {
                       playLaserBlip();
                       navigate('/register');
                     }}
-                    className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-[#ffd700] to-[#f39c12] text-black font-cinzel font-black text-xs uppercase tracking-wider hover:brightness-110 shadow-[0_0_15px_rgba(255,215,0,0.5)] cursor-pointer flex-shrink-0 transition-transform active:scale-95"
+                    className="flex-1 sm:flex-initial px-4 py-2 rounded-xl bg-gradient-to-r from-[#ffd700] to-[#f39c12] text-black font-cinzel font-black text-xs uppercase tracking-wider hover:brightness-110 shadow-[0_0_15px_rgba(255,215,0,0.5)] cursor-pointer flex-shrink-0 transition-transform active:scale-95 text-center"
                   >
                     ENLIST NOW →
                   </button>
