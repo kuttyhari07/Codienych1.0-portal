@@ -11,6 +11,7 @@ import CountdownSection from '../sections/CountdownSection';
 import ProblemStatementSection from '../sections/ProblemStatementSection';
 import TeamRulesSection from '../sections/TeamRulesSection';
 import HackathonRulesSection from '../sections/HackathonRulesSection';
+import RefreshmentScheduleSection from '../sections/RefreshmentScheduleSection';
 import TimelineSection from '../sections/TimelineSection';
 import PrizesSection from '../sections/PrizesSection';
 import DomainsSection from '../sections/DomainsSection';
@@ -101,7 +102,12 @@ const EventPortalPage = () => {
             <HackathonRulesSection />
           </ScrollReveal>
 
-          {/* 7. Voyage Map & Timeline */}
+          {/* 7. Refreshment & Meal Schedule + Wi-Fi Scroll */}
+          <ScrollReveal variant="fade-up">
+            <RefreshmentScheduleSection />
+          </ScrollReveal>
+
+          {/* 8. Voyage Map & Timeline */}
           <ScrollReveal variant="fade-up">
             <TimelineSection />
           </ScrollReveal>

@@ -212,3 +212,37 @@
 .animate-eq-4 {
   animation: eqBar 0.7s ease-in-out 0.15s infinite;
 }
+
+/* Infinite Scrolling Announcement Marquee */
+@keyframes marqueeScroll {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes marqueeScroll2 {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.animate-marquee {
+  display: inline-flex;
+  animation: marqueeScroll 32s linear infinite;
+}
+
+.animate-marquee2 {
+  display: inline-flex;
+  animation: marqueeScroll2 32s linear infinite;
+}
+
+.group\/marquee:hover .animate-marquee,
+.group\/marquee:hover .animate-marquee2 {
+  animation-play-state: paused;
+}
