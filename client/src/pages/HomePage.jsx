@@ -69,6 +69,29 @@ const HomePage = () => {
           <span className="text-[#ffd700] font-bold animate-pulse">EXPEDITION 2026 ⚔️</span>
         </motion.div>
 
+        {/* Important Schedule Announcement Pill */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.15 }}
+          className="mb-3"
+        >
+          <button
+            type="button"
+            onClick={() => {
+              playLaserBlip();
+              navigate('/portal#refreshments');
+            }}
+            className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-[#241004]/90 via-[#3d1a06]/95 to-[#241004]/90 border border-[#ffd700]/70 hover:border-[#ffd700] text-[#ffd700] hover:text-white transition-all shadow-[0_0_20px_rgba(255,215,0,0.3)] hover:shadow-[0_0_30px_rgba(255,215,0,0.55)] cursor-pointer text-[10px] sm:text-xs font-cinzel font-bold"
+          >
+            <span className="px-1.5 py-0.5 rounded bg-red-600 text-white text-[9px] font-black animate-pulse">
+              ⚠️ IMPORTANT
+            </span>
+            <span>Meal & Refreshment Schedule Released</span>
+            <span className="text-[#00e5ff]">View Scroll →</span>
+          </button>
+        </motion.div>
+
         {/* Institution / College Name & Department Presents */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}

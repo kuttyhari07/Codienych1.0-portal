@@ -22,6 +22,16 @@ const AncientParchmentScroll = ({
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
+  useEffect(() => {
+    const handleOpen = (e) => {
+      if (!e.detail?.id || e.detail.id === id) {
+        setIsOpen(true);
+      }
+    };
+    window.addEventListener('open-parchment-scroll', handleOpen);
+    return () => window.removeEventListener('open-parchment-scroll', handleOpen);
+  }, [id]);
+
   const handleToggle = () => {
     playLaserBlip();
     setIsOpen(prev => !prev);

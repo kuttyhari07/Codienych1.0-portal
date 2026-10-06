@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { 
   Coffee, 
   Utensils, 
@@ -14,28 +14,34 @@ import {
   CheckCircle2, 
   AlertCircle,
   Sun,
-  Moon
+  Moon,
+  GlassWater
 } from 'lucide-react';
 import AncientParchmentScroll from '../components/AncientParchmentScroll';
 
 /**
  * REFRESHMENT & MEAL SCHEDULE DATA
- * Converted into clear, student-friendly English with visible date & timings.
+ * Updated as requested:
+ * 1. Day 1 Afternoon (12:00 PM): Fresh Juice
+ * 2. Day 1 Afternoon (3:00 PM – 4:00 PM): Tea & Snacks
+ * 3. Day 1 Night (8:00 PM Onwards): Dinner Feast
+ * 4. Day 1 Midnight (11:00 PM – 12:00 AM): Midnight Tea
+ * 5. Day 2 Early Morning (5:30 AM – 6:30 AM): Sunrise Coffee
+ * 6. Day 2 Morning (7:00 AM – 8:00 AM): Morning Breakfast
  */
-const MEAL_SCHEDULE = [
+export const MEAL_SCHEDULE = [
   {
-    id: 'morning-tea',
+    id: 'afternoon-juice',
     numeral: 'I',
-    title: 'Morning Tea',
-    handwrittenMatch: '☕ Tea',
-    time: '11:00 AM – 12:00 PM',
+    title: 'Fresh Juice',
+    handwrittenMatch: '🧃 Juice',
+    time: '12:00 PM – 1:00 PM',
     date: '8 October 2026',
-    dayLabel: 'DAY 1 • MORNING',
-    session: 'Morning Refreshment',
-    description: 'Fresh hot tea served to energize pirate squads following the hackathon opening sprint.',
+    dayLabel: 'DAY 1 • AFTERNOON',
+    session: 'Afternoon Refreshment',
+    description: 'Chilled refreshing fresh fruit juice served to cool down and hydrate pirate squads as the hackathon voyage gets underway.',
     location: 'Cafeteria Refreshment Counters',
-    icon: Coffee,
-    badgeColor: 'bg-[#5c2b0e]/15 text-[#5c2b0e] border-[#5c2b0e]/30',
+    icon: GlassWater,
   },
   {
     id: 'tea-snacks',
@@ -45,86 +51,111 @@ const MEAL_SCHEDULE = [
     time: '3:00 PM – 4:00 PM',
     date: '8 October 2026',
     dayLabel: 'DAY 1 • AFTERNOON',
-    session: 'Afternoon Refreshment',
-    description: 'Hot tea paired with crisp savory snacks to refuel teams ahead of Review Round 1.',
+    session: 'Afternoon Provision',
+    description: 'Fresh hot tea paired with crisp savory snacks to refuel teams ahead of Review Round 1.',
     location: 'Cafeteria Refreshment Counters',
     icon: UtensilsCrossed,
-    badgeColor: 'bg-[#5c2b0e]/15 text-[#5c2b0e] border-[#5c2b0e]/30',
-  },
-  {
-    id: 'evening-coffee',
-    numeral: 'III',
-    title: 'Evening Coffee',
-    handwrittenMatch: '☕ Coffee',
-    time: '6:00 PM – 7:00 PM',
-    date: '8 October 2026',
-    dayLabel: 'DAY 1 • EVENING',
-    session: 'Evening Refreshment',
-    description: 'Steaming hot coffee break to recharge minds as evening descends and backend development peaks.',
-    location: 'Cafeteria Refreshment Counters',
-    icon: Coffee,
-    badgeColor: 'bg-[#5c2b0e]/15 text-[#5c2b0e] border-[#5c2b0e]/30',
   },
   {
     id: 'dinner',
-    numeral: 'IV',
+    numeral: 'III',
     title: 'Dinner Feast',
     handwrittenMatch: '🍽️ Dinner',
-    time: '8:00 PM Onwards',
+    time: '8:00 PM – 9:30 PM',
     date: '8 October 2026',
     dayLabel: 'DAY 1 • NIGHT',
     session: 'Night Meal Buffet',
-    description: 'Wholesome hot dinner served for all participants to sustain energy throughout the overnight voyage.',
+    description: 'Wholesome hot dinner buffet served for all crew members to sustain peak energy throughout the overnight voyage.',
     location: 'Main Campus Dining Hall (Mess)',
     icon: Utensils,
-    badgeColor: 'bg-[#6e1e1e]/15 text-[#6e1e1e] border-[#6e1e1e]/30',
+  },
+  {
+    id: 'midnight-tea',
+    numeral: 'IV',
+    title: 'Midnight Tea',
+    handwrittenMatch: '☕ Midnight Tea',
+    time: '11:00 PM – 12:00 AM',
+    date: '8 October 2026 – Midnight',
+    dayLabel: 'DAY 1 • MIDNIGHT',
+    session: 'Midnight Energy Booster',
+    description: 'Hot midnight tea served alongside the Midnight DJ bash & games lounge to beat fatigue and keep coding spirits high.',
+    location: 'Cafeteria Refreshment Counters',
+    icon: Moon,
+  },
+  {
+    id: 'morning-coffee',
+    numeral: 'V',
+    title: 'Sunrise Coffee',
+    handwrittenMatch: '☕ Coffee',
+    time: '5:30 AM – 6:30 AM',
+    date: '9 October 2026',
+    dayLabel: 'DAY 2 • EARLY MORNING',
+    session: 'Early Morning Booster',
+    description: 'Steaming hot sunrise coffee to awaken minds and fuel the final sprint to the finish line.',
+    location: 'Cafeteria Refreshment Counters',
+    icon: Coffee,
   },
   {
     id: 'breakfast',
-    numeral: 'V',
+    numeral: 'VI',
     title: 'Morning Breakfast',
     handwrittenMatch: '🍽️ Breakfast',
-    time: '7:00 AM Onwards',
+    time: '7:00 AM – 8:00 AM',
     date: '9 October 2026',
     dayLabel: 'DAY 2 • MORNING',
-    session: 'Day 2 Morning Meal',
-    description: 'Nutritious morning breakfast buffet to fuel final code freezes, slides preparation, and demo submissions.',
+    session: 'Day 2 Morning Breakfast',
+    description: 'Nutritious breakfast buffet to energize teams for final repo freeze, presentation polishing, and live jury evaluations.',
     location: 'Main Campus Dining Hall (Mess)',
     icon: Sun,
-    badgeColor: 'bg-[#b8860b]/20 text-[#5c4308] border-[#b8860b]/40',
   },
 ];
 
+/**
+ * Helper to smoothly scroll to the refreshments parchment scroll and ensure it unrolls
+ */
+export const scrollToRefreshmentScroll = () => {
+  window.dispatchEvent(new CustomEvent('open-parchment-scroll', { detail: { id: 'refreshment-schedule-scroll' } }));
+  const el = document.getElementById('refreshments');
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth' });
+  }
+};
+
 const RefreshmentScheduleSection = () => {
   return (
-    <section id="refreshments" className="relative z-10">
+    <section id="refreshments" className="relative z-10 scroll-mt-24">
       <AncientParchmentScroll
         id="refreshment-schedule-scroll"
         subtitle="// FLEET ANNOUNCEMENTS // RATIONS & COMM DISPATCH"
         title="REFRESHMENT & MEAL"
         goldTitle="SCHEDULE"
         description="Official provisions timeline, dining hours, and campus Wi-Fi network connectivity charter for all pirate squads."
-        badge="5 SESSIONS + WI-FI"
-        defaultOpen={false}
+        badge="6 SESSIONS + WI-FI"
+        defaultOpen={true}
       >
         {/* Direct Text on Ancient Scroll Map */}
         <div className="space-y-6 sm:space-y-8">
           
           {/* Top Charter Header */}
           <div className="text-center mb-4 sm:mb-6">
+            <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-red-800/15 border border-red-700/40 text-red-900 font-cinzel font-black text-[10px] sm:text-xs uppercase tracking-wider mb-2">
+              <span className="w-2 h-2 rounded-full bg-red-600 animate-ping" />
+              <span>OFFICIAL SCHEDULE ANNOUNCEMENT</span>
+            </div>
+
             <h3 className="font-pirate text-xl sm:text-3xl md:text-4xl text-[#3b1f09] tracking-wider drop-shadow-sm uppercase leading-tight px-1">
               Official Refreshment & Meal Schedule
             </h3>
             
-            <div className="inline-flex items-center space-x-2 px-3 sm:px-4 py-1 rounded-full bg-[#3d2412]/10 border border-[#6b421a]/25 mt-2.5 shadow-sm">
+            <div className="inline-flex items-center space-x-2 px-3 sm:px-4 py-1 rounded-full bg-[#3d2412]/10 border border-[#6b421a]/25 mt-2 shadow-sm">
               <Calendar className="w-3.5 h-3.5 text-[#6b421a]" />
               <span className="font-cinzel text-[10px] sm:text-xs text-[#452811] font-bold tracking-wider uppercase">
-                8 October 2026 (Afternoon & Night) – 9 October 2026 (Morning)
+                8 October 2026 (Day 1) – 9 October 2026 (Day 2)
               </span>
             </div>
             
             <p className="font-cinzel text-[10px] sm:text-xs text-[#5c3514] font-semibold mt-2 max-w-xl mx-auto px-2">
-              All refreshments and meals are provided compliantly for registered participants at the Campus Dining Hall & Cafeteria.
+              All refreshments, snacks, and meals are provided compliantly for registered participants at the Campus Dining Hall & Cafeteria.
             </p>
             <div className="w-20 sm:w-28 h-0.5 bg-[#6b421a]/30 mx-auto mt-3" />
           </div>
@@ -137,22 +168,24 @@ const RefreshmentScheduleSection = () => {
                 <span>Live Provisions & Connectivity Broadcast:</span>
               </div>
               <span className="font-mono text-[9px] sm:text-[10px] text-[#78461c] font-bold bg-[#3d2412]/10 px-2 py-0.5 rounded">
-                8 – 9 OCT 2026
+                6 SESSIONS
               </span>
             </div>
 
             {/* Seamless Infinite Marquee Ticker */}
             <div className="relative flex overflow-x-hidden group/marquee">
               <div className="animate-marquee whitespace-nowrap flex items-center space-x-6 text-[11px] sm:text-xs font-cinzel font-bold text-[#361c0a]">
-                <span>☕ <strong className="text-[#63330f]">11:00 AM – 12:00 PM:</strong> Morning Tea (8 Oct)</span>
+                <span>🧃 <strong className="text-[#63330f]">12:00 PM – 1:00 PM:</strong> Fresh Juice (8 Oct)</span>
                 <span>•</span>
-                <span>☕🍪 <strong className="text-[#63330f]">3:00 PM – 4:00 PM:</strong> Tea & Snacks (8 Oct Afternoon)</span>
+                <span>☕🍪 <strong className="text-[#63330f]">3:00 PM – 4:00 PM:</strong> Tea & Snacks (8 Oct)</span>
                 <span>•</span>
-                <span>☕ <strong className="text-[#63330f]">6:00 PM – 7:00 PM:</strong> Evening Coffee (8 Oct)</span>
+                <span>🍽️ <strong className="text-[#63330f]">8:00 PM – 9:30 PM:</strong> Dinner Feast (8 Oct)</span>
                 <span>•</span>
-                <span>🍽️ <strong className="text-[#63330f]">8:00 PM:</strong> Grand Dinner Feast (8 Oct)</span>
+                <span>☕ <strong className="text-[#63330f]">11:00 PM – 12:00 AM:</strong> Midnight Tea (8 Oct)</span>
                 <span>•</span>
-                <span>🍽️ <strong className="text-[#63330f]">7:00 AM:</strong> Morning Breakfast (9 Oct)</span>
+                <span>☕ <strong className="text-[#63330f]">5:30 AM – 6:30 AM:</strong> Sunrise Coffee (9 Oct)</span>
+                <span>•</span>
+                <span>🍽️ <strong className="text-[#63330f]">7:00 AM – 8:00 AM:</strong> Morning Breakfast (9 Oct)</span>
                 <span>•</span>
                 <span>📶 <strong className="text-[#104e70]">Free Wi-Fi:</strong> Team Heads Only</span>
                 <span>•</span>
@@ -161,15 +194,17 @@ const RefreshmentScheduleSection = () => {
               </div>
 
               <div className="absolute top-0 animate-marquee2 whitespace-nowrap flex items-center space-x-6 text-[11px] sm:text-xs font-cinzel font-bold text-[#361c0a]">
-                <span>☕ <strong className="text-[#63330f]">11:00 AM – 12:00 PM:</strong> Morning Tea (8 Oct)</span>
+                <span>🧃 <strong className="text-[#63330f]">12:00 PM – 1:00 PM:</strong> Fresh Juice (8 Oct)</span>
                 <span>•</span>
-                <span>☕🍪 <strong className="text-[#63330f]">3:00 PM – 4:00 PM:</strong> Tea & Snacks (8 Oct Afternoon)</span>
+                <span>☕🍪 <strong className="text-[#63330f]">3:00 PM – 4:00 PM:</strong> Tea & Snacks (8 Oct)</span>
                 <span>•</span>
-                <span>☕ <strong className="text-[#63330f]">6:00 PM – 7:00 PM:</strong> Evening Coffee (8 Oct)</span>
+                <span>🍽️ <strong className="text-[#63330f]">8:00 PM – 9:30 PM:</strong> Dinner Feast (8 Oct)</span>
                 <span>•</span>
-                <span>🍽️ <strong className="text-[#63330f]">8:00 PM:</strong> Grand Dinner Feast (8 Oct)</span>
+                <span>☕ <strong className="text-[#63330f]">11:00 PM – 12:00 AM:</strong> Midnight Tea (8 Oct)</span>
                 <span>•</span>
-                <span>🍽️ <strong className="text-[#63330f]">7:00 AM:</strong> Morning Breakfast (9 Oct)</span>
+                <span>☕ <strong className="text-[#63330f]">5:30 AM – 6:30 AM:</strong> Sunrise Coffee (9 Oct)</span>
+                <span>•</span>
+                <span>🍽️ <strong className="text-[#63330f]">7:00 AM – 8:00 AM:</strong> Morning Breakfast (9 Oct)</span>
                 <span>•</span>
                 <span>📶 <strong className="text-[#104e70]">Free Wi-Fi:</strong> Team Heads Only</span>
                 <span>•</span>
@@ -179,25 +214,23 @@ const RefreshmentScheduleSection = () => {
             </div>
           </div>
 
-          {/* PART 1: 5 MEAL & REFRESHMENT SCHEDULE ITEMS */}
+          {/* PART 1: 6 MEAL & REFRESHMENT SCHEDULE ITEMS */}
           <div>
             <div className="flex items-center space-x-2 mb-3.5 sm:mb-4 px-1">
               <Utensils className="w-4 h-4 text-[#75441b]" />
               <h4 className="font-cinzel text-xs sm:text-sm font-black text-[#4e2b10] tracking-wider uppercase">
-                Provisions & Refreshment Timeline
+                Provisions & Refreshment Timeline (6 Sessions)
               </h4>
             </div>
 
-            {/* Structured Grid with Proper Spacing */}
+            {/* Symmetrical 2-Column Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-              {MEAL_SCHEDULE.map((item, idx) => {
+              {MEAL_SCHEDULE.map((item) => {
                 const ItemIcon = item.icon;
                 return (
                   <div
                     key={item.id}
-                    className={`group/item flex flex-col justify-between p-3.5 sm:p-4 rounded-xl bg-[#2e190b]/[0.06] hover:bg-[#2e190b]/[0.12] border border-[#5c3614]/20 hover:border-[#6b421a]/45 transition-all shadow-[0_2px_4px_rgba(0,0,0,0.04)] ${
-                      idx === MEAL_SCHEDULE.length - 1 ? 'md:col-span-2 md:max-w-xl md:mx-auto md:w-full' : ''
-                    }`}
+                    className="group/item flex flex-col justify-between p-3.5 sm:p-4 rounded-xl bg-[#2e190b]/[0.06] hover:bg-[#2e190b]/[0.12] border border-[#5c3614]/20 hover:border-[#6b421a]/45 transition-all shadow-[0_2px_4px_rgba(0,0,0,0.04)]"
                   >
                     <div>
                       {/* Top Row: Numeral Seal + Title & Day Badge */}

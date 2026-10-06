@@ -12,9 +12,10 @@ const hudItems = [
   { id: 'entertainment', label: '08 TAVERN' },
   { id: 'team-rules', label: '09 CREW CODE' },
   { id: 'hackathon-rules', label: '10 RULES' },
-  { id: 'timeline', label: '11 VOYAGE MAP' },
-  { id: 'faq', label: '12 CAPTAIN FAQ' },
-  { id: 'contact', label: '13 ADMIRALTY' },
+  { id: 'refreshments', label: '11 RATIONS & WI-FI' },
+  { id: 'timeline', label: '12 VOYAGE MAP' },
+  { id: 'faq', label: '13 CAPTAIN FAQ' },
+  { id: 'contact', label: '14 ADMIRALTY' },
 ];
 
 const MissionHudIndex = () => {
@@ -37,6 +38,9 @@ const MissionHudIndex = () => {
   }, []);
 
   const scrollTo = (id) => {
+    if (id === 'refreshments') {
+      window.dispatchEvent(new CustomEvent('open-parchment-scroll', { detail: { id: 'refreshment-schedule-scroll' } }));
+    }
     const el = document.getElementById(id);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
