@@ -11,8 +11,26 @@ module.exports = {
 
   EVENT_NAME: process.env.EVENT_NAME || 'CODIENYCH 1.0',
   EVENT_TYPE: process.env.EVENT_TYPE || '24-HOUR HACKATHON',
-  REGISTRATION_DEADLINE: process.env.REGISTRATION_DEADLINE || '2026-10-06T23:59:59+05:30',
-  FORCE_REGISTRATION_CLOSED: process.env.FORCE_REGISTRATION_CLOSED === 'true',
+  REGISTRATION_DEADLINE: (() => {
+    const tonight = '2026-10-06T23:59:59+05:30';
+    const envDeadline = process.env.REGISTRATION_DEADLINE;
+    if (!envDeadline) return tonight;
+    const parsed = new Date(envDeadline).getTime();
+    const tonightMs = new Date(tonight).getTime();
+    // If env deadline is invalid or earlier than tonight (e.g. stale '2026-10-04' in cloud dashboard), guarantee tonight
+    if (isNaN(parsed) || parsed < tonightMs) {
+      return tonight;
+    }
+    return envDeadline;
+  })(),
+  FORCE_REGISTRATION_CLOSED: (() => {
+    // Keep registrations open until tonight's deadline 11:59:59 PM IST
+    const tonightMs = new Date('2026-10-06T23:59:59+05:30').getTime();
+    if (Date.now() < tonightMs) {
+      return false;
+    }
+    return process.env.FORCE_REGISTRATION_CLOSED === 'true';
+  })(),
   EXTRA_SLOTS: parseInt(process.env.EXTRA_SLOTS || '1', 10),
   HACKATHON_START_DATE: process.env.HACKATHON_START_DATE || '2026-10-08T09:00:00',
   // Registration fee per participant is strictly 500 (3 members: 1500, 4 members: 2000, 5 members: 2500, 6 members: 3000).
