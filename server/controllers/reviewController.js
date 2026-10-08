@@ -9,16 +9,16 @@ const getDefaultReviewSeeds = () => {
   const r1RevStart = new Date('2026-10-08T16:30:00+05:30');
   const r1RevEnd = new Date('2026-10-08T17:30:00+05:30');
 
-  // Round 2: Task 2 Coding Sprint: Today 05:30 PM to 09:30 PM IST (8 Oct 2026) -> Students coding window (Dinner: 7:30 - 8:30 PM)
-  // Review - 2 Evaluation follows: 09:30 PM to 10:30 PM IST
+  // Round 2: Task 2 Coding Sprint: Today 05:30 PM to 10:00 PM IST (8 Oct 2026) -> Students coding window (Dinner: 7:30 - 8:30 PM)
+  // Review - 2 Evaluation follows: 10:00 PM to 11:00 PM IST (Round 2 ends sharp at 23:00 / 11:00 PM)
   const r2Start = new Date('2026-10-08T17:30:00+05:30');
-  const r2End = new Date('2026-10-08T21:30:00+05:30');
-  const r2RevStart = new Date('2026-10-08T21:30:00+05:30');
-  const r2RevEnd = new Date('2026-10-08T22:30:00+05:30');
+  const r2End = new Date('2026-10-08T22:00:00+05:30');
+  const r2RevStart = new Date('2026-10-08T22:00:00+05:30');
+  const r2RevEnd = new Date('2026-10-08T23:00:00+05:30');
 
-  // Round 3: Task 3 Midnight Coding Sprint: Tonight 10:30 PM to 12:30 AM IST (8-9 Oct 2026) -> Midnight coding window (Snacks: 11:30 PM)
+  // Round 3: Task 3 Midnight Coding Sprint: Tonight 11:00 PM to 12:30 AM IST (8-9 Oct 2026) -> Midnight coding window (Snacks: 11:30 PM)
   // Review - 3 Evaluation follows: 12:30 AM to 01:30 AM IST
-  const r3Start = new Date('2026-10-08T22:30:00+05:30');
+  const r3Start = new Date('2026-10-08T23:00:00+05:30');
   const r3End = new Date('2026-10-09T00:30:00+05:30');
   const r3RevStart = new Date('2026-10-09T00:30:00+05:30');
   const r3RevEnd = new Date('2026-10-09T01:30:00+05:30');
@@ -57,7 +57,7 @@ const getDefaultReviewSeeds = () => {
       status: 'UPCOMING',
       isCurrent: false,
       venue: 'Respective Team Bays / Software Labs',
-      description: 'Task 2 Coding Window: 05:30 PM to 09:30 PM (4 Hours, Dinner: 07:30 PM - 08:30 PM). Review - 2 Jury Evaluation follows at 09:30 PM to 10:30 PM. Criteria: Working prototype, database schema setup, backend API integration, and key feature progress.',
+      description: 'Task 2 Coding Window: 05:30 PM to 10:00 PM (4.5 Hours, Dinner: 07:30 PM - 08:30 PM). Review - 2 Jury Evaluation follows at 10:00 PM to 11:00 PM (Round 2 concludes at 11:00 PM / 23:00). Criteria: Working prototype, database schema setup, backend API integration, and key feature progress.',
       announcement: '',
       extendedMinutes: 0,
     },
@@ -72,7 +72,7 @@ const getDefaultReviewSeeds = () => {
       status: 'UPCOMING',
       isCurrent: false,
       venue: 'Respective Team Bays / Software Labs',
-      description: 'Task 3 Midnight Coding Window: 10:30 PM to 12:30 AM (2 Hours, Refreshment-3 at 11:30 PM). Review - 3 Jury Evaluation follows at 12:30 AM to 01:30 AM. Criteria: Midnight code audit, edge cases, cloud deployment readiness, and code quality.',
+      description: 'Task 3 Midnight Coding Window: 11:00 PM to 12:30 AM (1.5 Hours, Refreshment-3 at 11:30 PM). Review - 3 Jury Evaluation follows at 12:30 AM to 01:30 AM. Criteria: Midnight code audit, edge cases, cloud deployment readiness, and code quality.',
       announcement: '',
       extendedMinutes: 0,
     },

@@ -25,7 +25,7 @@ const OFFICIAL_AGENDA = [
   { id: 6, title: 'Review - 1', time: '04:30 PM to 05:30 PM', day: 'Day 1 • 8 Oct', category: 'Evaluation', highlight: true, details: 'Problem Statement, Architecture Diagram & Wireframe Prototype' },
   { id: 7, title: 'Refreshment - 2', time: '05:30 PM to 06:00 PM', day: 'Day 1 • 8 Oct', category: 'Refreshment', details: 'Hot Tea & Samosa' },
   { id: 8, title: 'Dinner', time: '07:30 PM to 08:30 PM', day: 'Day 1 • 8 Oct', category: 'Meal', details: 'Dinner Feast for all participants' },
-  { id: 9, title: 'Review - 2', time: '09:30 PM to 10:30 PM', day: 'Day 1 • 8 Oct', category: 'Evaluation', highlight: true, details: 'Prototype Implementation, Database Schema & Backend APIs' },
+  { id: 9, title: 'Review - 2', time: '10:00 PM to 11:00 PM', day: 'Day 1 • 8 Oct', category: 'Evaluation', highlight: true, details: 'Prototype Implementation, Database Schema & Backend APIs' },
   { id: 10, title: 'Refreshment - 3', time: '11:30 PM', day: 'Day 1 • 8 Oct', category: 'Refreshment', details: 'Late Night Tea & Biscuit' },
   { id: 11, title: 'Review - 3', time: '12:30 AM to 01:30 AM', day: 'Day 2 • 9 Oct', category: 'Evaluation', highlight: true, details: 'Midnight Code Audit, Edge Cases & Deployment Readiness' },
   { id: 12, title: 'Refreshment - 4', time: '06:00 AM', day: 'Day 2 • 9 Oct', category: 'Refreshment', details: 'Sunrise Coffee & Biscuit' },

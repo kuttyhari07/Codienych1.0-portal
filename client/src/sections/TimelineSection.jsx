@@ -93,7 +93,7 @@ const VOYAGE_STAGES = [
     id: 5,
     step: '05',
     day: 'DAY 1 • 8 OCT',
-    time: '09:30 PM – 10:30 PM',
+    time: '10:00 PM – 11:00 PM',
     title: 'REVIEW - 2',
     deck: 'Midwatch Quarters',
     x: 78,
