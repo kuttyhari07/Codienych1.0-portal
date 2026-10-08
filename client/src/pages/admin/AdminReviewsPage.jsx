@@ -339,9 +339,15 @@ const AdminReviewsPage = () => {
               {/* Left Info */}
               <div className="flex-1">
                 <div className="flex items-center space-x-2 mb-2">
-                  <span className="px-2.5 py-0.5 rounded-full bg-red-500/20 text-red-400 border border-red-500/40 text-[11px] font-mono font-bold flex items-center space-x-1.5 animate-pulse">
-                    <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
-                    <span>CURRENT LIVE FOCUS STAGE</span>
+                  <span className={`px-2.5 py-0.5 rounded-full border text-[11px] font-mono font-bold flex items-center space-x-1.5 ${
+                    activeReview.status === 'ACTIVE'
+                      ? 'bg-red-500/20 text-red-400 border-red-500/40 animate-pulse'
+                      : activeReview.status === 'COMPLETED'
+                      ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40'
+                      : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                  }`}>
+                    {activeReview.status === 'ACTIVE' && <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />}
+                    <span>{activeReview.status === 'ACTIVE' ? 'LIVE EVALUATION ACTIVE' : activeReview.status === 'COMPLETED' ? 'STAGE CONCLUDED' : 'STANDBY (SCHEDULED)'}</span>
                   </span>
                   <span className="text-xs font-mono text-[#00e5ff]">
                     Round {activeReview.roundNumber} of {reviews.length}
@@ -364,7 +370,9 @@ const AdminReviewsPage = () => {
                       ? 'bg-red-500/20 text-red-400 border border-red-500/30'
                       : activeReview.status === 'PAUSED'
                       ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
-                      : 'bg-blue-500/20 text-cyan-300 border border-cyan-500/30'
+                      : activeReview.status === 'COMPLETED'
+                      ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                      : 'bg-amber-500/15 text-amber-300 border border-amber-500/30'
                   }`}>
                     STATUS: {activeReview.status}
                   </span>

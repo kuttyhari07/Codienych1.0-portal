@@ -2,25 +2,21 @@ const ReviewSchedule = require('../models/ReviewSchedule');
 
 // Official ESEC Department of Information Technology CODIENYCH 1.0 Agenda Timings (8.10.2026):
 const getDefaultReviewSeeds = () => {
-  const year = 2026;
-  const month = 9; // October (0-indexed: 9 = October)
-  const date = 8;
+  // Review - 1: Today 03:30 PM to 04:30 PM IST (8 Oct 2026)
+  const r1Start = new Date('2026-10-08T15:30:00+05:30');
+  const r1End = new Date('2026-10-08T16:30:00+05:30');
 
-  // Review - 1: Today 03:30 PM to 04:30 PM
-  const r1Start = new Date(year, month, date, 15, 30, 0);
-  const r1End = new Date(year, month, date, 16, 30, 0);
+  // Review - 2: Today 09:30 PM to 10:30 PM IST (8 Oct 2026)
+  const r2Start = new Date('2026-10-08T21:30:00+05:30');
+  const r2End = new Date('2026-10-08T22:30:00+05:30');
 
-  // Review - 2: Today 09:30 PM to 10:30 PM
-  const r2Start = new Date(year, month, date, 21, 30, 0);
-  const r2End = new Date(year, month, date, 22, 30, 0);
+  // Review - 3: Tonight / Midnight 12:30 AM to 01:30 AM IST (9 Oct 2026)
+  const r3Start = new Date('2026-10-09T00:30:00+05:30');
+  const r3End = new Date('2026-10-09T01:30:00+05:30');
 
-  // Review - 3: Tonight / Midnight 12:30 AM to 01:30 AM (9 Oct)
-  const r3Start = new Date(year, month, date + 1, 0, 30, 0);
-  const r3End = new Date(year, month, date + 1, 1, 30, 0);
-
-  // Review - 4: Tomorrow 09:30 AM to 11:30 AM (9 Oct)
-  const r4Start = new Date(year, month, date + 1, 9, 30, 0);
-  const r4End = new Date(year, month, date + 1, 11, 30, 0);
+  // Review - 4: Tomorrow 09:30 AM to 11:30 AM IST (9 Oct 2026)
+  const r4Start = new Date('2026-10-09T09:30:00+05:30');
+  const r4End = new Date('2026-10-09T11:30:00+05:30');
 
   return [
     {
@@ -133,73 +129,51 @@ const getActiveReview = async (req, res) => {
 
     const now = new Date();
 
-    // 1. Check for manual admin override: PAUSED status
-    const pausedReview = allReviews.find((r) => r.status === 'PAUSED');
+    // 1. Strict time-based status reconciliation for EVERY review:
+    for (const r of allReviews) {
+      const s = new Date(r.startTime);
+      const e = new Date(r.endTime);
 
-    // 2. Check for manual admin override: ACTIVE status explicitly set
-    const explicitlyActive = allReviews.find((r) => r.status === 'ACTIVE');
+      if (now < s) {
+        // Has NOT started yet! Must be UPCOMING (Standby). Cannot be ACTIVE.
+        if (r.status !== 'UPCOMING') {
+          r.status = 'UPCOMING';
+          await r.save();
+        }
+      } else if (now >= s && now < e) {
+        // Current real time falls strictly within this review window! Must be ACTIVE
+        if (r.status !== 'ACTIVE' && r.status !== 'PAUSED') {
+          r.status = 'ACTIVE';
+          await r.save();
+        }
+      } else if (now >= e) {
+        // Review window has closed! Must be COMPLETED
+        if (r.status !== 'COMPLETED') {
+          r.status = 'COMPLETED';
+          await r.save();
+        }
+      }
+    }
 
-    // 3. Check if any review's scheduled window is currently live in real time:
-    //    now >= startTime && now < endTime && status !== 'COMPLETED'
-    const scheduledLiveReview = allReviews.find((r) => {
+    // 2. Select the single active review to feature:
+    // First priority: A review whose window is currently live (now >= s && now < e)
+    let activeReview = allReviews.find((r) => {
       const s = new Date(r.startTime);
       const e = new Date(r.endTime);
       return now >= s && now < e && r.status !== 'COMPLETED';
     });
 
-    let activeReview = null;
-
-    if (pausedReview) {
-      activeReview = pausedReview;
-    } else if (explicitlyActive) {
-      // If the explicitly active review has already reached or passed its endTime, auto-conclude it!
-      if (now >= new Date(explicitlyActive.endTime)) {
-        explicitlyActive.status = 'COMPLETED';
-        explicitlyActive.isCurrent = false;
-        await explicitlyActive.save();
-        // Fall back to next upcoming review
-        activeReview = allReviews.find((r) => new Date(r.endTime) > now && r.status !== 'COMPLETED') || explicitlyActive;
-      } else {
-        activeReview = explicitlyActive;
-      }
-    } else if (scheduledLiveReview) {
-      // Current real time falls strictly within this review's window
-      activeReview = scheduledLiveReview;
-      if (activeReview.status !== 'ACTIVE') {
-        activeReview.status = 'ACTIVE';
-        activeReview.isCurrent = true;
-        await activeReview.save();
-      }
-    } else {
-      // Outside all live review windows (Standby gap or before Review 1)
-      // Pick the next upcoming review that has not yet completed
-      const nextUpcoming = allReviews.find((r) => new Date(r.endTime) > now && r.status !== 'COMPLETED');
-      if (nextUpcoming) {
-        activeReview = nextUpcoming;
-        // In standby gap, status MUST be UPCOMING so timer remains idle
-        if (activeReview.status === 'ACTIVE') {
-          activeReview.status = 'UPCOMING';
-          await activeReview.save();
-        }
-      } else {
-        // All reviews have concluded
-        activeReview = allReviews[allReviews.length - 1];
-      }
+    // If none is currently live (e.g. before Review 1, or during break gaps), pick the next upcoming review
+    if (!activeReview) {
+      activeReview = allReviews.find((r) => new Date(r.endTime) > now && r.status !== 'COMPLETED');
     }
 
-    // Auto-conclude any past reviews whose endTime has passed (unless currently live extended)
-    for (const r of allReviews) {
-      const e = new Date(r.endTime);
-      if (now >= e && r.status !== 'COMPLETED' && r._id.toString() !== activeReview?._id?.toString()) {
-        r.status = 'COMPLETED';
-        if (r.isCurrent) {
-          r.isCurrent = false;
-        }
-        await r.save();
-      }
+    // Fallback: If all reviews have ended, pick the last review
+    if (!activeReview && allReviews.length > 0) {
+      activeReview = allReviews[allReviews.length - 1];
     }
 
-    // Ensure isCurrent is true ONLY on the single activeReview, false on all others
+    // 3. Ensure isCurrent is true ONLY on activeReview, and false on all others
     if (activeReview) {
       for (const r of allReviews) {
         const shouldBeCurrent = r._id.toString() === activeReview._id.toString();
@@ -210,7 +184,7 @@ const getActiveReview = async (req, res) => {
       }
     }
 
-    // Fetch refreshed synchronized review list
+    // Re-fetch clean synchronized list
     const refreshedReviews = await ReviewSchedule.find().sort({ order: 1, startTime: 1 });
     const syncedActiveReview = refreshedReviews.find((r) => r.isCurrent) || activeReview;
 
@@ -432,10 +406,13 @@ const setActiveReview = async (req, res) => {
       });
     }
 
+    const now = new Date();
+    const durationMs = Math.max(15 * 60 * 1000, new Date(review.endTime).getTime() - new Date(review.startTime).getTime());
+    review.startTime = now;
+    review.endTime = new Date(now.getTime() + durationMs);
     review.isCurrent = true;
     review.status = 'ACTIVE';
 
-    // If current time is past endTime, optionally adjust or let admin control
     await review.save();
 
     return res.status(200).json({

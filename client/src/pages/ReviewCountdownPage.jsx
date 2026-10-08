@@ -191,9 +191,9 @@ const ReviewCountdownPage = () => {
         return;
       }
 
-      // 3. Before Review Start Time (Standby): now < startMs and NOT forced active
-      if (now < startMs && activeReview.status !== 'ACTIVE') {
-        // Machi requirement: COUNTDOWN MUST NOT RUN RIGHT NOW!
+      // 3. Before Review Start Time (Standby): strictly when now < startMs
+      if (now < startMs) {
+        // Machi requirement: COUNTDOWN MUST NOT RUN BEFORE START TIME!
         // Display the allocated total duration (e.g. 01:00:00 for 1-hour review) on Standby.
         // Digits are STATIC / FROZEN (NOT counting down!).
         const totalDurationSec = Math.max(0, Math.floor((endMs - startMs) / 1000));
@@ -212,8 +212,8 @@ const ReviewCountdownPage = () => {
         return;
       }
 
-      // 4. Review is Live / In Progress: strictly during scheduled window OR forced ACTIVE
-      if ((now >= startMs && now < endMs) || activeReview.status === 'ACTIVE') {
+      // 4. Review is Live / In Progress: STRICTLY during scheduled window (now >= startMs && now < endMs)
+      if (now >= startMs && now < endMs) {
         const totalDurationSec = Math.max(1, Math.floor((endMs - startMs) / 1000));
         const remainingSec = Math.max(0, Math.floor((endMs - now) / 1000));
         const elapsedSec = totalDurationSec - remainingSec;
@@ -296,7 +296,7 @@ const ReviewCountdownPage = () => {
     const startMs = startTime ? new Date(startTime).getTime() : 0;
     const endMs = endTime ? new Date(endTime).getTime() : 0;
 
-    const isLive = (startMs && endMs && now >= startMs && now < endMs && status !== 'COMPLETED') || status === 'ACTIVE';
+    const isLive = startMs && endMs && now >= startMs && now < endMs && status !== 'COMPLETED';
     const isConcluded = (endMs && now >= endMs) || status === 'COMPLETED';
 
     if (isLive) {
@@ -349,7 +349,7 @@ const ReviewCountdownPage = () => {
   const liveReviewNow = allReviews.find((r) => {
     const s = new Date(r.startTime).getTime();
     const e = new Date(r.endTime).getTime();
-    return (nowMs >= s && nowMs < e && r.status !== 'COMPLETED') || r.status === 'ACTIVE';
+    return nowMs >= s && nowMs < e && r.status !== 'COMPLETED';
   });
 
   return (
