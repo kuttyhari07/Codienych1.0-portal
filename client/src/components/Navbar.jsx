@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, Compass, Skull, Swords, Anchor, Scroll, MapPin, Lock } from 'lucide-react';
+import { Menu, X, Compass, Skull, Swords, Anchor, Scroll, MapPin, Lock, Clock } from 'lucide-react';
 import useRegistrationStatus from '../utils/useRegistrationStatus';
 
 const navItems = [
@@ -128,6 +128,14 @@ const Navbar = () => {
         {/* Action Buttons */}
         <div className="hidden sm:flex items-center space-x-2 xl:space-x-3 flex-shrink-0">
           <Link
+            to="/review"
+            className="px-3 py-1.5 text-xs font-cinzel text-[#ffd700] hover:text-white border border-[#ffd700]/50 rounded-lg hover:border-[#ffd700] transition-all flex items-center space-x-1.5 bg-[#140e06] shadow-[0_0_12px_rgba(255,215,0,0.25)] whitespace-nowrap group"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping" />
+            <Clock className="w-3.5 h-3.5 text-[#ffd700]" />
+            <span>LIVE REVIEW</span>
+          </Link>
+          <Link
             to="/status"
             className="px-3 py-1.5 text-xs font-cinzel text-gray-300 hover:text-[#ffd700] border border-[#3b2b19] rounded-lg hover:border-[#e5c158] transition-all flex items-center space-x-1.5 bg-[#091522]/60 whitespace-nowrap"
           >
@@ -219,6 +227,15 @@ const Navbar = () => {
             </button>
           ))}
           <div className="pt-3 border-t border-[#3b2b19] flex flex-col space-y-2">
+            <Link
+              to="/review"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full text-center py-2.5 text-xs font-cinzel font-bold text-[#ffd700] border border-[#ffd700]/70 rounded-lg bg-[#140e06] flex items-center justify-center space-x-2 shadow-[0_0_12px_rgba(255,215,0,0.25)]"
+            >
+              <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
+              <Clock className="w-3.5 h-3.5 text-[#ffd700]" />
+              <span>LIVE REVIEW COUNTDOWN & TIMELINE</span>
+            </Link>
             <Link
               to="/status"
               onClick={() => setMobileMenuOpen(false)}

@@ -9,6 +9,8 @@ const config = require('./config/env');
 
 const registrationRoutes = require('./routes/registrationRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const reviewRoutes = require('./routes/reviewRoutes');
+const { seedDefaultReviewsIfEmpty } = require('./controllers/reviewController');
 
 const app = express();
 
@@ -76,6 +78,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Routes
 app.use('/api/registrations', registrationRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 // Root & Health check endpoints
 app.get('/', (req, res) => {
@@ -206,6 +209,7 @@ const autoSeedAdmin = async () => {
 const startServer = async () => {
   await connectDB();
   await autoSeedAdmin();
+  await seedDefaultReviewsIfEmpty();
 
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`==================================================`);

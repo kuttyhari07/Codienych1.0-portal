@@ -23,6 +23,7 @@ const AdminDashboardPage = () => {
   const [broadcastTarget, setBroadcastTarget] = useState('all');
   const [broadcastLimit, setBroadcastLimit] = useState('240');
   const [broadcastResult, setBroadcastResult] = useState(null);
+  const [reviewData, setReviewData] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,6 +36,12 @@ const AdminDashboardPage = () => {
       if (res.data.success) {
         setStats(res.data.data);
       }
+      try {
+        const revRes = await api.get('/reviews/active');
+        if (revRes.data.success) {
+          setReviewData(revRes.data.data);
+        }
+      } catch (e) {}
     } catch (err) {
       if (err.response && err.response.status === 401) {
         localStorage.removeItem('adminToken');
@@ -176,6 +183,15 @@ const AdminDashboardPage = () => {
           </div>
 
           <div className="flex flex-wrap gap-2.5">
+            <Link
+              to="/admin/reviews"
+              className="inline-flex items-center justify-center space-x-2 px-4 py-2.5 bg-gradient-to-r from-[#ffd700] via-[#e5c158] to-[#d4af37] text-black font-cinzel font-black text-xs rounded-xl shadow-[0_0_20px_rgba(255,215,0,0.35)] hover:brightness-110 transition-all cursor-pointer flex-shrink-0 uppercase tracking-wider"
+              title="Manage review schedule, timings, and stage countdown"
+            >
+              <Clock className="w-4 h-4 text-black" />
+              <span>REVIEW TIMINGS & TIMER</span>
+            </Link>
+
             <button
               onClick={() => {
                 setShowBroadcastModal(true);
@@ -208,6 +224,55 @@ const AdminDashboardPage = () => {
             </button>
           </div>
         </div>
+
+        {/* Live Review Chronometer Telemetry Widget */}
+        {reviewData?.activeReview && (
+          <div className="bg-gradient-to-r from-[#0d1e2e] via-[#091522] to-[#0a1827] border-2 border-[#ffd700]/70 rounded-2xl p-4 sm:p-5 mb-8 shadow-[0_0_25px_rgba(255,215,0,0.15)] flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex items-center space-x-3.5">
+              <div className="w-10 h-10 rounded-xl bg-[#ffd700]/10 border border-[#ffd700]/40 flex items-center justify-center flex-shrink-0">
+                <Clock className="w-5 h-5 text-[#ffd700] animate-pulse" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] font-mono text-[#00e5ff] font-bold uppercase tracking-wider">
+                    STAGE CHRONOMETER • ROUND {reviewData.activeReview.roundNumber}
+                  </span>
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
+                    reviewData.activeReview.status === 'ACTIVE'
+                      ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                      : 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30'
+                  }`}>
+                    {reviewData.activeReview.status}
+                  </span>
+                </div>
+                <h3 className="font-pirate text-lg sm:text-xl text-white">
+                  {reviewData.activeReview.title}
+                </h3>
+                <p className="text-xs font-cinzel text-gray-400">
+                  Window: {new Date(reviewData.activeReview.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} — {new Date(reviewData.activeReview.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} ({reviewData.activeReview.venue || 'Labs'})
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2.5 flex-shrink-0">
+              <Link
+                to="/review"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3.5 py-2 rounded-xl bg-[#081a29] hover:bg-[#122e47] border border-[#00e5ff]/50 text-[#00e5ff] font-cinzel font-bold text-xs flex items-center space-x-1.5 transition-all"
+              >
+                <span>PROJECTOR ↗</span>
+              </Link>
+              <Link
+                to="/admin/reviews"
+                className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#ffd700] to-[#f39c12] text-black font-cinzel font-bold text-xs flex items-center space-x-1.5 hover:brightness-110 shadow-md transition-all"
+              >
+                <Clock className="w-3.5 h-3.5 text-black" />
+                <span>CONFIGURE TIMING →</span>
+              </Link>
+            </div>
+          </div>
+        )}
 
         {/* Stats Cards Matrix */}
         {stats && (

@@ -13,6 +13,8 @@ const AdminRegistrationsPage = lazy(() => import('./pages/admin/AdminRegistratio
 const AdminTeamDetailPage = lazy(() => import('./pages/admin/AdminTeamDetailPage'));
 const AdminPaymentsPage = lazy(() => import('./pages/admin/AdminPaymentsPage'));
 const AdminParticipantsPage = lazy(() => import('./pages/admin/AdminParticipantsPage'));
+const AdminReviewsPage = lazy(() => import('./pages/admin/AdminReviewsPage'));
+const ReviewCountdownPage = lazy(() => import('./pages/ReviewCountdownPage'));
 
 // Sleek lightweight loading fallback
 const PageLoader = () => (
@@ -38,12 +40,16 @@ function App() {
             <Route path="/event" element={<EventPortalPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/status" element={<StatusPage />} />
+            <Route path="/review" element={<ReviewCountdownPage />} />
+            <Route path="/reviews" element={<ReviewCountdownPage />} />
+            <Route path="/countdown" element={<ReviewCountdownPage />} />
             <Route path="/admin/login" element={<AdminLoginPage />} />
             <Route path="/admin" element={<AdminDashboardPage />} />
             <Route path="/admin/registrations" element={<AdminRegistrationsPage />} />
             <Route path="/admin/registrations/:id" element={<AdminTeamDetailPage />} />
             <Route path="/admin/payments" element={<AdminPaymentsPage />} />
             <Route path="/admin/participants" element={<AdminParticipantsPage />} />
+            <Route path="/admin/reviews" element={<AdminReviewsPage />} />
           </Routes>
         </Suspense>
       </Router>

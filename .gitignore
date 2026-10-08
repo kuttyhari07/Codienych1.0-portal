@@ -45,6 +45,7 @@ Desktop.ini
 # Exported reports & sensitive data files
 *.pdf
 *.html
+*.csv
 server/scripts/check_colleges.cjs
 server/scripts/export_kr_details.cjs
 server/scripts/generate_ksr_pdf.cjs

@@ -19,6 +19,15 @@ const {
   getWhatsAppBroadcastStatus,
   triggerWhatsAppBroadcast,
 } = require('../controllers/adminController');
+const {
+  createReview,
+  updateReview,
+  setActiveReview,
+  extendReviewTime,
+  updateReviewStatus,
+  deleteReview,
+  resetDefaultReviews,
+} = require('../controllers/reviewController');
 
 // Public admin routes
 router.post('/login', loginAdmin);
@@ -34,6 +43,15 @@ router.get('/export-report', exportReport);
 router.get('/whatsapp-broadcast/status', getWhatsAppBroadcastStatus);
 router.post('/whatsapp-broadcast/send', triggerWhatsAppBroadcast);
 
+// Review Schedule Admin Management
+router.post('/reviews', createReview);
+router.put('/reviews/:id', updateReview);
+router.post('/reviews/:id/set-active', setActiveReview);
+router.post('/reviews/:id/extend', extendReviewTime);
+router.patch('/reviews/:id/status', updateReviewStatus);
+router.delete('/reviews/:id', deleteReview);
+router.post('/reviews/reset-defaults', resetDefaultReviews);
+
 router.get('/registrations', getRegistrations);
 router.get('/registrations/:id', getRegistrationById);
 router.patch('/registrations/:id/approve-team', approveTeamRegistration);
@@ -48,4 +66,5 @@ router.patch('/participants/:id/verify', verifyParticipant);
 router.patch('/participants/:id/reject', rejectParticipant);
 
 module.exports = router;
+
 

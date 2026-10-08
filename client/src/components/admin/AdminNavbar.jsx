@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Shield, LogOut, ArrowLeft, Anchor } from 'lucide-react';
+import { Shield, LogOut, ArrowLeft, Anchor, Clock } from 'lucide-react';
 import api from '../../services/api';
 
 const AdminNavbar = ({ title, showBack = false, backTo = '/admin' }) => {
@@ -56,8 +56,28 @@ const AdminNavbar = ({ title, showBack = false, backTo = '/admin' }) => {
           </div>
         </div>
 
-        {/* Right Side: Logout Button */}
-        <div>
+        {/* Right Side: Links & Logout */}
+        <div className="flex items-center space-x-2 sm:space-x-3">
+          <Link
+            to="/admin/reviews"
+            className="px-2.5 sm:px-3 py-1.5 rounded-lg bg-[#0c1e2d] border border-[#ffd700]/50 text-[#ffd700] hover:bg-[#ffd700] hover:text-black font-cinzel text-xs flex items-center space-x-1.5 transition-colors cursor-pointer"
+            title="Manage Review Timings and Stage Countdown"
+          >
+            <Clock className="w-3.5 h-3.5 text-[#ffd700]" />
+            <span className="hidden sm:inline">REVIEW TIMINGS</span>
+            <span className="sm:hidden">REVIEWS</span>
+          </Link>
+
+          <Link
+            to="/review"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden md:flex px-2.5 py-1.5 rounded-lg bg-[#07131d] border border-[#00e5ff]/40 text-[#00e5ff] hover:bg-[#00e5ff] hover:text-black font-cinzel text-xs items-center space-x-1.5 transition-colors cursor-pointer"
+            title="Open Live Public Projector Screen"
+          >
+            <span>LIVE SCREEN ↗</span>
+          </Link>
+
           <button
             onClick={handleLogout}
             className="px-3 py-1.5 rounded-lg bg-red-950/40 border border-red-500/40 text-red-400 hover:bg-red-900/50 font-cinzel text-xs flex items-center space-x-1.5 transition-colors cursor-pointer"
