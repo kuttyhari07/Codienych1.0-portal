@@ -485,10 +485,10 @@ const ReviewCountdownPage = () => {
           </div>
         )}
 
-        {/* TWO EQUAL-SIZED CHRONOMETER BOXES: 24-HOUR MASTER CLOCK & CURRENT STAGE TASK CLOCK */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch mb-8">
+        {/* TWO CHRONOMETER BOXES: 24-HOUR MASTER CLOCK ON TOP, ACTIVE STAGE TASK/REVIEW CLOCK BELOW */}
+        <div className="flex flex-col space-y-6 sm:space-y-8 mb-8">
           {/* BOX 1: 24-HOUR MASTER EXPEDITION CHRONOMETER */}
-          <div className="relative bg-gradient-to-b from-[#091522]/95 via-[#061019]/95 to-[#04090f]/95 border-2 border-[#ffd700]/80 rounded-3xl p-5 sm:p-7 md:p-8 shadow-[0_0_50px_rgba(255,215,0,0.18)] flex flex-col justify-between overflow-hidden backdrop-blur-xl">
+          <div className="relative w-full bg-gradient-to-b from-[#091522]/95 via-[#061019]/95 to-[#04090f]/95 border-2 border-[#ffd700]/80 rounded-3xl p-5 sm:p-7 md:p-8 shadow-[0_0_50px_rgba(255,215,0,0.18)] flex flex-col justify-between overflow-hidden backdrop-blur-xl">
             {/* Ornate Corner Accents */}
             <div className="absolute top-0 left-0 w-20 h-20 border-t-2 border-l-2 border-[#ffd700] rounded-tl-3xl pointer-events-none" />
             <div className="absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 border-[#ffd700] rounded-tr-3xl pointer-events-none" />
@@ -539,42 +539,42 @@ const ReviewCountdownPage = () => {
               </div>
 
               {/* Digital Countdown Clock (Hours, Minutes, Seconds) */}
-              <div className="mb-5">
-                <div className="grid grid-cols-3 gap-2.5 sm:gap-3 text-center">
+              <div className="mb-5 max-w-4xl mx-auto w-full">
+                <div className="grid grid-cols-3 gap-2.5 sm:gap-4 md:gap-6 text-center">
                   {/* Hours Box */}
-                  <div className="bg-[#03070c]/90 border border-[#4a381e] hover:border-[#ffd700] rounded-2xl p-3 sm:p-5 shadow-2xl transition-all">
-                    <div className="font-pirate text-4xl sm:text-6xl md:text-7xl text-[#ffd700] pirate-gold-title leading-none">
+                  <div className="bg-[#03070c]/90 border border-[#4a381e] hover:border-[#ffd700] rounded-2xl p-3 sm:p-5 md:p-6 shadow-2xl transition-all">
+                    <div className="font-pirate text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-[#ffd700] pirate-gold-title leading-none">
                       {String(hackathon24h.hours).padStart(2, '0')}
                     </div>
-                    <div className="font-cinzel text-[10px] sm:text-xs font-bold text-[#cfb07a] tracking-widest uppercase mt-2">
+                    <div className="font-cinzel text-[10px] sm:text-xs md:text-sm font-bold text-[#cfb07a] tracking-widest uppercase mt-2">
                       HOURS
                     </div>
                   </div>
 
                   {/* Minutes Box */}
-                  <div className="bg-[#03070c]/90 border border-[#4a381e] hover:border-[#ffd700] rounded-2xl p-3 sm:p-5 shadow-2xl transition-all">
-                    <div className="font-pirate text-4xl sm:text-6xl md:text-7xl text-[#ffd700] pirate-gold-title leading-none">
+                  <div className="bg-[#03070c]/90 border border-[#4a381e] hover:border-[#ffd700] rounded-2xl p-3 sm:p-5 md:p-6 shadow-2xl transition-all">
+                    <div className="font-pirate text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-[#ffd700] pirate-gold-title leading-none">
                       {String(hackathon24h.minutes).padStart(2, '0')}
                     </div>
-                    <div className="font-cinzel text-[10px] sm:text-xs font-bold text-[#cfb07a] tracking-widest uppercase mt-2">
+                    <div className="font-cinzel text-[10px] sm:text-xs md:text-sm font-bold text-[#cfb07a] tracking-widest uppercase mt-2">
                       MINUTES
                     </div>
                   </div>
 
                   {/* Seconds Box */}
-                  <div className={`bg-[#03070c]/90 rounded-2xl p-3 sm:p-5 transition-all ${
+                  <div className={`bg-[#03070c]/90 rounded-2xl p-3 sm:p-5 md:p-6 transition-all ${
                     hackathon24h.isLive
                       ? 'border-2 border-[#00e5ff]/50 shadow-[0_0_25px_rgba(0,229,255,0.25)]'
                       : 'border border-[#4a381e] hover:border-[#ffd700] shadow-2xl'
                   }`}>
-                    <div className={`font-pirate text-4xl sm:text-6xl md:text-7xl leading-none ${
+                    <div className={`font-pirate text-4xl sm:text-6xl md:text-7xl lg:text-8xl leading-none ${
                       hackathon24h.isLive
                         ? 'text-[#00e5ff] pirate-cyan-glow animate-pulse'
                         : 'text-[#ffd700] pirate-gold-title'
                     }`}>
                       {String(hackathon24h.seconds).padStart(2, '0')}
                     </div>
-                    <div className={`font-cinzel text-[10px] sm:text-xs font-bold tracking-widest uppercase mt-2 ${
+                    <div className={`font-cinzel text-[10px] sm:text-xs md:text-sm font-bold tracking-widest uppercase mt-2 ${
                       hackathon24h.isLive ? 'text-[#00e5ff]' : 'text-[#cfb07a]'
                     }`}>
                       SECONDS
@@ -583,8 +583,8 @@ const ReviewCountdownPage = () => {
                 </div>
 
                 {/* Status Indicator Label */}
-                <div className="text-center mt-3.5">
-                  <span className={`inline-block font-cinzel font-black text-xs tracking-widest uppercase px-3.5 py-1.5 rounded-full border ${
+                <div className="text-center mt-3.5 sm:mt-4">
+                  <span className={`inline-block font-cinzel font-black text-xs sm:text-sm tracking-widest uppercase px-4 py-1.5 rounded-full border ${
                     hackathon24h.isLive
                       ? 'bg-red-950/60 text-red-300 border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.3)] animate-pulse'
                       : hackathon24h.isUpcoming
@@ -599,15 +599,15 @@ const ReviewCountdownPage = () => {
               </div>
             </div>
 
-            <div>
+            <div className="max-w-4xl mx-auto w-full">
               {/* Dynamic 24-Hour Progress Bar */}
               <div className="mb-4">
-                <div className="flex justify-between items-center text-[10px] sm:text-[11px] font-mono text-gray-400 mb-1.5">
+                <div className="flex justify-between items-center text-[10px] sm:text-xs font-mono text-gray-400 mb-1.5">
                   <span>OCT 8, 11:30 AM</span>
                   <span className="text-[#ffd700] font-bold">{Math.round(hackathon24h.progress)}% COMPLETED</span>
                   <span>OCT 9, 11:30 AM (FREEZE)</span>
                 </div>
-                <div className="h-3 w-full bg-[#03070b] border border-[#ffd700]/30 rounded-full overflow-hidden p-0.5 shadow-inner">
+                <div className="h-3.5 w-full bg-[#03070b] border border-[#ffd700]/30 rounded-full overflow-hidden p-0.5 shadow-inner">
                   <div
                     className="h-full rounded-full bg-gradient-to-r from-[#00e5ff] via-[#ffd700] to-[#ff4500] transition-all duration-1000 shadow-[0_0_12px_#ffd700]"
                     style={{ width: `${hackathon24h.progress}%` }}
@@ -626,9 +626,9 @@ const ReviewCountdownPage = () => {
             </div>
           </div>
 
-          {/* BOX 2: ACTIVE STAGE & TASK CHRONOMETER */}
+          {/* BOX 2: ACTIVE STAGE & TASK CHRONOMETER (DIRECTLY BELOW 24-HOUR MASTER CLOCK) */}
           {activeReview ? (
-            <div className="relative bg-gradient-to-b from-[#091522]/95 via-[#061019]/95 to-[#04090f]/95 border-2 border-[#ffd700]/80 rounded-3xl p-5 sm:p-7 md:p-8 shadow-[0_0_50px_rgba(255,215,0,0.18)] flex flex-col justify-between overflow-hidden backdrop-blur-xl">
+            <div className="relative w-full bg-gradient-to-b from-[#091522]/95 via-[#061019]/95 to-[#04090f]/95 border-2 border-[#ffd700]/80 rounded-3xl p-5 sm:p-7 md:p-8 shadow-[0_0_50px_rgba(255,215,0,0.18)] flex flex-col justify-between overflow-hidden backdrop-blur-xl">
               {/* Ornate Corner Accents */}
               <div className="absolute top-0 left-0 w-20 h-20 border-t-2 border-l-2 border-[#ffd700] rounded-tl-3xl pointer-events-none" />
               <div className="absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 border-[#ffd700] rounded-tr-3xl pointer-events-none" />
@@ -638,7 +638,7 @@ const ReviewCountdownPage = () => {
               <div>
                 {/* If inspecting another review while a live review is active */}
                 {liveReviewNow && activeReview._id !== liveReviewNow._id && (
-                  <div className="mb-3.5 p-2.5 sm:p-3 bg-red-950/80 border-2 border-red-500 rounded-2xl flex flex-wrap items-center justify-between gap-2 shadow-[0_0_20px_rgba(239,68,68,0.3)]">
+                  <div className="mb-3.5 p-2.5 sm:p-3 bg-red-950/80 border-2 border-red-500 rounded-2xl flex flex-wrap items-center justify-between gap-2 shadow-[0_0_20px_rgba(239,68,68,0.3)] max-w-4xl mx-auto w-full">
                     <div className="flex items-center space-x-2 text-xs font-cinzel text-red-200">
                       <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
                       <span>
@@ -708,42 +708,42 @@ const ReviewCountdownPage = () => {
                 </div>
 
                 {/* DIGITAL COUNTDOWN CLOCK */}
-                <div className="mb-5">
-                  <div className="grid grid-cols-3 gap-2.5 sm:gap-3 text-center">
+                <div className="mb-5 max-w-4xl mx-auto w-full">
+                  <div className="grid grid-cols-3 gap-2.5 sm:gap-4 md:gap-6 text-center">
                     {/* Hours Box */}
-                    <div className="bg-[#03070c]/90 border border-[#4a381e] hover:border-[#ffd700] rounded-2xl p-3 sm:p-5 shadow-2xl transition-all">
-                      <div className="font-pirate text-4xl sm:text-6xl md:text-7xl text-[#ffd700] pirate-gold-title leading-none">
+                    <div className="bg-[#03070c]/90 border border-[#4a381e] hover:border-[#ffd700] rounded-2xl p-3 sm:p-5 md:p-6 shadow-2xl transition-all">
+                      <div className="font-pirate text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-[#ffd700] pirate-gold-title leading-none">
                         {String(timeLeft.hours).padStart(2, '0')}
                       </div>
-                      <div className="font-cinzel text-[10px] sm:text-xs font-bold text-[#cfb07a] tracking-widest uppercase mt-2">
+                      <div className="font-cinzel text-[10px] sm:text-xs md:text-sm font-bold text-[#cfb07a] tracking-widest uppercase mt-2">
                         HOURS
                       </div>
                     </div>
 
                     {/* Minutes Box */}
-                    <div className="bg-[#03070c]/90 border border-[#4a381e] hover:border-[#ffd700] rounded-2xl p-3 sm:p-5 shadow-2xl transition-all">
-                      <div className="font-pirate text-4xl sm:text-6xl md:text-7xl text-[#ffd700] pirate-gold-title leading-none">
+                    <div className="bg-[#03070c]/90 border border-[#4a381e] hover:border-[#ffd700] rounded-2xl p-3 sm:p-5 md:p-6 shadow-2xl transition-all">
+                      <div className="font-pirate text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-[#ffd700] pirate-gold-title leading-none">
                         {String(timeLeft.minutes).padStart(2, '0')}
                       </div>
-                      <div className="font-cinzel text-[10px] sm:text-xs font-bold text-[#cfb07a] tracking-widest uppercase mt-2">
+                      <div className="font-cinzel text-[10px] sm:text-xs md:text-sm font-bold text-[#cfb07a] tracking-widest uppercase mt-2">
                         MINUTES
                       </div>
                     </div>
 
                     {/* Seconds Box */}
-                    <div className={`bg-[#03070c]/90 rounded-2xl p-3 sm:p-5 transition-all ${
+                    <div className={`bg-[#03070c]/90 rounded-2xl p-3 sm:p-5 md:p-6 transition-all ${
                       timeLeft.phase === 'IN_PROGRESS' || timeLeft.phase === 'EVALUATION'
                         ? 'border-2 border-[#00e5ff]/50 shadow-[0_0_25px_rgba(0,229,255,0.25)]'
                         : 'border border-[#4a381e] hover:border-[#ffd700] shadow-2xl'
                     }`}>
-                      <div className={`font-pirate text-4xl sm:text-6xl md:text-7xl leading-none ${
+                      <div className={`font-pirate text-4xl sm:text-6xl md:text-7xl lg:text-8xl leading-none ${
                         timeLeft.phase === 'IN_PROGRESS' || timeLeft.phase === 'EVALUATION'
                           ? 'text-[#00e5ff] pirate-cyan-glow animate-pulse'
                           : 'text-[#ffd700] pirate-gold-title'
                       }`}>
                         {String(timeLeft.seconds).padStart(2, '0')}
                       </div>
-                      <div className={`font-cinzel text-[10px] sm:text-xs font-bold tracking-widest uppercase mt-2 ${
+                      <div className={`font-cinzel text-[10px] sm:text-xs md:text-sm font-bold tracking-widest uppercase mt-2 ${
                         timeLeft.phase === 'IN_PROGRESS' || timeLeft.phase === 'EVALUATION' ? 'text-[#00e5ff]' : 'text-[#cfb07a]'
                       }`}>
                         {timeLeft.phase === 'STANDBY' ? 'SECONDS (IDLE)' : 'SECONDS'}
@@ -752,8 +752,8 @@ const ReviewCountdownPage = () => {
                   </div>
 
                   {/* Status Indicator Label Below Digits */}
-                  <div className="text-center mt-3.5">
-                    <span className={`inline-block font-cinzel font-black text-xs tracking-widest uppercase px-3.5 py-1.5 rounded-full border ${
+                  <div className="text-center mt-3.5 sm:mt-4">
+                    <span className={`inline-block font-cinzel font-black text-xs sm:text-sm tracking-widest uppercase px-4 py-1.5 rounded-full border ${
                       timeLeft.phase === 'IN_PROGRESS'
                         ? 'bg-red-950/60 text-red-300 border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.3)] animate-pulse'
                         : timeLeft.phase === 'EVALUATION'
@@ -774,17 +774,17 @@ const ReviewCountdownPage = () => {
                 </div>
               </div>
 
-              <div>
+              <div className="max-w-4xl mx-auto w-full">
                 {/* Dynamic Progress Bar */}
                 <div className="mb-4">
-                  <div className="flex justify-between items-center text-[10px] sm:text-[11px] font-mono text-gray-400 mb-1.5">
+                  <div className="flex justify-between items-center text-[10px] sm:text-xs font-mono text-gray-400 mb-1.5">
                     <span>{timeLeft.phase === 'STANDBY' ? 'TASK STANDBY' : timeLeft.phase === 'EVALUATION' ? 'EVALUATION' : 'SPRINT START'}</span>
                     <span className="text-[#ffd700] font-bold">
                       {timeLeft.phase === 'STANDBY' ? '0% (IDLE)' : `${Math.round(timeLeft.progressPercent)}% ELAPSED`}
                     </span>
                     <span>{timeLeft.phase === 'STANDBY' ? `OPENS AT ${new Date(activeReview.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : timeLeft.phase === 'EVALUATION' ? 'EVALUATION END' : 'DEADLINE FREEZE'}</span>
                   </div>
-                  <div className="h-3 w-full bg-[#03070b] border border-[#ffd700]/30 rounded-full overflow-hidden p-0.5 shadow-inner">
+                  <div className="h-3.5 w-full bg-[#03070b] border border-[#ffd700]/30 rounded-full overflow-hidden p-0.5 shadow-inner">
                     <div
                       className="h-full rounded-full bg-gradient-to-r from-[#ffd700] via-[#f39c12] to-[#ff4500] transition-all duration-1000 shadow-[0_0_12px_#ffd700]"
                       style={{ width: `${timeLeft.phase === 'STANDBY' ? 0 : timeLeft.progressPercent}%` }}
