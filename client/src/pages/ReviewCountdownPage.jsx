@@ -16,6 +16,25 @@ import {
 } from '../utils/cyberSound';
 import CyberEnergyMatrixCanvas from '../components/CyberEnergyMatrixCanvas';
 
+const OFFICIAL_AGENDA = [
+  { id: 1, title: 'Registration', time: '09:30 AM to 11:00 AM', day: 'Day 1 • 8 Oct', category: 'General' },
+  { id: 2, title: 'Inauguration Ceremony', time: '11:30 AM to 12:00 PM', day: 'Day 1 • 8 Oct', category: 'Inauguration', highlight: true, details: 'Welcome, Prayer song, Lighting Lamp, Welcome Address, Chief Guest Honor, Chief Guest Speech, Program Instruction' },
+  { id: 3, title: 'Lunch', time: '12:30 PM to 01:30 PM', day: 'Day 1 • 8 Oct', category: 'Meal' },
+  { id: 4, title: 'Task Starts', time: '01:30 PM', day: 'Day 1 • 8 Oct', category: 'Hackathon', highlight: true, details: '24-Hour continuous coding sprint begins!' },
+  { id: 5, title: 'Refreshment - 1', time: '02:45 PM', day: 'Day 1 • 8 Oct', category: 'Refreshment', details: 'Fresh Juice' },
+  { id: 6, title: 'Review - 1', time: '03:30 PM to 04:30 PM', day: 'Day 1 • 8 Oct', category: 'Evaluation', highlight: true, details: 'Problem Statement, Architecture Diagram & Wireframe Prototype' },
+  { id: 7, title: 'Refreshment - 2', time: '04:30 PM to 05:00 PM', day: 'Day 1 • 8 Oct', category: 'Refreshment', details: 'Hot Tea & Samosa' },
+  { id: 8, title: 'Dinner', time: '07:30 PM to 08:30 PM', day: 'Day 1 • 8 Oct', category: 'Meal', details: 'Dinner Feast for all participants' },
+  { id: 9, title: 'Review - 2', time: '09:30 PM to 10:30 PM', day: 'Day 1 • 8 Oct', category: 'Evaluation', highlight: true, details: 'Prototype Implementation, Database Schema & Backend APIs' },
+  { id: 10, title: 'Refreshment - 3', time: '11:30 PM', day: 'Day 1 • 8 Oct', category: 'Refreshment', details: 'Late Night Tea & Biscuit' },
+  { id: 11, title: 'Review - 3', time: '12:30 AM to 01:30 AM', day: 'Day 2 • 9 Oct', category: 'Evaluation', highlight: true, details: 'Midnight Code Audit, Edge Cases & Deployment Readiness' },
+  { id: 12, title: 'Refreshment - 4', time: '06:00 AM', day: 'Day 2 • 9 Oct', category: 'Refreshment', details: 'Sunrise Coffee & Biscuit' },
+  { id: 13, title: 'Breakfast', time: '08:00 AM to 09:00 AM', day: 'Day 2 • 9 Oct', category: 'Meal', details: 'Morning Breakfast' },
+  { id: 14, title: 'Review - 4 (Final Evaluation)', time: '09:30 AM to 11:30 AM', day: 'Day 2 • 9 Oct', category: 'Evaluation', highlight: true, details: 'Grand Jury Presentation, Pitch Deck & Live Demo' },
+  { id: 15, title: 'Prize Distribution', time: '11:45 AM', day: 'Day 2 • 9 Oct', category: 'Valedictory', highlight: true, details: 'Winners Announcement & Cash Prizes Awarding' },
+  { id: 16, title: 'Photo Session & Vote of Thanks', time: '12:15 PM', day: 'Day 2 • 9 Oct', category: 'Valedictory' },
+];
+
 const ReviewCountdownPage = () => {
   const [activeReview, setActiveReview] = useState(null);
   const [allReviews, setAllReviews] = useState([]);
@@ -712,6 +731,70 @@ const ReviewCountdownPage = () => {
                 </div>
               );
             })}
+          </div>
+        </section>
+
+        {/* OFFICIAL ESEC MASTER AGENDA (8.10.2026 - 9.10.2026) */}
+        <section className="mt-8 bg-[#061019]/90 border border-[#ffd700]/40 rounded-3xl p-5 sm:p-8 shadow-2xl backdrop-blur-xl">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-[#ffd700]/20">
+            <div>
+              <div className="flex items-center space-x-2 text-[11px] font-mono text-[#00e5ff] uppercase tracking-wider mb-1">
+                <span>ERODE SENGUNTHAR ENGINEERING COLLEGE</span>
+                <span>•</span>
+                <span>DEPT OF IT</span>
+              </div>
+              <h3 className="font-pirate text-xl sm:text-2xl text-white tracking-wide">
+                CODIENYCH 1.0 <span className="text-[#ffd700] pirate-gold-title">OFFICIAL AGENDA TIMELINE</span>
+              </h3>
+            </div>
+            <span className="px-3 py-1 rounded-full bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] text-xs font-mono font-bold self-start sm:self-auto">
+              8.10.2026 – 9.10.2026
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+            {OFFICIAL_AGENDA.map((item) => (
+              <div
+                key={item.id}
+                className={`p-3.5 sm:p-4 rounded-xl border transition-all flex items-start space-x-3.5 ${
+                  item.highlight
+                    ? 'bg-[#0f1f2e]/90 border-[#ffd700]/50 shadow-[0_0_15px_rgba(255,215,0,0.12)]'
+                    : 'bg-[#03080e]/80 border-[#1f3042] text-gray-300'
+                }`}
+              >
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 text-xs font-mono font-black ${
+                  item.highlight ? 'bg-[#ffd700] text-black shadow-md' : 'bg-[#0e1c29] text-gray-400 border border-[#233547]'
+                }`}>
+                  {String(item.id).padStart(2, '0')}
+                </div>
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2">
+                    <h4 className={`text-xs sm:text-sm font-bold truncate ${item.highlight ? 'text-white' : 'text-gray-200'}`}>
+                      {item.title}
+                    </h4>
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold whitespace-nowrap ${
+                      item.highlight
+                        ? 'bg-[#ffd700]/20 text-[#ffd700] border border-[#ffd700]/40'
+                        : 'bg-[#0a1520] text-gray-400 border border-[#1b2b3b]'
+                    }`}>
+                      {item.time}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between text-[11px] font-cinzel text-gray-400 mt-1">
+                    <span>{item.day}</span>
+                    <span className="text-[#00e5ff] text-[10px] font-mono">{item.category}</span>
+                  </div>
+
+                  {item.details && (
+                    <p className="text-[11px] font-cinzel text-[#cfb07a] mt-1 line-clamp-2 leading-relaxed">
+                      {item.details}
+                    </p>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 

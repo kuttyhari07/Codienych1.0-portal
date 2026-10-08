@@ -1,44 +1,43 @@
 const ReviewSchedule = require('../models/ReviewSchedule');
 
-// Default initial seeds for CODIENYCH 1.0 Hackathon
+// Official ESEC Department of Information Technology CODIENYCH 1.0 Agenda Timings (8.10.2026):
 const getDefaultReviewSeeds = () => {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth();
-  const date = now.getDate();
+  const year = 2026;
+  const month = 9; // October (0-indexed: 9 = October)
+  const date = 8;
 
-  // Review 1: Today 11:30 AM - 01:30 PM
-  const r1Start = new Date(year, month, date, 11, 30, 0);
-  const r1End = new Date(year, month, date, 13, 30, 0);
+  // Review - 1: Today 03:30 PM to 04:30 PM
+  const r1Start = new Date(year, month, date, 15, 30, 0);
+  const r1End = new Date(year, month, date, 16, 30, 0);
 
-  // Review 2: Today 08:00 PM - 10:30 PM
-  const r2Start = new Date(year, month, date, 20, 0, 0);
+  // Review - 2: Today 09:30 PM to 10:30 PM
+  const r2Start = new Date(year, month, date, 21, 30, 0);
   const r2End = new Date(year, month, date, 22, 30, 0);
 
-  // Review 3: Tomorrow 03:30 AM - 05:30 AM
-  const r3Start = new Date(year, month, date + 1, 3, 30, 0);
-  const r3End = new Date(year, month, date + 1, 5, 30, 0);
+  // Review - 3: Tonight / Midnight 12:30 AM to 01:30 AM (9 Oct)
+  const r3Start = new Date(year, month, date + 1, 0, 30, 0);
+  const r3End = new Date(year, month, date + 1, 1, 30, 0);
 
-  // Final Review: Tomorrow 09:00 AM - 11:30 AM
-  const r4Start = new Date(year, month, date + 1, 9, 0, 0);
+  // Review - 4: Tomorrow 09:30 AM to 11:30 AM (9 Oct)
+  const r4Start = new Date(year, month, date + 1, 9, 30, 0);
   const r4End = new Date(year, month, date + 1, 11, 30, 0);
 
   return [
     {
-      title: 'Review 1: Ideation, Architecture & Problem Statement',
+      title: 'Review - 1',
       roundNumber: 1,
       order: 1,
       startTime: r1Start,
       endTime: r1End,
-      status: 'ACTIVE',
+      status: 'UPCOMING',
       isCurrent: true,
       venue: 'Respective Team Bays / Software Labs',
-      description: 'Evaluation criteria: Clarity of problem statement, architecture flow diagram, tech stack feasibility, and UI/UX wireframe prototypes. 5 mins presentation + 3 mins Q&A.',
-      announcement: 'Review 1 is live! Keep your architecture diagrams and slides ready for jury evaluation.',
+      description: 'Official Review 1 (03:30 PM - 04:30 PM). Evaluation criteria: Clarity of problem statement, architecture flow diagram, tech stack feasibility, and UI/UX wireframe prototypes. 5 mins presentation + 3 mins Q&A.',
+      announcement: 'Review - 1 is scheduled from 03:30 PM to 04:30 PM! Prepare your architecture diagrams and slides.',
       extendedMinutes: 0,
     },
     {
-      title: 'Review 2: Midway Prototype & API Implementation',
+      title: 'Review - 2',
       roundNumber: 2,
       order: 2,
       startTime: r2Start,
@@ -46,12 +45,12 @@ const getDefaultReviewSeeds = () => {
       status: 'UPCOMING',
       isCurrent: false,
       venue: 'Respective Team Bays / Software Labs',
-      description: 'Evaluation criteria: Working prototype, database schema setup, backend API integration, and key feature implementation progress.',
+      description: 'Official Review 2 (09:30 PM - 10:30 PM). Evaluation criteria: Working prototype, database schema setup, backend API integration, and key feature implementation progress.',
       announcement: '',
       extendedMinutes: 0,
     },
     {
-      title: 'Review 3: Code Freeze, Security & Cloud Deployment',
+      title: 'Review - 3',
       roundNumber: 3,
       order: 3,
       startTime: r3Start,
@@ -59,39 +58,57 @@ const getDefaultReviewSeeds = () => {
       status: 'UPCOMING',
       isCurrent: false,
       venue: 'Respective Team Bays / Software Labs',
-      description: 'Evaluation criteria: Live hosted web application, edge cases testing, GitHub commit activity, and code quality inspection.',
+      description: 'Official Review 3 (12:30 AM - 01:30 AM). Evaluation criteria: Midnight coding scrutiny, edge cases, cloud deployment readiness, and code quality inspection.',
       announcement: '',
       extendedMinutes: 0,
     },
     {
-      title: 'Final Review: Grand Jury Presentation & Live Pitch',
+      title: 'Review - 4',
       roundNumber: 4,
       order: 4,
       startTime: r4Start,
       endTime: r4End,
       status: 'UPCOMING',
       isCurrent: false,
-      venue: 'Main Auditorium Stage',
-      description: 'Grand evaluation before industry jury panel. 7 mins live pitch + 3 mins live demo + 2 mins jury interrogation.',
+      venue: 'Main Fleet Stage / Auditorium',
+      description: 'Official Final Review 4 (09:30 AM - 11:30 AM). Grand evaluation before industry jury panel. Live project demonstration, business viability, and final code freeze.',
       announcement: '',
       extendedMinutes: 0,
     },
   ];
 };
 
-// Auto seed default reviews if none exist in the database
+// Auto seed or sync official agenda reviews in the database
 const seedDefaultReviewsIfEmpty = async () => {
   try {
+    const seeds = getDefaultReviewSeeds();
     const count = await ReviewSchedule.countDocuments();
     if (count === 0) {
-      const seeds = getDefaultReviewSeeds();
       await ReviewSchedule.insertMany(seeds);
-      console.log('[Review Schedule] Initialized default hackathon review rounds.');
+      console.log('[Review Schedule] Initialized official ESEC agenda review rounds.');
+    } else {
+      // Sync official timings across the rounds
+      for (const seed of seeds) {
+        await ReviewSchedule.updateOne(
+          { roundNumber: seed.roundNumber },
+          {
+            $set: {
+              title: seed.title,
+              startTime: seed.startTime,
+              endTime: seed.endTime,
+              venue: seed.venue,
+              description: seed.description,
+            },
+          }
+        );
+      }
+      console.log('[Review Schedule] Synchronized official agenda review timings.');
     }
   } catch (err) {
     console.warn('[Review Schedule Seed Warning]', err.message);
   }
 };
+
 
 /**
  * Public: Get Currently Active Review & Full Review Schedule
