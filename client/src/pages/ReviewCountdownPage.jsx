@@ -458,7 +458,7 @@ const ReviewCountdownPage = () => {
       )}
 
       {/* Main Container */}
-      <main className="relative z-10 flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-10 flex flex-col justify-center">
+      <main className="relative z-10 flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 py-6 sm:py-8 flex flex-col justify-center">
         {/* Fullscreen Minimal Header */}
         {isFullscreen && (
           <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#ffd700]/30">
@@ -485,289 +485,375 @@ const ReviewCountdownPage = () => {
           </div>
         )}
 
-        {/* Global 24-Hour Hackathon Mission Clock Banner */}
-        <div className="bg-[#061019]/90 border border-[#ffd700]/50 rounded-2xl p-4 sm:p-5 mb-6 shadow-xl backdrop-blur-md">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-            <div className="flex items-center space-x-3.5">
-              <div className="w-10 h-10 rounded-xl bg-[#ffd700]/15 border border-[#ffd700]/50 flex items-center justify-center flex-shrink-0">
-                <Anchor className="w-5 h-5 text-[#ffd700] animate-bounce" />
-              </div>
-              <div>
+        {/* TWO EQUAL-SIZED CHRONOMETER BOXES: 24-HOUR MASTER CLOCK & CURRENT STAGE TASK CLOCK */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch mb-8">
+          {/* BOX 1: 24-HOUR MASTER EXPEDITION CHRONOMETER */}
+          <div className="relative bg-gradient-to-b from-[#091522]/95 via-[#061019]/95 to-[#04090f]/95 border-2 border-[#ffd700]/80 rounded-3xl p-5 sm:p-7 md:p-8 shadow-[0_0_50px_rgba(255,215,0,0.18)] flex flex-col justify-between overflow-hidden backdrop-blur-xl">
+            {/* Ornate Corner Accents */}
+            <div className="absolute top-0 left-0 w-20 h-20 border-t-2 border-l-2 border-[#ffd700] rounded-tl-3xl pointer-events-none" />
+            <div className="absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 border-[#ffd700] rounded-tr-3xl pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-20 h-20 border-b-2 border-l-2 border-[#ffd700] rounded-bl-3xl pointer-events-none" />
+            <div className="absolute bottom-0 right-0 w-20 h-20 border-b-2 border-r-2 border-[#ffd700] rounded-br-3xl pointer-events-none" />
+
+            <div>
+              {/* Header Tag */}
+              <div className="flex flex-wrap items-center justify-between gap-3 mb-4 sm:mb-6">
+                <div className="inline-flex items-center space-x-2 bg-[#ffd700]/10 border border-[#ffd700]/40 px-3.5 py-1.5 rounded-full">
+                  <Anchor className="w-4 h-4 text-[#ffd700] animate-bounce" />
+                  <span className="font-cinzel text-xs sm:text-sm font-black tracking-widest text-[#ffd700] uppercase">
+                    24-HOUR MASTER MISSION
+                  </span>
+                </div>
+
                 <div className="flex items-center space-x-2">
                   {hackathon24h.isLive ? (
-                    <span className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-red-500/20 text-red-400 border border-red-500/40 text-[10px] font-mono font-bold animate-pulse">
-                      <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping" />
+                    <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-red-500/20 text-red-400 border border-red-500/50 text-xs font-cinzel font-bold shadow-[0_0_12px_rgba(239,68,68,0.4)] animate-pulse">
+                      <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
                       <span>24-HR EXPEDITION LIVE</span>
                     </span>
                   ) : hackathon24h.isUpcoming ? (
-                    <span className="px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-[10px] font-mono font-bold">
-                      STARTS TODAY 11:30 AM
+                    <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-xs font-cinzel font-bold">
+                      <Clock className="w-3.5 h-3.5" />
+                      <span>COMMENCES TODAY 11:30 AM</span>
                     </span>
                   ) : (
-                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-mono font-bold">
-                      24-HR FINALE REACHED
+                    <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-xs font-cinzel font-bold">
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      <span>24-HR FINALE REACHED</span>
                     </span>
                   )}
-                  <span className="text-xs sm:text-sm font-cinzel font-black text-white uppercase tracking-wider">
-                    24-HOUR MASTER EXPEDITION CLOCK
+                </div>
+              </div>
+
+              {/* Title & Window */}
+              <div className="text-center mb-5 sm:mb-6">
+                <h2 className="font-pirate text-2xl sm:text-3xl md:text-4xl text-white tracking-wide mb-2 leading-tight">
+                  24-HOUR MASTER EXPEDITION
+                </h2>
+                <div className="flex flex-wrap items-center justify-center gap-2 text-xs text-[#e5c158] font-cinzel">
+                  <span className="inline-flex items-center space-x-1.5 bg-[#0e1d2c] px-3 py-1 rounded-lg border border-[#ffd700]/30 font-bold">
+                    <Clock className="w-3.5 h-3.5 text-[#00e5ff]" />
+                    <span>EXPEDITION WINDOW: 8 OCT 11:30 AM → 9 OCT 11:30 AM</span>
                   </span>
                 </div>
-                <p className="text-[11px] font-cinzel text-gray-400 mt-0.5">
-                  Continuous High Seas Sprint: <strong className="text-[#ffd700]">Today 11:30 AM</strong> → <strong className="text-[#ffd700]">Tomorrow 11:30 AM IST (October 8 – 9, 2026)</strong>
-                </p>
-              </div>
-            </div>
-
-            {/* Countdown Clock Pill */}
-            <div className="flex items-center space-x-2.5 bg-[#03070c] px-4 py-2 rounded-xl border border-[#ffd700]/40 shadow-inner flex-shrink-0">
-              <Clock className="w-4 h-4 text-[#00e5ff]" />
-              <div className="font-mono text-base sm:text-lg font-black text-[#ffd700] tracking-wider">
-                {String(hackathon24h.hours).padStart(2, '0')}h : {String(hackathon24h.minutes).padStart(2, '0')}m : {String(hackathon24h.seconds).padStart(2, '0')}s
-              </div>
-              <span className="text-[10px] font-cinzel text-gray-400 font-bold uppercase">
-                {hackathon24h.isLive ? 'REMAINING' : hackathon24h.isUpcoming ? 'TO KICK-OFF' : 'FINISHED'}
-              </span>
-            </div>
-          </div>
-
-          {/* Overall 24-Hour Progress Bar */}
-          <div className="mt-3">
-            <div className="flex justify-between items-center text-[10px] font-mono text-gray-400 mb-1">
-              <span>OCT 8, 11:30 AM</span>
-              <span className="text-[#ffd700] font-bold">{Math.round(hackathon24h.progress)}% COMPLETED</span>
-              <span>OCT 9, 11:30 AM (CODE FREEZE)</span>
-            </div>
-            <div className="h-2 w-full bg-[#03070b] border border-[#ffd700]/25 rounded-full overflow-hidden p-0.5 shadow-inner">
-              <div
-                className="h-full rounded-full bg-gradient-to-r from-[#00e5ff] via-[#ffd700] to-[#ff4500] transition-all duration-1000"
-                style={{ width: `${hackathon24h.progress}%` }}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Hero Active Review Card */}
-        {activeReview ? (
-          <div className="relative bg-gradient-to-b from-[#091522]/95 via-[#061019]/95 to-[#04090f]/95 border-2 border-[#ffd700]/80 rounded-3xl p-5 sm:p-8 md:p-10 shadow-[0_0_60px_rgba(255,215,0,0.18)] mb-8 overflow-hidden backdrop-blur-xl">
-            {/* Top Ornate Accents */}
-            <div className="absolute top-0 left-0 w-24 h-24 border-t-2 border-l-2 border-[#ffd700] rounded-tl-3xl pointer-events-none" />
-            <div className="absolute top-0 right-0 w-24 h-24 border-t-2 border-r-2 border-[#ffd700] rounded-tr-3xl pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-24 h-24 border-b-2 border-l-2 border-[#ffd700] rounded-bl-3xl pointer-events-none" />
-            <div className="absolute bottom-0 right-0 w-24 h-24 border-b-2 border-r-2 border-[#ffd700] rounded-br-3xl pointer-events-none" />
-
-            {/* If inspecting another review while a live review is active */}
-            {liveReviewNow && activeReview._id !== liveReviewNow._id && (
-              <div className="mb-4 p-3.5 bg-red-950/80 border-2 border-red-500 rounded-2xl flex flex-wrap items-center justify-between gap-3 shadow-[0_0_20px_rgba(239,68,68,0.3)]">
-                <div className="flex items-center space-x-2.5 text-xs font-cinzel text-red-200">
-                  <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping" />
-                  <span>
-                    <strong>{liveReviewNow.title}</strong> is currently <strong className="text-white uppercase">LIVE ON STAGE</strong>!
-                  </span>
-                </div>
-                <button
-                  onClick={() => setActiveReview(liveReviewNow)}
-                  className="px-3 py-1.5 bg-red-500 hover:bg-red-400 text-black font-cinzel font-black text-xs rounded-xl transition-all cursor-pointer shadow-md"
-                >
-                  SWITCH TO LIVE ROUND
-                </button>
-              </div>
-            )}
-
-            {/* Active Review Header Tag */}
-            <div className="flex flex-wrap items-center justify-between gap-3 mb-4 sm:mb-6">
-              <div className="inline-flex items-center space-x-2 bg-[#ffd700]/10 border border-[#ffd700]/40 px-3.5 py-1.5 rounded-full">
-                <Radio className="w-4 h-4 text-[#ffd700] animate-pulse" />
-                <span className="font-cinzel text-xs sm:text-sm font-black tracking-widest text-[#ffd700] uppercase">
-                  {timeLeft.phase === 'IN_PROGRESS'
-                    ? `ROUND ${String(activeReview.roundNumber || 1).padStart(2, '0')} • TASK SPRINT LIVE`
-                    : timeLeft.phase === 'EVALUATION'
-                    ? `ROUND ${String(activeReview.roundNumber || 1).padStart(2, '0')} • JURY EVALUATION LIVE`
-                    : timeLeft.phase === 'ENDED'
-                    ? `ROUND ${String(activeReview.roundNumber || 1).padStart(2, '0')} • CONCLUDED`
-                    : `ROUND ${String(activeReview.roundNumber || 1).padStart(2, '0')} • STANDBY SCHEDULE`}
-                </span>
               </div>
 
-              <div className="flex items-center space-x-3">
-                {getStatusBadge(activeReview.status, activeReview.isCurrent, activeReview.startTime, activeReview.endTime, activeReview.reviewEndTime)}
-                {activeReview.extendedMinutes > 0 && (
-                  <span className="px-2.5 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/40 text-xs font-mono font-bold">
-                    +{activeReview.extendedMinutes}m EXTENDED
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {/* Review Title & Venue */}
-            <div className="text-center mb-6 sm:mb-8">
-              <h2 className="font-pirate text-2xl sm:text-4xl md:text-5xl text-white tracking-wide mb-2 sm:mb-3">
-                {activeReview.title}
-              </h2>
-              
-              <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-xs sm:text-sm text-[#e5c158] font-cinzel">
-                <span className="inline-flex items-center space-x-1.5 bg-[#0e1d2c] px-3 py-1 rounded-lg border border-[#ffd700]/30 font-bold">
-                  <Clock className="w-3.5 h-3.5 text-[#00e5ff]" />
-                  <span>TASK WINDOW: {formatTimeSlot(activeReview.startTime, activeReview.endTime)}</span>
-                </span>
-
-                {activeReview.reviewEndTime && (
-                  <span className="inline-flex items-center space-x-1.5 bg-[#0e1d2c] px-3 py-1 rounded-lg border border-purple-500/30 text-purple-300 font-bold">
-                    <Award className="w-3.5 h-3.5 text-purple-400" />
-                    <span>EVALUATION: {formatTimeSlot(activeReview.endTime, activeReview.reviewEndTime)}</span>
-                  </span>
-                )}
-                
-                {activeReview.venue && (
-                  <span className="inline-flex items-center space-x-1.5 bg-[#0e1d2c] px-3 py-1 rounded-lg border border-[#ffd700]/30">
-                    <MapPin className="w-3.5 h-3.5 text-[#ffd700]" />
-                    <span>{activeReview.venue}</span>
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {/* MASSIVE DIGITAL COUNTDOWN CLOCK */}
-            <div className="max-w-3xl mx-auto mb-6 sm:mb-8">
-              <div className="grid grid-cols-3 gap-2.5 sm:gap-6 text-center">
-                {/* Hours Box */}
-                <div className="bg-[#03070c]/90 border border-[#4a381e] hover:border-[#ffd700] rounded-2xl sm:rounded-3xl p-3 sm:p-6 shadow-2xl transition-all">
-                  <div className="font-pirate text-4xl sm:text-7xl md:text-8xl text-[#ffd700] pirate-gold-title leading-none">
-                    {String(timeLeft.hours).padStart(2, '0')}
+              {/* Digital Countdown Clock (Hours, Minutes, Seconds) */}
+              <div className="mb-5">
+                <div className="grid grid-cols-3 gap-2.5 sm:gap-3 text-center">
+                  {/* Hours Box */}
+                  <div className="bg-[#03070c]/90 border border-[#4a381e] hover:border-[#ffd700] rounded-2xl p-3 sm:p-5 shadow-2xl transition-all">
+                    <div className="font-pirate text-4xl sm:text-6xl md:text-7xl text-[#ffd700] pirate-gold-title leading-none">
+                      {String(hackathon24h.hours).padStart(2, '0')}
+                    </div>
+                    <div className="font-cinzel text-[10px] sm:text-xs font-bold text-[#cfb07a] tracking-widest uppercase mt-2">
+                      HOURS
+                    </div>
                   </div>
-                  <div className="font-cinzel text-[10px] sm:text-xs font-bold text-[#cfb07a] tracking-widest uppercase mt-2">
-                    HOURS
-                  </div>
-                </div>
 
-                {/* Minutes Box */}
-                <div className="bg-[#03070c]/90 border border-[#4a381e] hover:border-[#ffd700] rounded-2xl sm:rounded-3xl p-3 sm:p-6 shadow-2xl transition-all">
-                  <div className="font-pirate text-4xl sm:text-7xl md:text-8xl text-[#ffd700] pirate-gold-title leading-none">
-                    {String(timeLeft.minutes).padStart(2, '0')}
+                  {/* Minutes Box */}
+                  <div className="bg-[#03070c]/90 border border-[#4a381e] hover:border-[#ffd700] rounded-2xl p-3 sm:p-5 shadow-2xl transition-all">
+                    <div className="font-pirate text-4xl sm:text-6xl md:text-7xl text-[#ffd700] pirate-gold-title leading-none">
+                      {String(hackathon24h.minutes).padStart(2, '0')}
+                    </div>
+                    <div className="font-cinzel text-[10px] sm:text-xs font-bold text-[#cfb07a] tracking-widest uppercase mt-2">
+                      MINUTES
+                    </div>
                   </div>
-                  <div className="font-cinzel text-[10px] sm:text-xs font-bold text-[#cfb07a] tracking-widest uppercase mt-2">
-                    MINUTES
-                  </div>
-                </div>
 
-                {/* Seconds Box */}
-                <div className={`bg-[#03070c]/90 rounded-2xl sm:rounded-3xl p-3 sm:p-6 transition-all ${
-                  timeLeft.phase === 'IN_PROGRESS' || timeLeft.phase === 'EVALUATION'
-                    ? 'border-2 border-[#00e5ff]/50 shadow-[0_0_25px_rgba(0,229,255,0.25)]'
-                    : 'border border-[#4a381e] hover:border-[#ffd700] shadow-2xl'
-                }`}>
-                  <div className={`font-pirate text-4xl sm:text-7xl md:text-8xl leading-none ${
-                    timeLeft.phase === 'IN_PROGRESS' || timeLeft.phase === 'EVALUATION'
-                      ? 'text-[#00e5ff] pirate-cyan-glow animate-pulse'
-                      : 'text-[#ffd700] pirate-gold-title'
+                  {/* Seconds Box */}
+                  <div className={`bg-[#03070c]/90 rounded-2xl p-3 sm:p-5 transition-all ${
+                    hackathon24h.isLive
+                      ? 'border-2 border-[#00e5ff]/50 shadow-[0_0_25px_rgba(0,229,255,0.25)]'
+                      : 'border border-[#4a381e] hover:border-[#ffd700] shadow-2xl'
                   }`}>
-                    {String(timeLeft.seconds).padStart(2, '0')}
+                    <div className={`font-pirate text-4xl sm:text-6xl md:text-7xl leading-none ${
+                      hackathon24h.isLive
+                        ? 'text-[#00e5ff] pirate-cyan-glow animate-pulse'
+                        : 'text-[#ffd700] pirate-gold-title'
+                    }`}>
+                      {String(hackathon24h.seconds).padStart(2, '0')}
+                    </div>
+                    <div className={`font-cinzel text-[10px] sm:text-xs font-bold tracking-widest uppercase mt-2 ${
+                      hackathon24h.isLive ? 'text-[#00e5ff]' : 'text-[#cfb07a]'
+                    }`}>
+                      SECONDS
+                    </div>
                   </div>
-                  <div className={`font-cinzel text-[10px] sm:text-xs font-bold tracking-widest uppercase mt-2 ${
-                    timeLeft.phase === 'IN_PROGRESS' || timeLeft.phase === 'EVALUATION' ? 'text-[#00e5ff]' : 'text-[#cfb07a]'
+                </div>
+
+                {/* Status Indicator Label */}
+                <div className="text-center mt-3.5">
+                  <span className={`inline-block font-cinzel font-black text-xs tracking-widest uppercase px-3.5 py-1.5 rounded-full border ${
+                    hackathon24h.isLive
+                      ? 'bg-red-950/60 text-red-300 border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.3)] animate-pulse'
+                      : hackathon24h.isUpcoming
+                      ? 'bg-amber-950/60 text-amber-300 border-amber-500/50'
+                      : 'bg-emerald-950/60 text-emerald-300 border-emerald-500/50'
                   }`}>
-                    {timeLeft.phase === 'STANDBY' ? 'SECONDS (IDLE)' : 'SECONDS'}
-                  </div>
-                </div>
-              </div>
-
-              {/* Status Indicator Label Below Digits */}
-              <div className="text-center mt-4">
-                <span className={`inline-block font-cinzel font-black text-xs sm:text-sm tracking-widest uppercase px-4 py-1.5 rounded-full border ${
-                  timeLeft.phase === 'IN_PROGRESS'
-                    ? 'bg-red-950/60 text-red-300 border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.3)] animate-pulse'
-                    : timeLeft.phase === 'EVALUATION'
-                    ? 'bg-cyan-950/60 text-cyan-300 border-cyan-500/50 shadow-[0_0_15px_rgba(0,229,255,0.3)] animate-pulse'
-                    : timeLeft.phase === 'STANDBY'
-                    ? 'bg-amber-950/60 text-amber-300 border-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.2)]'
-                    : timeLeft.phase === 'PAUSED'
-                    ? 'bg-amber-950/60 text-amber-300 border-amber-500/50'
-                    : 'bg-emerald-950/60 text-emerald-300 border-emerald-500/50'
-                }`}>
-                  {timeLeft.phase === 'IN_PROGRESS' && '⚡ TASK CODING SPRINT ACTIVE — ALLOTTED TIME REMAINING'}
-                  {timeLeft.phase === 'EVALUATION' && '⚖️ JURY REVIEW EVALUATION IN PROGRESS — TIME REMAINING'}
-                  {timeLeft.phase === 'STANDBY' && `⏸️ TASK IN STANDBY • COMMENCES PROMPTLY AT ${new Date(activeReview.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}
-                  {timeLeft.phase === 'PAUSED' && '⏸️ SPRINT TEMPORARILY SUSPENDED BY JURY'}
-                  {timeLeft.phase === 'ENDED' && '🏁 STAGE CONCLUDED • TIMER CLOSED'}
-                </span>
-              </div>
-
-              {timeLeft.phase === 'STANDBY' && (
-                <div className="mt-3 text-center">
-                  <p className="text-xs sm:text-sm font-cinzel text-[#ffd700] font-semibold bg-[#120e06] border border-[#ffd700]/30 py-2 px-4 rounded-xl inline-block shadow-md">
-                    ⏳ Task chronometer is in <strong className="text-white">STANDBY</strong>. Students have <strong className="text-white">{Math.round((new Date(activeReview.endTime) - new Date(activeReview.startTime)) / 60000)} minutes</strong> allocated for this task. The countdown will strictly commence at <strong className="text-white">{new Date(activeReview.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong> and end at <strong className="text-white">{new Date(activeReview.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>.
-                  </p>
-                </div>
-              )}
-
-              {timeLeft.phase === 'EVALUATION' && (
-                <div className="mt-3 text-center">
-                  <p className="text-xs sm:text-sm font-cinzel text-cyan-300 font-semibold bg-[#031520] border border-cyan-500/40 py-2 px-4 rounded-xl inline-block shadow-md">
-                    ⚖️ Task coding sprint complete! Review evaluation is actively taking place before jury panels until <strong className="text-white">{new Date(activeReview.reviewEndTime || activeReview.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>.
-                  </p>
-                </div>
-              )}
-
-              {timeLeft.phase === 'ENDED' && (
-                <div className="mt-3 text-center">
-                  <p className="text-xs sm:text-sm font-cinzel text-emerald-400 font-semibold bg-[#03150d] border border-emerald-500/40 py-2 px-4 rounded-xl inline-block shadow-md">
-                    🏁 Stage concluded at <strong className="text-white">{new Date(activeReview.reviewEndTime || activeReview.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>. Timer has closed.
-                  </p>
-                </div>
-              )}
-            </div>
-
-            {/* Dynamic Progress Bar */}
-            <div className="max-w-3xl mx-auto mb-6">
-              <div className="flex justify-between items-center text-[11px] font-mono text-gray-400 mb-1.5">
-                <span>{timeLeft.phase === 'STANDBY' ? 'TASK STANDBY' : timeLeft.phase === 'EVALUATION' ? 'EVALUATION START' : 'SPRINT START'}</span>
-                <span className="text-[#ffd700] font-bold">
-                  {timeLeft.phase === 'STANDBY' ? '0% (IDLE)' : `${Math.round(timeLeft.progressPercent)}% ELAPSED`}
-                </span>
-                <span>{timeLeft.phase === 'STANDBY' ? `OPENS AT ${new Date(activeReview.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : timeLeft.phase === 'EVALUATION' ? 'EVALUATION END' : 'DEADLINE FREEZE'}</span>
-              </div>
-              <div className="h-3 w-full bg-[#03070b] border border-[#ffd700]/30 rounded-full overflow-hidden p-0.5 shadow-inner">
-                <div
-                  className="h-full rounded-full bg-gradient-to-r from-[#ffd700] via-[#f39c12] to-[#ff4500] transition-all duration-1000 shadow-[0_0_12px_#ffd700]"
-                  style={{ width: `${timeLeft.phase === 'STANDBY' ? 0 : timeLeft.progressPercent}%` }}
-                />
-              </div>
-            </div>
-
-            {/* Jury Live Announcement Marquee / Alert */}
-            {activeReview.announcement && (
-              <div className="max-w-3xl mx-auto bg-gradient-to-r from-[#1c1206] via-[#2d1b09] to-[#1c1206] border-2 border-[#ffd700] rounded-2xl p-4 sm:p-5 flex items-start space-x-3 sm:space-x-4 shadow-[0_0_20px_rgba(255,215,0,0.25)] animate-fadeIn">
-                <AlertCircle className="w-5 h-5 sm:w-6 sm:h-6 text-[#ffd700] flex-shrink-0 mt-0.5 animate-bounce" />
-                <div className="flex-1">
-                  <span className="block font-cinzel text-xs font-black text-[#ffd700] tracking-wider uppercase mb-1">
-                    OFFICIAL JURY / ADMIRALTY ANNOUNCEMENT:
+                    {hackathon24h.isLive && '⚡ MASTER EXPEDITION IN FLIGHT — REMAINING TIME'}
+                    {hackathon24h.isUpcoming && '⏸️ MASTER MISSION COMMENCES AT 11:30 AM'}
+                    {hackathon24h.isConcluded && '🏁 24-HOUR EXPEDITION FINALE REACHED'}
                   </span>
-                  <p className="font-cinzel text-xs sm:text-sm text-white font-semibold leading-relaxed">
-                    {activeReview.announcement}
-                  </p>
                 </div>
               </div>
-            )}
+            </div>
 
-            {/* Review Description & Evaluation Criteria */}
-            {activeReview.description && (
-              <div className="max-w-3xl mx-auto mt-5 bg-[#040a12]/80 border border-[#2a3a4d] rounded-xl p-4 text-xs font-cinzel text-gray-300 leading-relaxed flex items-start space-x-2.5">
-                <Info className="w-4 h-4 text-[#00e5ff] flex-shrink-0 mt-0.5" />
+            <div>
+              {/* Dynamic 24-Hour Progress Bar */}
+              <div className="mb-4">
+                <div className="flex justify-between items-center text-[10px] sm:text-[11px] font-mono text-gray-400 mb-1.5">
+                  <span>OCT 8, 11:30 AM</span>
+                  <span className="text-[#ffd700] font-bold">{Math.round(hackathon24h.progress)}% COMPLETED</span>
+                  <span>OCT 9, 11:30 AM (FREEZE)</span>
+                </div>
+                <div className="h-3 w-full bg-[#03070b] border border-[#ffd700]/30 rounded-full overflow-hidden p-0.5 shadow-inner">
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-[#00e5ff] via-[#ffd700] to-[#ff4500] transition-all duration-1000 shadow-[0_0_12px_#ffd700]"
+                    style={{ width: `${hackathon24h.progress}%` }}
+                  />
+                </div>
+              </div>
+
+              {/* Bottom Mission Summary Card */}
+              <div className="bg-[#040a12]/80 border border-[#2a3a4d] rounded-xl p-3 sm:p-3.5 text-xs font-cinzel text-gray-300 leading-relaxed flex items-start space-x-2.5">
+                <Anchor className="w-4 h-4 text-[#ffd700] flex-shrink-0 mt-0.5" />
                 <div>
-                  <span className="text-[#00e5ff] font-bold uppercase tracking-wider block mb-0.5">Round Guidelines & Expectations:</span>
-                  <span>{activeReview.description}</span>
+                  <span className="text-[#ffd700] font-bold uppercase tracking-wider block mb-0.5">Continuous 24-Hour Voyage:</span>
+                  <span>Non-stop coding voyage across all 4 stages. Code freeze locks sharp at 11:30 AM tomorrow.</span>
                 </div>
               </div>
-            )}
+            </div>
           </div>
-        ) : (
-          <div className="bg-[#08121a] border border-[#3a2e1d] rounded-2xl p-8 text-center max-w-xl mx-auto mb-8">
-            <Anchor className="w-12 h-12 text-[#ffd700] mx-auto mb-3" />
-            <h3 className="font-pirate text-2xl text-white">NO ACTIVE REVIEW CONFIGURED</h3>
-            <p className="font-cinzel text-xs text-gray-400 mt-2">
-              The jury admiralty has not designated an active review schedule milestone yet.
-            </p>
-          </div>
-        )}
+
+          {/* BOX 2: ACTIVE STAGE & TASK CHRONOMETER */}
+          {activeReview ? (
+            <div className="relative bg-gradient-to-b from-[#091522]/95 via-[#061019]/95 to-[#04090f]/95 border-2 border-[#ffd700]/80 rounded-3xl p-5 sm:p-7 md:p-8 shadow-[0_0_50px_rgba(255,215,0,0.18)] flex flex-col justify-between overflow-hidden backdrop-blur-xl">
+              {/* Ornate Corner Accents */}
+              <div className="absolute top-0 left-0 w-20 h-20 border-t-2 border-l-2 border-[#ffd700] rounded-tl-3xl pointer-events-none" />
+              <div className="absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 border-[#ffd700] rounded-tr-3xl pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-20 h-20 border-b-2 border-l-2 border-[#ffd700] rounded-bl-3xl pointer-events-none" />
+              <div className="absolute bottom-0 right-0 w-20 h-20 border-b-2 border-r-2 border-[#ffd700] rounded-br-3xl pointer-events-none" />
+
+              <div>
+                {/* If inspecting another review while a live review is active */}
+                {liveReviewNow && activeReview._id !== liveReviewNow._id && (
+                  <div className="mb-3.5 p-2.5 sm:p-3 bg-red-950/80 border-2 border-red-500 rounded-2xl flex flex-wrap items-center justify-between gap-2 shadow-[0_0_20px_rgba(239,68,68,0.3)]">
+                    <div className="flex items-center space-x-2 text-xs font-cinzel text-red-200">
+                      <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
+                      <span>
+                        <strong>{liveReviewNow.title}</strong> is <strong className="text-white uppercase">LIVE NOW</strong>!
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => setActiveReview(liveReviewNow)}
+                      className="px-2.5 py-1 bg-red-500 hover:bg-red-400 text-black font-cinzel font-black text-xs rounded-lg transition-all cursor-pointer shadow-md"
+                    >
+                      SWITCH TO LIVE
+                    </button>
+                  </div>
+                )}
+
+                {/* Active Review Header Tag */}
+                <div className="flex flex-wrap items-center justify-between gap-3 mb-4 sm:mb-6">
+                  <div className="inline-flex items-center space-x-2 bg-[#ffd700]/10 border border-[#ffd700]/40 px-3.5 py-1.5 rounded-full">
+                    <Radio className="w-4 h-4 text-[#ffd700] animate-pulse" />
+                    <span className="font-cinzel text-xs sm:text-sm font-black tracking-widest text-[#ffd700] uppercase">
+                      {timeLeft.phase === 'IN_PROGRESS'
+                        ? `ROUND ${String(activeReview.roundNumber || 1).padStart(2, '0')} • TASK SPRINT LIVE`
+                        : timeLeft.phase === 'EVALUATION'
+                        ? `ROUND ${String(activeReview.roundNumber || 1).padStart(2, '0')} • JURY EVALUATION LIVE`
+                        : timeLeft.phase === 'ENDED'
+                        ? `ROUND ${String(activeReview.roundNumber || 1).padStart(2, '0')} • CONCLUDED`
+                        : `ROUND ${String(activeReview.roundNumber || 1).padStart(2, '0')} • STANDBY SCHEDULE`}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    {getStatusBadge(activeReview.status, activeReview.isCurrent, activeReview.startTime, activeReview.endTime, activeReview.reviewEndTime)}
+                    {activeReview.extendedMinutes > 0 && (
+                      <span className="px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/40 text-xs font-mono font-bold">
+                        +{activeReview.extendedMinutes}m EXTENDED
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Review Title & Venue */}
+                <div className="text-center mb-5 sm:mb-6">
+                  <h2 className="font-pirate text-2xl sm:text-3xl md:text-4xl text-white tracking-wide mb-2 leading-tight">
+                    {activeReview.title}
+                  </h2>
+                  
+                  <div className="flex flex-wrap items-center justify-center gap-2 text-xs sm:text-xs text-[#e5c158] font-cinzel">
+                    <span className="inline-flex items-center space-x-1.5 bg-[#0e1d2c] px-3 py-1 rounded-lg border border-[#ffd700]/30 font-bold">
+                      <Clock className="w-3.5 h-3.5 text-[#00e5ff]" />
+                      <span>TASK: {formatTimeSlot(activeReview.startTime, activeReview.endTime)}</span>
+                    </span>
+
+                    {activeReview.reviewEndTime && (
+                      <span className="inline-flex items-center space-x-1.5 bg-[#0e1d2c] px-3 py-1 rounded-lg border border-purple-500/30 text-purple-300 font-bold">
+                        <Award className="w-3.5 h-3.5 text-purple-400" />
+                        <span>EVALUATION: {formatTimeSlot(activeReview.endTime, activeReview.reviewEndTime)}</span>
+                      </span>
+                    )}
+                    
+                    {activeReview.venue && (
+                      <span className="inline-flex items-center space-x-1.5 bg-[#0e1d2c] px-2.5 py-1 rounded-lg border border-[#ffd700]/30">
+                        <MapPin className="w-3 h-3 text-[#ffd700]" />
+                        <span>{activeReview.venue}</span>
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* DIGITAL COUNTDOWN CLOCK */}
+                <div className="mb-5">
+                  <div className="grid grid-cols-3 gap-2.5 sm:gap-3 text-center">
+                    {/* Hours Box */}
+                    <div className="bg-[#03070c]/90 border border-[#4a381e] hover:border-[#ffd700] rounded-2xl p-3 sm:p-5 shadow-2xl transition-all">
+                      <div className="font-pirate text-4xl sm:text-6xl md:text-7xl text-[#ffd700] pirate-gold-title leading-none">
+                        {String(timeLeft.hours).padStart(2, '0')}
+                      </div>
+                      <div className="font-cinzel text-[10px] sm:text-xs font-bold text-[#cfb07a] tracking-widest uppercase mt-2">
+                        HOURS
+                      </div>
+                    </div>
+
+                    {/* Minutes Box */}
+                    <div className="bg-[#03070c]/90 border border-[#4a381e] hover:border-[#ffd700] rounded-2xl p-3 sm:p-5 shadow-2xl transition-all">
+                      <div className="font-pirate text-4xl sm:text-6xl md:text-7xl text-[#ffd700] pirate-gold-title leading-none">
+                        {String(timeLeft.minutes).padStart(2, '0')}
+                      </div>
+                      <div className="font-cinzel text-[10px] sm:text-xs font-bold text-[#cfb07a] tracking-widest uppercase mt-2">
+                        MINUTES
+                      </div>
+                    </div>
+
+                    {/* Seconds Box */}
+                    <div className={`bg-[#03070c]/90 rounded-2xl p-3 sm:p-5 transition-all ${
+                      timeLeft.phase === 'IN_PROGRESS' || timeLeft.phase === 'EVALUATION'
+                        ? 'border-2 border-[#00e5ff]/50 shadow-[0_0_25px_rgba(0,229,255,0.25)]'
+                        : 'border border-[#4a381e] hover:border-[#ffd700] shadow-2xl'
+                    }`}>
+                      <div className={`font-pirate text-4xl sm:text-6xl md:text-7xl leading-none ${
+                        timeLeft.phase === 'IN_PROGRESS' || timeLeft.phase === 'EVALUATION'
+                          ? 'text-[#00e5ff] pirate-cyan-glow animate-pulse'
+                          : 'text-[#ffd700] pirate-gold-title'
+                      }`}>
+                        {String(timeLeft.seconds).padStart(2, '0')}
+                      </div>
+                      <div className={`font-cinzel text-[10px] sm:text-xs font-bold tracking-widest uppercase mt-2 ${
+                        timeLeft.phase === 'IN_PROGRESS' || timeLeft.phase === 'EVALUATION' ? 'text-[#00e5ff]' : 'text-[#cfb07a]'
+                      }`}>
+                        {timeLeft.phase === 'STANDBY' ? 'SECONDS (IDLE)' : 'SECONDS'}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Status Indicator Label Below Digits */}
+                  <div className="text-center mt-3.5">
+                    <span className={`inline-block font-cinzel font-black text-xs tracking-widest uppercase px-3.5 py-1.5 rounded-full border ${
+                      timeLeft.phase === 'IN_PROGRESS'
+                        ? 'bg-red-950/60 text-red-300 border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.3)] animate-pulse'
+                        : timeLeft.phase === 'EVALUATION'
+                        ? 'bg-cyan-950/60 text-cyan-300 border-cyan-500/50 shadow-[0_0_15px_rgba(0,229,255,0.3)] animate-pulse'
+                        : timeLeft.phase === 'STANDBY'
+                        ? 'bg-amber-950/60 text-amber-300 border-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.2)]'
+                        : timeLeft.phase === 'PAUSED'
+                        ? 'bg-amber-950/60 text-amber-300 border-amber-500/50'
+                        : 'bg-emerald-950/60 text-emerald-300 border-emerald-500/50'
+                    }`}>
+                      {timeLeft.phase === 'IN_PROGRESS' && '⚡ TASK CODING SPRINT ACTIVE — REMAINING'}
+                      {timeLeft.phase === 'EVALUATION' && '⚖️ JURY REVIEW EVALUATION IN PROGRESS'}
+                      {timeLeft.phase === 'STANDBY' && `⏸️ COMMENCES AT ${new Date(activeReview.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}
+                      {timeLeft.phase === 'PAUSED' && '⏸️ SPRINT TEMPORARILY SUSPENDED'}
+                      {timeLeft.phase === 'ENDED' && '🏁 STAGE CONCLUDED • TIMER CLOSED'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                {/* Dynamic Progress Bar */}
+                <div className="mb-4">
+                  <div className="flex justify-between items-center text-[10px] sm:text-[11px] font-mono text-gray-400 mb-1.5">
+                    <span>{timeLeft.phase === 'STANDBY' ? 'TASK STANDBY' : timeLeft.phase === 'EVALUATION' ? 'EVALUATION' : 'SPRINT START'}</span>
+                    <span className="text-[#ffd700] font-bold">
+                      {timeLeft.phase === 'STANDBY' ? '0% (IDLE)' : `${Math.round(timeLeft.progressPercent)}% ELAPSED`}
+                    </span>
+                    <span>{timeLeft.phase === 'STANDBY' ? `OPENS AT ${new Date(activeReview.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : timeLeft.phase === 'EVALUATION' ? 'EVALUATION END' : 'DEADLINE FREEZE'}</span>
+                  </div>
+                  <div className="h-3 w-full bg-[#03070b] border border-[#ffd700]/30 rounded-full overflow-hidden p-0.5 shadow-inner">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-[#ffd700] via-[#f39c12] to-[#ff4500] transition-all duration-1000 shadow-[0_0_12px_#ffd700]"
+                      style={{ width: `${timeLeft.phase === 'STANDBY' ? 0 : timeLeft.progressPercent}%` }}
+                    />
+                  </div>
+                </div>
+
+                {/* Bottom Context Banner */}
+                {timeLeft.phase === 'STANDBY' && (
+                  <div className="bg-[#120e06] border border-[#ffd700]/30 rounded-xl p-3 sm:p-3.5 text-xs font-cinzel text-gray-300 leading-relaxed flex items-start space-x-2.5">
+                    <Clock className="w-4 h-4 text-[#ffd700] flex-shrink-0 mt-0.5" />
+                    <div>
+                      <span className="text-[#ffd700] font-bold uppercase tracking-wider block mb-0.5">Task Standby Mode:</span>
+                      <span>Students have <strong className="text-white">{Math.round((new Date(activeReview.endTime) - new Date(activeReview.startTime)) / 60000)} mins</strong> allocated. Timer strictly begins at <strong className="text-white">{new Date(activeReview.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>.</span>
+                    </div>
+                  </div>
+                )}
+
+                {timeLeft.phase === 'EVALUATION' && (
+                  <div className="bg-[#031520] border border-cyan-500/40 rounded-xl p-3 sm:p-3.5 text-xs font-cinzel text-gray-300 leading-relaxed flex items-start space-x-2.5">
+                    <Award className="w-4 h-4 text-cyan-400 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <span className="text-cyan-300 font-bold uppercase tracking-wider block mb-0.5">Jury Evaluation Live:</span>
+                      <span>Coding sprint complete. Jury panels are evaluating prototypes until <strong className="text-white">{new Date(activeReview.reviewEndTime || activeReview.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>.</span>
+                    </div>
+                  </div>
+                )}
+
+                {timeLeft.phase === 'IN_PROGRESS' && (
+                  <div className="bg-[#1c0808] border border-red-500/40 rounded-xl p-3 sm:p-3.5 text-xs font-cinzel text-gray-300 leading-relaxed flex items-start space-x-2.5">
+                    <Zap className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <span className="text-red-300 font-bold uppercase tracking-wider block mb-0.5">Coding Sprint In Flight:</span>
+                      <span>Students are actively coding! Complete deliverables before deadline at <strong className="text-white">{new Date(activeReview.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>.</span>
+                    </div>
+                  </div>
+                )}
+
+                {timeLeft.phase === 'ENDED' && (
+                  <div className="bg-[#03150d] border border-emerald-500/40 rounded-xl p-3 sm:p-3.5 text-xs font-cinzel text-gray-300 leading-relaxed flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <span className="text-emerald-300 font-bold uppercase tracking-wider block mb-0.5">Stage Concluded:</span>
+                      <span>Stage concluded at <strong className="text-white">{new Date(activeReview.reviewEndTime || activeReview.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>. Timer has closed.</span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Jury Live Announcement Marquee / Alert */}
+                {activeReview.announcement && (
+                  <div className="mt-3 bg-gradient-to-r from-[#1c1206] via-[#2d1b09] to-[#1c1206] border border-[#ffd700] rounded-xl p-3 flex items-start space-x-2.5 shadow-md">
+                    <AlertCircle className="w-4 h-4 text-[#ffd700] flex-shrink-0 mt-0.5 animate-bounce" />
+                    <p className="font-cinzel text-xs text-white font-semibold leading-relaxed">
+                      <strong className="text-[#ffd700] uppercase">ANNOUNCEMENT: </strong>{activeReview.announcement}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="bg-[#08121a] border border-[#3a2e1d] rounded-3xl p-8 text-center flex flex-col items-center justify-center">
+              <Anchor className="w-12 h-12 text-[#ffd700] mb-3" />
+              <h3 className="font-pirate text-2xl text-white">NO ACTIVE REVIEW CONFIGURED</h3>
+              <p className="font-cinzel text-xs text-gray-400 mt-2">
+                The jury admiralty has not designated an active review schedule milestone yet.
+              </p>
+            </div>
+          )}
+        </div>
 
         {/* SCHEDULE TIMELINE: All Hackathon Review Milestones */}
         <section className="mt-4">
