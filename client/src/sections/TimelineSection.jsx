@@ -78,7 +78,7 @@ const VOYAGE_STAGES = [
     id: 4,
     step: '04',
     day: 'DAY 1 • 8 OCT',
-    time: '03:30 PM – 04:30 PM',
+    time: '04:30 PM – 05:30 PM',
     title: 'REVIEW - 1',
     deck: 'Mentorship Zone',
     x: 82,

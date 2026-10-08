@@ -2,16 +2,16 @@ const ReviewSchedule = require('../models/ReviewSchedule');
 
 // Official ESEC Department of Information Technology CODIENYCH 1.0 Agenda Timings (8.10.2026):
 const getDefaultReviewSeeds = () => {
-  // Round 1: Task 1 Coding Sprint: Today 01:30 PM to 03:30 PM IST (8 Oct 2026) -> Students coding window
-  // Review - 1 Evaluation follows: 03:30 PM to 04:30 PM IST
+  // Round 1: Task 1 Coding Sprint: Today 01:30 PM to 04:30 PM IST (8 Oct 2026) -> Students coding window
+  // Review - 1 Evaluation follows: 04:30 PM to 05:30 PM IST
   const r1Start = new Date('2026-10-08T13:30:00+05:30');
-  const r1End = new Date('2026-10-08T15:30:00+05:30');
-  const r1RevStart = new Date('2026-10-08T15:30:00+05:30');
-  const r1RevEnd = new Date('2026-10-08T16:30:00+05:30');
+  const r1End = new Date('2026-10-08T16:30:00+05:30');
+  const r1RevStart = new Date('2026-10-08T16:30:00+05:30');
+  const r1RevEnd = new Date('2026-10-08T17:30:00+05:30');
 
-  // Round 2: Task 2 Coding Sprint: Today 04:30 PM to 09:30 PM IST (8 Oct 2026) -> Students coding window (Dinner: 7:30 - 8:30 PM)
+  // Round 2: Task 2 Coding Sprint: Today 05:30 PM to 09:30 PM IST (8 Oct 2026) -> Students coding window (Dinner: 7:30 - 8:30 PM)
   // Review - 2 Evaluation follows: 09:30 PM to 10:30 PM IST
-  const r2Start = new Date('2026-10-08T16:30:00+05:30');
+  const r2Start = new Date('2026-10-08T17:30:00+05:30');
   const r2End = new Date('2026-10-08T21:30:00+05:30');
   const r2RevStart = new Date('2026-10-08T21:30:00+05:30');
   const r2RevEnd = new Date('2026-10-08T22:30:00+05:30');
@@ -42,8 +42,8 @@ const getDefaultReviewSeeds = () => {
       status: 'UPCOMING',
       isCurrent: true,
       venue: 'Respective Team Bays / Software Labs',
-      description: 'Task 1 Coding Window: 01:30 PM to 03:30 PM (2 Hours). Review - 1 Jury Evaluation follows at 03:30 PM to 04:30 PM. Criteria: Problem Statement clarity, Architecture diagram, and UI/UX wireframe prototypes.',
-      announcement: 'Task 1 begins at 01:30 PM! Coding sprint runs until 03:30 PM followed immediately by Review - 1.',
+      description: 'Task 1 Coding Window: 01:30 PM to 04:30 PM (3 Hours). Review - 1 Jury Evaluation follows at 04:30 PM to 05:30 PM. Criteria: Problem Statement clarity, Architecture diagram, and UI/UX wireframe prototypes.',
+      announcement: 'Task 1 in progress! Coding sprint runs until 04:30 PM followed immediately by Review - 1 at 04:30 PM.',
       extendedMinutes: 0,
     },
     {
@@ -57,7 +57,7 @@ const getDefaultReviewSeeds = () => {
       status: 'UPCOMING',
       isCurrent: false,
       venue: 'Respective Team Bays / Software Labs',
-      description: 'Task 2 Coding Window: 04:30 PM to 09:30 PM (5 Hours, Dinner: 07:30 PM - 08:30 PM). Review - 2 Jury Evaluation follows at 09:30 PM to 10:30 PM. Criteria: Working prototype, database schema setup, backend API integration, and key feature progress.',
+      description: 'Task 2 Coding Window: 05:30 PM to 09:30 PM (4 Hours, Dinner: 07:30 PM - 08:30 PM). Review - 2 Jury Evaluation follows at 09:30 PM to 10:30 PM. Criteria: Working prototype, database schema setup, backend API integration, and key feature progress.',
       announcement: '',
       extendedMinutes: 0,
     },
