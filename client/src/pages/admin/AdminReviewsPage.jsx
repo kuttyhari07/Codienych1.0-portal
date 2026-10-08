@@ -413,7 +413,19 @@ const AdminReviewsPage = () => {
                       className="flex-1 py-1.5 px-3 rounded-lg bg-green-950/60 hover:bg-green-900 border border-green-500/50 text-green-300 font-cinzel font-bold text-xs flex items-center justify-center space-x-1 cursor-pointer transition-colors"
                     >
                       <Play className="w-3.5 h-3.5" />
-                      <span>RESUME</span>
+                      <span>START NOW</span>
+                    </button>
+                  )}
+
+                  {activeReview.status !== 'UPCOMING' && (
+                    <button
+                      onClick={() => handleUpdateStatus(activeReview._id, 'UPCOMING')}
+                      disabled={actionLoading}
+                      className="py-1.5 px-2.5 rounded-lg bg-cyan-950/60 hover:bg-cyan-900 border border-cyan-500/50 text-cyan-300 font-cinzel font-bold text-xs flex items-center justify-center space-x-1 cursor-pointer transition-colors"
+                      title="Set to Standby mode (countdown stays paused until scheduled start time)"
+                    >
+                      <Clock className="w-3.5 h-3.5" />
+                      <span>STANDBY</span>
                     </button>
                   )}
 

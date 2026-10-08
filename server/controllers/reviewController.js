@@ -131,33 +131,97 @@ const getActiveReview = async (req, res) => {
       });
     }
 
-    // 1. Look for explicitly flagged current review
-    let activeReview = allReviews.find((r) => r.isCurrent);
-
-    // 2. If none marked current, find the one with status 'ACTIVE'
-    if (!activeReview) {
-      activeReview = allReviews.find((r) => r.status === 'ACTIVE');
-    }
-
-    // 3. Fallback: Find next upcoming review where endTime > now
     const now = new Date();
-    if (!activeReview) {
-      activeReview = allReviews.find((r) => new Date(r.endTime) > now && r.status !== 'COMPLETED');
+
+    // 1. Check for manual admin override: PAUSED status
+    const pausedReview = allReviews.find((r) => r.status === 'PAUSED');
+
+    // 2. Check for manual admin override: ACTIVE status explicitly set
+    const explicitlyActive = allReviews.find((r) => r.status === 'ACTIVE');
+
+    // 3. Check if any review's scheduled window is currently live in real time:
+    //    now >= startTime && now < endTime && status !== 'COMPLETED'
+    const scheduledLiveReview = allReviews.find((r) => {
+      const s = new Date(r.startTime);
+      const e = new Date(r.endTime);
+      return now >= s && now < e && r.status !== 'COMPLETED';
+    });
+
+    let activeReview = null;
+
+    if (pausedReview) {
+      activeReview = pausedReview;
+    } else if (explicitlyActive) {
+      // If the explicitly active review has already reached or passed its endTime, auto-conclude it!
+      if (now >= new Date(explicitlyActive.endTime)) {
+        explicitlyActive.status = 'COMPLETED';
+        explicitlyActive.isCurrent = false;
+        await explicitlyActive.save();
+        // Fall back to next upcoming review
+        activeReview = allReviews.find((r) => new Date(r.endTime) > now && r.status !== 'COMPLETED') || explicitlyActive;
+      } else {
+        activeReview = explicitlyActive;
+      }
+    } else if (scheduledLiveReview) {
+      // Current real time falls strictly within this review's window
+      activeReview = scheduledLiveReview;
+      if (activeReview.status !== 'ACTIVE') {
+        activeReview.status = 'ACTIVE';
+        activeReview.isCurrent = true;
+        await activeReview.save();
+      }
+    } else {
+      // Outside all live review windows (Standby gap or before Review 1)
+      // Pick the next upcoming review that has not yet completed
+      const nextUpcoming = allReviews.find((r) => new Date(r.endTime) > now && r.status !== 'COMPLETED');
+      if (nextUpcoming) {
+        activeReview = nextUpcoming;
+        // In standby gap, status MUST be UPCOMING so timer remains idle
+        if (activeReview.status === 'ACTIVE') {
+          activeReview.status = 'UPCOMING';
+          await activeReview.save();
+        }
+      } else {
+        // All reviews have concluded
+        activeReview = allReviews[allReviews.length - 1];
+      }
     }
 
-    // 4. Fallback: first review
-    if (!activeReview && allReviews.length > 0) {
-      activeReview = allReviews[0];
+    // Auto-conclude any past reviews whose endTime has passed (unless currently live extended)
+    for (const r of allReviews) {
+      const e = new Date(r.endTime);
+      if (now >= e && r.status !== 'COMPLETED' && r._id.toString() !== activeReview?._id?.toString()) {
+        r.status = 'COMPLETED';
+        if (r.isCurrent) {
+          r.isCurrent = false;
+        }
+        await r.save();
+      }
     }
+
+    // Ensure isCurrent is true ONLY on the single activeReview, false on all others
+    if (activeReview) {
+      for (const r of allReviews) {
+        const shouldBeCurrent = r._id.toString() === activeReview._id.toString();
+        if (r.isCurrent !== shouldBeCurrent) {
+          r.isCurrent = shouldBeCurrent;
+          await r.save();
+        }
+      }
+    }
+
+    // Fetch refreshed synchronized review list
+    const refreshedReviews = await ReviewSchedule.find().sort({ order: 1, startTime: 1 });
+    const syncedActiveReview = refreshedReviews.find((r) => r.isCurrent) || activeReview;
 
     return res.status(200).json({
       success: true,
       data: {
-        activeReview,
-        allReviews,
+        activeReview: syncedActiveReview,
+        allReviews: refreshedReviews,
         serverTime: new Date().toISOString(),
-        totalReviews: allReviews.length,
-        completedReviews: allReviews.filter((r) => r.status === 'COMPLETED').length,
+        totalReviews: refreshedReviews.length,
+        completedReviews: refreshedReviews.filter((r) => r.status === 'COMPLETED').length,
       },
     });
   } catch (error) {

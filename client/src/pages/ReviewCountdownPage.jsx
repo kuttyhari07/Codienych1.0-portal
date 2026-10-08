@@ -51,7 +51,7 @@ const ReviewCountdownPage = () => {
     minutes: 0,
     seconds: 0,
     totalSeconds: 0,
-    phase: 'UPCOMING', // 'STARTING_SOON', 'IN_PROGRESS', 'PAUSED', 'ENDED'
+    phase: 'STANDBY', // 'STANDBY', 'IN_PROGRESS', 'PAUSED', 'ENDED'
     progressPercent: 0,
   });
 
@@ -156,16 +156,25 @@ const ReviewCountdownPage = () => {
       const startMs = new Date(activeReview.startTime).getTime();
       const endMs = new Date(activeReview.endTime).getTime();
 
+      // 1. Manually Paused by Jury
       if (activeReview.status === 'PAUSED') {
-        const diff = Math.max(0, Math.floor((endMs - now) / 1000));
-        setTimeLeft((prev) => ({
-          ...prev,
+        const remainingSec = Math.max(0, Math.floor((endMs - now) / 1000));
+        const hours = Math.floor(remainingSec / 3600);
+        const minutes = Math.floor((remainingSec % 3600) / 60);
+        const seconds = remainingSec % 60;
+        setTimeLeft({
+          hours,
+          minutes,
+          seconds,
+          totalSeconds: remainingSec,
           phase: 'PAUSED',
-        }));
+          progressPercent: 0,
+        });
         return;
       }
 
-      if (activeReview.status === 'COMPLETED') {
+      // 2. Concluded / Closed (Past End Time or marked COMPLETED)
+      if (activeReview.status === 'COMPLETED' || now >= endMs) {
         setTimeLeft({
           hours: 0,
           minutes: 0,
@@ -174,29 +183,37 @@ const ReviewCountdownPage = () => {
           phase: 'ENDED',
           progressPercent: 100,
         });
+
+        if (soundOn && !playedWarningsRef.current.ended) {
+          playedWarningsRef.current.ended = true;
+          playVictoryFanfare();
+        }
         return;
       }
 
-      // Check if not started yet
-      if (now < startMs) {
-        const diffSeconds = Math.max(0, Math.floor((startMs - now) / 1000));
-        const hours = Math.floor(diffSeconds / 3600);
-        const minutes = Math.floor((diffSeconds % 3600) / 60);
-        const seconds = diffSeconds % 60;
+      // 3. Before Review Start Time (Standby): now < startMs and NOT forced active
+      if (now < startMs && activeReview.status !== 'ACTIVE') {
+        // Machi requirement: COUNTDOWN MUST NOT RUN RIGHT NOW!
+        // Display the allocated total duration (e.g. 01:00:00 for 1-hour review) on Standby.
+        // Digits are STATIC / FROZEN (NOT counting down!).
+        const totalDurationSec = Math.max(0, Math.floor((endMs - startMs) / 1000));
+        const hours = Math.floor(totalDurationSec / 3600);
+        const minutes = Math.floor((totalDurationSec % 3600) / 60);
+        const seconds = totalDurationSec % 60;
 
         setTimeLeft({
           hours,
           minutes,
           seconds,
-          totalSeconds: diffSeconds,
-          phase: 'STARTING_SOON',
+          totalSeconds: totalDurationSec,
+          phase: 'STANDBY',
           progressPercent: 0,
         });
         return;
       }
 
-      // Review In Progress
-      if (now >= startMs && now <= endMs) {
+      // 4. Review is Live / In Progress: strictly during scheduled window OR forced ACTIVE
+      if ((now >= startMs && now < endMs) || activeReview.status === 'ACTIVE') {
         const totalDurationSec = Math.max(1, Math.floor((endMs - startMs) / 1000));
         const remainingSec = Math.max(0, Math.floor((endMs - now) / 1000));
         const elapsedSec = totalDurationSec - remainingSec;
@@ -215,7 +232,7 @@ const ReviewCountdownPage = () => {
           progressPercent: progress,
         });
 
-        // Trigger Audio Alerts
+        // Trigger Audio Alerts strictly while active
         if (soundOn) {
           if (remainingSec <= 600 && remainingSec > 598 && !playedWarningsRef.current.tenMin) {
             playedWarningsRef.current.tenMin = true;
@@ -231,23 +248,6 @@ const ReviewCountdownPage = () => {
           }
         }
         return;
-      }
-
-      // Past End Time
-      if (now > endMs) {
-        setTimeLeft({
-          hours: 0,
-          minutes: 0,
-          seconds: 0,
-          totalSeconds: 0,
-          phase: 'ENDED',
-          progressPercent: 100,
-        });
-
-        if (soundOn && !playedWarningsRef.current.ended) {
-          playedWarningsRef.current.ended = true;
-          playVictoryFanfare();
-        }
       }
     };
 
@@ -291,8 +291,15 @@ const ReviewCountdownPage = () => {
     return `${s} — ${e}`;
   };
 
-  const getStatusBadge = (status, isCurrentReview) => {
-    if (isCurrentReview && status === 'ACTIVE') {
+  const getStatusBadge = (status, isCurrentReview, startTime, endTime) => {
+    const now = Date.now() + serverOffset;
+    const startMs = startTime ? new Date(startTime).getTime() : 0;
+    const endMs = endTime ? new Date(endTime).getTime() : 0;
+
+    const isLive = (startMs && endMs && now >= startMs && now < endMs && status !== 'COMPLETED') || status === 'ACTIVE';
+    const isConcluded = (endMs && now >= endMs) || status === 'COMPLETED';
+
+    if (isLive) {
       return (
         <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-red-500/20 text-red-400 border border-red-500/50 text-xs font-cinzel font-bold shadow-[0_0_12px_rgba(239,68,68,0.4)] animate-pulse">
           <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
@@ -300,7 +307,7 @@ const ReviewCountdownPage = () => {
         </span>
       );
     }
-    if (status === 'COMPLETED') {
+    if (isConcluded) {
       return (
         <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-xs font-cinzel font-bold">
           <CheckCircle2 className="w-3.5 h-3.5" />
@@ -317,9 +324,9 @@ const ReviewCountdownPage = () => {
       );
     }
     return (
-      <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-blue-500/20 text-cyan-300 border border-cyan-500/30 text-xs font-cinzel font-bold">
+      <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 text-xs font-cinzel font-bold">
         <Clock className="w-3.5 h-3.5" />
-        <span>UPCOMING</span>
+        <span>STANDBY</span>
       </span>
     );
   };
@@ -337,6 +344,13 @@ const ReviewCountdownPage = () => {
       </div>
     );
   }
+
+  const nowMs = Date.now() + serverOffset;
+  const liveReviewNow = allReviews.find((r) => {
+    const s = new Date(r.startTime).getTime();
+    const e = new Date(r.endTime).getTime();
+    return (nowMs >= s && nowMs < e && r.status !== 'COMPLETED') || r.status === 'ACTIVE';
+  });
 
   return (
     <div className={`min-h-screen bg-[#020509] text-[#f4e6c3] flex flex-col relative overflow-x-hidden ${isFullscreen ? 'p-2 sm:p-6' : ''}`}>
@@ -506,17 +520,39 @@ const ReviewCountdownPage = () => {
             <div className="absolute bottom-0 left-0 w-24 h-24 border-b-2 border-l-2 border-[#ffd700] rounded-bl-3xl pointer-events-none" />
             <div className="absolute bottom-0 right-0 w-24 h-24 border-b-2 border-r-2 border-[#ffd700] rounded-br-3xl pointer-events-none" />
 
+            {/* If inspecting another review while a live review is active */}
+            {liveReviewNow && activeReview._id !== liveReviewNow._id && (
+              <div className="mb-4 p-3.5 bg-red-950/80 border-2 border-red-500 rounded-2xl flex flex-wrap items-center justify-between gap-3 shadow-[0_0_20px_rgba(239,68,68,0.3)]">
+                <div className="flex items-center space-x-2.5 text-xs font-cinzel text-red-200">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping" />
+                  <span>
+                    <strong>{liveReviewNow.title}</strong> is currently <strong className="text-white uppercase">LIVE ON STAGE</strong>!
+                  </span>
+                </div>
+                <button
+                  onClick={() => setActiveReview(liveReviewNow)}
+                  className="px-3 py-1.5 bg-red-500 hover:bg-red-400 text-black font-cinzel font-black text-xs rounded-xl transition-all cursor-pointer shadow-md"
+                >
+                  SWITCH TO LIVE ROUND
+                </button>
+              </div>
+            )}
+
             {/* Active Review Header Tag */}
             <div className="flex flex-wrap items-center justify-between gap-3 mb-4 sm:mb-6">
               <div className="inline-flex items-center space-x-2 bg-[#ffd700]/10 border border-[#ffd700]/40 px-3.5 py-1.5 rounded-full">
                 <Radio className="w-4 h-4 text-[#ffd700] animate-pulse" />
                 <span className="font-cinzel text-xs sm:text-sm font-black tracking-widest text-[#ffd700] uppercase">
-                  ROUND {String(activeReview.roundNumber || 1).padStart(2, '0')} IN FOCUS
+                  {timeLeft.phase === 'IN_PROGRESS'
+                    ? `ROUND ${String(activeReview.roundNumber || 1).padStart(2, '0')} • LIVE IN EVALUATION`
+                    : timeLeft.phase === 'ENDED'
+                    ? `ROUND ${String(activeReview.roundNumber || 1).padStart(2, '0')} • CONCLUDED`
+                    : `ROUND ${String(activeReview.roundNumber || 1).padStart(2, '0')} • STANDBY SCHEDULE`}
                 </span>
               </div>
 
               <div className="flex items-center space-x-3">
-                {getStatusBadge(activeReview.status, activeReview.isCurrent)}
+                {getStatusBadge(activeReview.status, activeReview.isCurrent, activeReview.startTime, activeReview.endTime)}
                 {activeReview.extendedMinutes > 0 && (
                   <span className="px-2.5 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/40 text-xs font-mono font-bold">
                     +{activeReview.extendedMinutes}m EXTENDED
@@ -570,12 +606,22 @@ const ReviewCountdownPage = () => {
                 </div>
 
                 {/* Seconds Box */}
-                <div className="bg-[#03070c]/90 border-2 border-[#00e5ff]/50 rounded-2xl sm:rounded-3xl p-3 sm:p-6 shadow-[0_0_25px_rgba(0,229,255,0.25)] transition-all">
-                  <div className="font-pirate text-4xl sm:text-7xl md:text-8xl text-[#00e5ff] pirate-cyan-glow leading-none animate-pulse">
+                <div className={`bg-[#03070c]/90 rounded-2xl sm:rounded-3xl p-3 sm:p-6 transition-all ${
+                  timeLeft.phase === 'IN_PROGRESS'
+                    ? 'border-2 border-[#00e5ff]/50 shadow-[0_0_25px_rgba(0,229,255,0.25)]'
+                    : 'border border-[#4a381e] hover:border-[#ffd700] shadow-2xl'
+                }`}>
+                  <div className={`font-pirate text-4xl sm:text-7xl md:text-8xl leading-none ${
+                    timeLeft.phase === 'IN_PROGRESS'
+                      ? 'text-[#00e5ff] pirate-cyan-glow animate-pulse'
+                      : 'text-[#ffd700] pirate-gold-title'
+                  }`}>
                     {String(timeLeft.seconds).padStart(2, '0')}
                   </div>
-                  <div className="font-cinzel text-[10px] sm:text-xs font-bold text-[#00e5ff] tracking-widest uppercase mt-2">
-                    SECONDS
+                  <div className={`font-cinzel text-[10px] sm:text-xs font-bold tracking-widest uppercase mt-2 ${
+                    timeLeft.phase === 'IN_PROGRESS' ? 'text-[#00e5ff]' : 'text-[#cfb07a]'
+                  }`}>
+                    {timeLeft.phase === 'STANDBY' ? 'SECONDS (IDLE)' : 'SECONDS'}
                   </div>
                 </div>
               </div>
@@ -585,31 +631,49 @@ const ReviewCountdownPage = () => {
                 <span className={`inline-block font-cinzel font-black text-xs sm:text-sm tracking-widest uppercase px-4 py-1.5 rounded-full border ${
                   timeLeft.phase === 'IN_PROGRESS'
                     ? 'bg-red-950/60 text-red-300 border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.3)] animate-pulse'
-                    : timeLeft.phase === 'STARTING_SOON'
-                    ? 'bg-cyan-950/60 text-cyan-300 border-cyan-500/50'
+                    : timeLeft.phase === 'STANDBY'
+                    ? 'bg-amber-950/60 text-amber-300 border-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.2)]'
                     : timeLeft.phase === 'PAUSED'
                     ? 'bg-amber-950/60 text-amber-300 border-amber-500/50'
                     : 'bg-emerald-950/60 text-emerald-300 border-emerald-500/50'
                 }`}>
                   {timeLeft.phase === 'IN_PROGRESS' && '⚡ EVALUATION WINDOW ACTIVE — TIME REMAINING'}
-                  {timeLeft.phase === 'STARTING_SOON' && '⏳ COUNTDOWN TO ROUND INVOCATION'}
+                  {timeLeft.phase === 'STANDBY' && `⏸️ TIMER IN STANDBY • COMMENCES PROMPTLY AT ${new Date(activeReview.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}
                   {timeLeft.phase === 'PAUSED' && '⏸️ REVIEW TEMPORARILY SUSPENDED BY JURY'}
-                  {timeLeft.phase === 'ENDED' && '🏁 REVIEW ROUND CONCLUDED'}
+                  {timeLeft.phase === 'ENDED' && '🏁 REVIEW ROUND CONCLUDED • TIMER CLOSED'}
                 </span>
               </div>
+
+              {timeLeft.phase === 'STANDBY' && (
+                <div className="mt-3 text-center">
+                  <p className="text-xs sm:text-sm font-cinzel text-[#ffd700] font-semibold bg-[#120e06] border border-[#ffd700]/30 py-2 px-4 rounded-xl inline-block shadow-md">
+                    ⏳ Evaluation chronometer is currently in <strong className="text-white">STANDBY</strong>. The {Math.round((new Date(activeReview.endTime) - new Date(activeReview.startTime)) / 60000)}-minute countdown will strictly start at <strong className="text-white">{new Date(activeReview.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>.
+                  </p>
+                </div>
+              )}
+
+              {timeLeft.phase === 'ENDED' && (
+                <div className="mt-3 text-center">
+                  <p className="text-xs sm:text-sm font-cinzel text-emerald-400 font-semibold bg-[#03150d] border border-emerald-500/40 py-2 px-4 rounded-xl inline-block shadow-md">
+                    🏁 Evaluation round concluded at <strong className="text-white">{new Date(activeReview.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>. Timer has closed.
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Dynamic Progress Bar */}
             <div className="max-w-3xl mx-auto mb-6">
               <div className="flex justify-between items-center text-[11px] font-mono text-gray-400 mb-1.5">
-                <span>STAGE COMMENCEMENT</span>
-                <span className="text-[#ffd700] font-bold">{Math.round(timeLeft.progressPercent)}% ELAPSED</span>
-                <span>DEADLINE FREEZE</span>
+                <span>{timeLeft.phase === 'STANDBY' ? 'STAGE STANDBY' : 'STAGE COMMENCEMENT'}</span>
+                <span className="text-[#ffd700] font-bold">
+                  {timeLeft.phase === 'STANDBY' ? '0% (IDLE)' : `${Math.round(timeLeft.progressPercent)}% ELAPSED`}
+                </span>
+                <span>{timeLeft.phase === 'STANDBY' ? `OPENS AT ${new Date(activeReview.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : 'DEADLINE FREEZE'}</span>
               </div>
               <div className="h-3 w-full bg-[#03070b] border border-[#ffd700]/30 rounded-full overflow-hidden p-0.5 shadow-inner">
                 <div
                   className="h-full rounded-full bg-gradient-to-r from-[#ffd700] via-[#f39c12] to-[#ff4500] transition-all duration-1000 shadow-[0_0_12px_#ffd700]"
-                  style={{ width: `${timeLeft.progressPercent}%` }}
+                  style={{ width: `${timeLeft.phase === 'STANDBY' ? 0 : timeLeft.progressPercent}%` }}
                 />
               </div>
             </div>
@@ -689,7 +753,7 @@ const ReviewCountdownPage = () => {
                       <span className="font-mono text-xs font-bold text-[#00e5ff] tracking-wider">
                         STAGE {String(rev.roundNumber).padStart(2, '0')}
                       </span>
-                      {getStatusBadge(rev.status, rev.isCurrent)}
+                      {getStatusBadge(rev.status, isSelected, rev.startTime, rev.endTime)}
                     </div>
 
                     <h4 className="font-pirate text-lg sm:text-xl text-white mb-2 leading-snug">
@@ -720,13 +784,23 @@ const ReviewCountdownPage = () => {
                     <span className="text-[10px] font-mono text-gray-500">
                       Duration: {Math.round((new Date(rev.endTime) - new Date(rev.startTime)) / (1000 * 60))} mins
                     </span>
-                    <button
-                      onClick={() => setSelectedReviewModal(rev)}
-                      className="text-xs font-cinzel font-bold text-[#ffd700] hover:underline flex items-center space-x-1 cursor-pointer"
-                    >
-                      <span>VIEW DETAILS</span>
-                      <ChevronRight className="w-3.5 h-3.5" />
-                    </button>
+                    <div className="flex items-center space-x-2.5">
+                      {!isSelected && (
+                        <button
+                          onClick={() => setActiveReview(rev)}
+                          className="text-[11px] font-cinzel font-bold text-[#00e5ff] hover:text-white px-2.5 py-1 rounded-lg bg-[#0e2236] hover:bg-[#15344f] border border-[#00e5ff]/40 transition-colors cursor-pointer"
+                        >
+                          FOCUS CLOCK
+                        </button>
+                      )}
+                      <button
+                        onClick={() => setSelectedReviewModal(rev)}
+                        className="text-xs font-cinzel font-bold text-[#ffd700] hover:underline flex items-center space-x-1 cursor-pointer"
+                      >
+                        <span>DETAILS</span>
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               );
