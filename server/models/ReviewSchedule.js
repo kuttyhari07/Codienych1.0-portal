@@ -20,6 +20,12 @@ const ReviewScheduleSchema = new mongoose.Schema(
       type: Date,
       required: [true, 'End time is required'],
     },
+    reviewStartTime: {
+      type: Date,
+    },
+    reviewEndTime: {
+      type: Date,
+    },
     status: {
       type: String,
       enum: ['UPCOMING', 'ACTIVE', 'PAUSED', 'COMPLETED'],

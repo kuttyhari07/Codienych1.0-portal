@@ -24,6 +24,8 @@ const AdminReviewsPage = () => {
     roundNumber: 1,
     startTime: '',
     endTime: '',
+    reviewStartTime: '',
+    reviewEndTime: '',
     venue: 'Main Hackathon Bay / Software Labs',
     description: '',
     announcement: '',
@@ -76,12 +78,15 @@ const AdminReviewsPage = () => {
     const now = new Date();
     const oneHourLater = new Date(now.getTime() + 60 * 60 * 1000);
     const threeHoursLater = new Date(now.getTime() + 3 * 60 * 60 * 1000);
+    const fourHoursLater = new Date(now.getTime() + 4 * 60 * 60 * 1000);
 
     setFormData({
-      title: `Review ${reviews.length + 1}: `,
+      title: `Task ${reviews.length + 1} (Review - ${reviews.length + 1})`,
       roundNumber: reviews.length + 1,
       startTime: toDateTimeLocal(oneHourLater),
       endTime: toDateTimeLocal(threeHoursLater),
+      reviewStartTime: toDateTimeLocal(threeHoursLater),
+      reviewEndTime: toDateTimeLocal(fourHoursLater),
       venue: 'Main Hackathon Bay / Software Labs',
       description: '',
       announcement: '',
@@ -98,6 +103,8 @@ const AdminReviewsPage = () => {
       roundNumber: rev.roundNumber,
       startTime: toDateTimeLocal(rev.startTime),
       endTime: toDateTimeLocal(rev.endTime),
+      reviewStartTime: toDateTimeLocal(rev.reviewStartTime || rev.endTime),
+      reviewEndTime: toDateTimeLocal(rev.reviewEndTime || rev.endTime),
       venue: rev.venue || '',
       description: rev.description || '',
       announcement: rev.announcement || '',
@@ -360,8 +367,13 @@ const AdminReviewsPage = () => {
 
                 <div className="flex flex-wrap items-center gap-3 text-xs font-cinzel text-gray-300">
                   <span className="bg-[#050e17] px-3 py-1 rounded-lg border border-[#ffd700]/30 text-[#ffd700] font-bold">
-                    ⏰ {formatDisplayTime(activeReview.startTime)} → {formatDisplayTime(activeReview.endTime)}
+                    ⏰ Task: {formatDisplayTime(activeReview.startTime)} → {formatDisplayTime(activeReview.endTime)}
                   </span>
+                  {activeReview.reviewEndTime && (
+                    <span className="bg-[#050e17] px-3 py-1 rounded-lg border border-purple-500/30 text-purple-300 font-bold">
+                      ⚖️ Review: {formatDisplayTime(activeReview.endTime)} → {formatDisplayTime(activeReview.reviewEndTime)}
+                    </span>
+                  )}
                   <span className="bg-[#050e17] px-3 py-1 rounded-lg border border-[#ffd700]/30">
                     📍 {activeReview.venue}
                   </span>
@@ -541,7 +553,14 @@ const AdminReviewsPage = () => {
                       </td>
 
                       <td className="py-3.5 px-4 text-gray-300">
-                        {formatDisplayTime(rev.startTime)} → {formatDisplayTime(rev.endTime)}
+                        <div>
+                          <span className="text-[#ffd700] font-bold">Task: {formatDisplayTime(rev.startTime)} → {formatDisplayTime(rev.endTime)}</span>
+                        </div>
+                        {rev.reviewEndTime && (
+                          <div className="text-[11px] text-purple-300 mt-0.5">
+                            Review: {formatDisplayTime(rev.endTime)} → {formatDisplayTime(rev.reviewEndTime)}
+                          </div>
+                        )}
                       </td>
 
                       <td className="py-3.5 px-4 text-gray-400">
@@ -656,7 +675,7 @@ const AdminReviewsPage = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-cinzel text-[#ffd700] uppercase mb-1">
-                    Start Date & Time *
+                    Task Coding Start Time *
                   </label>
                   <input
                     type="datetime-local"
@@ -669,7 +688,7 @@ const AdminReviewsPage = () => {
 
                 <div>
                   <label className="block text-xs font-cinzel text-[#ffd700] uppercase mb-1">
-                    End Date & Time *
+                    Task Coding End Time (Deadline) *
                   </label>
                   <input
                     type="datetime-local"
@@ -677,6 +696,33 @@ const AdminReviewsPage = () => {
                     value={formData.endTime}
                     onChange={(e) => setFormData({ ...formData, endTime: e.target.value })}
                     className="w-full bg-[#04090e] border border-[#ffd700]/50 focus:border-[#ffd700] rounded-xl px-3.5 py-2 text-xs text-[#ffd700] font-mono outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* Review Evaluation Timing Pickers */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-[#050c14] p-3 rounded-xl border border-purple-500/30">
+                <div>
+                  <label className="block text-xs font-cinzel text-purple-300 uppercase mb-1">
+                    Review Evaluation Start
+                  </label>
+                  <input
+                    type="datetime-local"
+                    value={formData.reviewStartTime}
+                    onChange={(e) => setFormData({ ...formData, reviewStartTime: e.target.value })}
+                    className="w-full bg-[#04090e] border border-purple-500/40 focus:border-purple-400 rounded-xl px-3.5 py-2 text-xs text-purple-300 font-mono outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-cinzel text-purple-300 uppercase mb-1">
+                    Review Evaluation End
+                  </label>
+                  <input
+                    type="datetime-local"
+                    value={formData.reviewEndTime}
+                    onChange={(e) => setFormData({ ...formData, reviewEndTime: e.target.value })}
+                    className="w-full bg-[#04090e] border border-purple-500/40 focus:border-purple-400 rounded-xl px-3.5 py-2 text-xs text-purple-300 font-mono outline-none"
                   />
                 </div>
               </div>

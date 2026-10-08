@@ -155,6 +155,7 @@ const ReviewCountdownPage = () => {
 
       const startMs = new Date(activeReview.startTime).getTime();
       const endMs = new Date(activeReview.endTime).getTime();
+      const revEndMs = activeReview.reviewEndTime ? new Date(activeReview.reviewEndTime).getTime() : endMs;
 
       // 1. Manually Paused by Jury
       if (activeReview.status === 'PAUSED') {
@@ -173,8 +174,8 @@ const ReviewCountdownPage = () => {
         return;
       }
 
-      // 2. Concluded / Closed (Past End Time or marked COMPLETED)
-      if (activeReview.status === 'COMPLETED' || now >= endMs) {
+      // 2. Concluded / Closed (Past Evaluation End Time or marked COMPLETED)
+      if (activeReview.status === 'COMPLETED' || now >= revEndMs) {
         setTimeLeft({
           hours: 0,
           minutes: 0,
@@ -191,10 +192,10 @@ const ReviewCountdownPage = () => {
         return;
       }
 
-      // 3. Before Review Start Time (Standby): strictly when now < startMs
+      // 3. Before Task Start Time (Standby): strictly when now < startMs
       if (now < startMs) {
         // Machi requirement: COUNTDOWN MUST NOT RUN BEFORE START TIME!
-        // Display the allocated total duration (e.g. 01:00:00 for 1-hour review) on Standby.
+        // Display the allocated total task duration (e.g. 02:00:00 for 2-hour task from 01:30 PM to 03:30 PM) on Standby.
         // Digits are STATIC / FROZEN (NOT counting down!).
         const totalDurationSec = Math.max(0, Math.floor((endMs - startMs) / 1000));
         const hours = Math.floor(totalDurationSec / 3600);
@@ -212,7 +213,7 @@ const ReviewCountdownPage = () => {
         return;
       }
 
-      // 4. Review is Live / In Progress: STRICTLY during scheduled window (now >= startMs && now < endMs)
+      // 4. Students Task Coding Sprint: STRICTLY during task window (now >= startMs && now < endMs)
       if (now >= startMs && now < endMs) {
         const totalDurationSec = Math.max(1, Math.floor((endMs - startMs) / 1000));
         const remainingSec = Math.max(0, Math.floor((endMs - now) / 1000));
@@ -229,6 +230,7 @@ const ReviewCountdownPage = () => {
           seconds,
           totalSeconds: remainingSec,
           phase: 'IN_PROGRESS',
+          subPhase: 'TASK_CODING',
           progressPercent: progress,
         });
 
@@ -247,6 +249,29 @@ const ReviewCountdownPage = () => {
             playBassDrop();
           }
         }
+        return;
+      }
+
+      // 5. Review Jury Evaluation Window: (now >= endMs && now < revEndMs)
+      if (now >= endMs && now < revEndMs) {
+        const totalRevSec = Math.max(1, Math.floor((revEndMs - endMs) / 1000));
+        const remainingRevSec = Math.max(0, Math.floor((revEndMs - now) / 1000));
+        const elapsedRevSec = totalRevSec - remainingRevSec;
+
+        const hours = Math.floor(remainingRevSec / 3600);
+        const minutes = Math.floor((remainingRevSec % 3600) / 60);
+        const seconds = remainingRevSec % 60;
+        const progress = Math.min(100, Math.max(0, (elapsedRevSec / totalRevSec) * 100));
+
+        setTimeLeft({
+          hours,
+          minutes,
+          seconds,
+          totalSeconds: remainingRevSec,
+          phase: 'EVALUATION',
+          subPhase: 'REVIEW_EVALUATION',
+          progressPercent: progress,
+        });
         return;
       }
     };
@@ -291,19 +316,29 @@ const ReviewCountdownPage = () => {
     return `${s} — ${e}`;
   };
 
-  const getStatusBadge = (status, isCurrentReview, startTime, endTime) => {
+  const getStatusBadge = (status, isCurrentReview, startTime, endTime, reviewEndTime) => {
     const now = Date.now() + serverOffset;
     const startMs = startTime ? new Date(startTime).getTime() : 0;
     const endMs = endTime ? new Date(endTime).getTime() : 0;
+    const revEndMs = reviewEndTime ? new Date(reviewEndTime).getTime() : endMs;
 
-    const isLive = startMs && endMs && now >= startMs && now < endMs && status !== 'COMPLETED';
-    const isConcluded = (endMs && now >= endMs) || status === 'COMPLETED';
+    const isTaskLive = startMs && endMs && now >= startMs && now < endMs && status !== 'COMPLETED';
+    const isEvaluationLive = endMs && revEndMs && now >= endMs && now < revEndMs && status !== 'COMPLETED';
+    const isConcluded = (revEndMs && now >= revEndMs) || status === 'COMPLETED';
 
-    if (isLive) {
+    if (isTaskLive) {
       return (
         <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-red-500/20 text-red-400 border border-red-500/50 text-xs font-cinzel font-bold shadow-[0_0_12px_rgba(239,68,68,0.4)] animate-pulse">
           <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
-          <span>LIVE NOW</span>
+          <span>TASK LIVE</span>
+        </span>
+      );
+    }
+    if (isEvaluationLive) {
+      return (
+        <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-400 border border-cyan-500/50 text-xs font-cinzel font-bold shadow-[0_0_12px_rgba(0,229,255,0.4)] animate-pulse">
+          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+          <span>EVALUATION LIVE</span>
         </span>
       );
     }
@@ -348,8 +383,8 @@ const ReviewCountdownPage = () => {
   const nowMs = Date.now() + serverOffset;
   const liveReviewNow = allReviews.find((r) => {
     const s = new Date(r.startTime).getTime();
-    const e = new Date(r.endTime).getTime();
-    return nowMs >= s && nowMs < e && r.status !== 'COMPLETED';
+    const revEnd = new Date(r.reviewEndTime || r.endTime).getTime();
+    return nowMs >= s && nowMs < revEnd && r.status !== 'COMPLETED';
   });
 
   return (
@@ -544,7 +579,9 @@ const ReviewCountdownPage = () => {
                 <Radio className="w-4 h-4 text-[#ffd700] animate-pulse" />
                 <span className="font-cinzel text-xs sm:text-sm font-black tracking-widest text-[#ffd700] uppercase">
                   {timeLeft.phase === 'IN_PROGRESS'
-                    ? `ROUND ${String(activeReview.roundNumber || 1).padStart(2, '0')} • LIVE IN EVALUATION`
+                    ? `ROUND ${String(activeReview.roundNumber || 1).padStart(2, '0')} • TASK SPRINT LIVE`
+                    : timeLeft.phase === 'EVALUATION'
+                    ? `ROUND ${String(activeReview.roundNumber || 1).padStart(2, '0')} • JURY EVALUATION LIVE`
                     : timeLeft.phase === 'ENDED'
                     ? `ROUND ${String(activeReview.roundNumber || 1).padStart(2, '0')} • CONCLUDED`
                     : `ROUND ${String(activeReview.roundNumber || 1).padStart(2, '0')} • STANDBY SCHEDULE`}
@@ -552,7 +589,7 @@ const ReviewCountdownPage = () => {
               </div>
 
               <div className="flex items-center space-x-3">
-                {getStatusBadge(activeReview.status, activeReview.isCurrent, activeReview.startTime, activeReview.endTime)}
+                {getStatusBadge(activeReview.status, activeReview.isCurrent, activeReview.startTime, activeReview.endTime, activeReview.reviewEndTime)}
                 {activeReview.extendedMinutes > 0 && (
                   <span className="px-2.5 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/40 text-xs font-mono font-bold">
                     +{activeReview.extendedMinutes}m EXTENDED
@@ -570,8 +607,15 @@ const ReviewCountdownPage = () => {
               <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-xs sm:text-sm text-[#e5c158] font-cinzel">
                 <span className="inline-flex items-center space-x-1.5 bg-[#0e1d2c] px-3 py-1 rounded-lg border border-[#ffd700]/30 font-bold">
                   <Clock className="w-3.5 h-3.5 text-[#00e5ff]" />
-                  <span>WINDOW: {formatTimeSlot(activeReview.startTime, activeReview.endTime)}</span>
+                  <span>TASK WINDOW: {formatTimeSlot(activeReview.startTime, activeReview.endTime)}</span>
                 </span>
+
+                {activeReview.reviewEndTime && (
+                  <span className="inline-flex items-center space-x-1.5 bg-[#0e1d2c] px-3 py-1 rounded-lg border border-purple-500/30 text-purple-300 font-bold">
+                    <Award className="w-3.5 h-3.5 text-purple-400" />
+                    <span>EVALUATION: {formatTimeSlot(activeReview.endTime, activeReview.reviewEndTime)}</span>
+                  </span>
+                )}
                 
                 {activeReview.venue && (
                   <span className="inline-flex items-center space-x-1.5 bg-[#0e1d2c] px-3 py-1 rounded-lg border border-[#ffd700]/30">
@@ -607,19 +651,19 @@ const ReviewCountdownPage = () => {
 
                 {/* Seconds Box */}
                 <div className={`bg-[#03070c]/90 rounded-2xl sm:rounded-3xl p-3 sm:p-6 transition-all ${
-                  timeLeft.phase === 'IN_PROGRESS'
+                  timeLeft.phase === 'IN_PROGRESS' || timeLeft.phase === 'EVALUATION'
                     ? 'border-2 border-[#00e5ff]/50 shadow-[0_0_25px_rgba(0,229,255,0.25)]'
                     : 'border border-[#4a381e] hover:border-[#ffd700] shadow-2xl'
                 }`}>
                   <div className={`font-pirate text-4xl sm:text-7xl md:text-8xl leading-none ${
-                    timeLeft.phase === 'IN_PROGRESS'
+                    timeLeft.phase === 'IN_PROGRESS' || timeLeft.phase === 'EVALUATION'
                       ? 'text-[#00e5ff] pirate-cyan-glow animate-pulse'
                       : 'text-[#ffd700] pirate-gold-title'
                   }`}>
                     {String(timeLeft.seconds).padStart(2, '0')}
                   </div>
                   <div className={`font-cinzel text-[10px] sm:text-xs font-bold tracking-widest uppercase mt-2 ${
-                    timeLeft.phase === 'IN_PROGRESS' ? 'text-[#00e5ff]' : 'text-[#cfb07a]'
+                    timeLeft.phase === 'IN_PROGRESS' || timeLeft.phase === 'EVALUATION' ? 'text-[#00e5ff]' : 'text-[#cfb07a]'
                   }`}>
                     {timeLeft.phase === 'STANDBY' ? 'SECONDS (IDLE)' : 'SECONDS'}
                   </div>
@@ -631,23 +675,34 @@ const ReviewCountdownPage = () => {
                 <span className={`inline-block font-cinzel font-black text-xs sm:text-sm tracking-widest uppercase px-4 py-1.5 rounded-full border ${
                   timeLeft.phase === 'IN_PROGRESS'
                     ? 'bg-red-950/60 text-red-300 border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.3)] animate-pulse'
+                    : timeLeft.phase === 'EVALUATION'
+                    ? 'bg-cyan-950/60 text-cyan-300 border-cyan-500/50 shadow-[0_0_15px_rgba(0,229,255,0.3)] animate-pulse'
                     : timeLeft.phase === 'STANDBY'
                     ? 'bg-amber-950/60 text-amber-300 border-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.2)]'
                     : timeLeft.phase === 'PAUSED'
                     ? 'bg-amber-950/60 text-amber-300 border-amber-500/50'
                     : 'bg-emerald-950/60 text-emerald-300 border-emerald-500/50'
                 }`}>
-                  {timeLeft.phase === 'IN_PROGRESS' && '⚡ EVALUATION WINDOW ACTIVE — TIME REMAINING'}
-                  {timeLeft.phase === 'STANDBY' && `⏸️ TIMER IN STANDBY • COMMENCES PROMPTLY AT ${new Date(activeReview.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}
-                  {timeLeft.phase === 'PAUSED' && '⏸️ REVIEW TEMPORARILY SUSPENDED BY JURY'}
-                  {timeLeft.phase === 'ENDED' && '🏁 REVIEW ROUND CONCLUDED • TIMER CLOSED'}
+                  {timeLeft.phase === 'IN_PROGRESS' && '⚡ TASK CODING SPRINT ACTIVE — ALLOTTED TIME REMAINING'}
+                  {timeLeft.phase === 'EVALUATION' && '⚖️ JURY REVIEW EVALUATION IN PROGRESS — TIME REMAINING'}
+                  {timeLeft.phase === 'STANDBY' && `⏸️ TASK IN STANDBY • COMMENCES PROMPTLY AT ${new Date(activeReview.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}
+                  {timeLeft.phase === 'PAUSED' && '⏸️ SPRINT TEMPORARILY SUSPENDED BY JURY'}
+                  {timeLeft.phase === 'ENDED' && '🏁 STAGE CONCLUDED • TIMER CLOSED'}
                 </span>
               </div>
 
               {timeLeft.phase === 'STANDBY' && (
                 <div className="mt-3 text-center">
                   <p className="text-xs sm:text-sm font-cinzel text-[#ffd700] font-semibold bg-[#120e06] border border-[#ffd700]/30 py-2 px-4 rounded-xl inline-block shadow-md">
-                    ⏳ Evaluation chronometer is currently in <strong className="text-white">STANDBY</strong>. The {Math.round((new Date(activeReview.endTime) - new Date(activeReview.startTime)) / 60000)}-minute countdown will strictly start at <strong className="text-white">{new Date(activeReview.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>.
+                    ⏳ Task chronometer is in <strong className="text-white">STANDBY</strong>. Students have <strong className="text-white">{Math.round((new Date(activeReview.endTime) - new Date(activeReview.startTime)) / 60000)} minutes</strong> allocated for this task. The countdown will strictly commence at <strong className="text-white">{new Date(activeReview.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong> and end at <strong className="text-white">{new Date(activeReview.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>.
+                  </p>
+                </div>
+              )}
+
+              {timeLeft.phase === 'EVALUATION' && (
+                <div className="mt-3 text-center">
+                  <p className="text-xs sm:text-sm font-cinzel text-cyan-300 font-semibold bg-[#031520] border border-cyan-500/40 py-2 px-4 rounded-xl inline-block shadow-md">
+                    ⚖️ Task coding sprint complete! Review evaluation is actively taking place before jury panels until <strong className="text-white">{new Date(activeReview.reviewEndTime || activeReview.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>.
                   </p>
                 </div>
               )}
@@ -655,7 +710,7 @@ const ReviewCountdownPage = () => {
               {timeLeft.phase === 'ENDED' && (
                 <div className="mt-3 text-center">
                   <p className="text-xs sm:text-sm font-cinzel text-emerald-400 font-semibold bg-[#03150d] border border-emerald-500/40 py-2 px-4 rounded-xl inline-block shadow-md">
-                    🏁 Evaluation round concluded at <strong className="text-white">{new Date(activeReview.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>. Timer has closed.
+                    🏁 Stage concluded at <strong className="text-white">{new Date(activeReview.reviewEndTime || activeReview.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>. Timer has closed.
                   </p>
                 </div>
               )}
@@ -664,11 +719,11 @@ const ReviewCountdownPage = () => {
             {/* Dynamic Progress Bar */}
             <div className="max-w-3xl mx-auto mb-6">
               <div className="flex justify-between items-center text-[11px] font-mono text-gray-400 mb-1.5">
-                <span>{timeLeft.phase === 'STANDBY' ? 'STAGE STANDBY' : 'STAGE COMMENCEMENT'}</span>
+                <span>{timeLeft.phase === 'STANDBY' ? 'TASK STANDBY' : timeLeft.phase === 'EVALUATION' ? 'EVALUATION START' : 'SPRINT START'}</span>
                 <span className="text-[#ffd700] font-bold">
                   {timeLeft.phase === 'STANDBY' ? '0% (IDLE)' : `${Math.round(timeLeft.progressPercent)}% ELAPSED`}
                 </span>
-                <span>{timeLeft.phase === 'STANDBY' ? `OPENS AT ${new Date(activeReview.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : 'DEADLINE FREEZE'}</span>
+                <span>{timeLeft.phase === 'STANDBY' ? `OPENS AT ${new Date(activeReview.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : timeLeft.phase === 'EVALUATION' ? 'EVALUATION END' : 'DEADLINE FREEZE'}</span>
               </div>
               <div className="h-3 w-full bg-[#03070b] border border-[#ffd700]/30 rounded-full overflow-hidden p-0.5 shadow-inner">
                 <div
@@ -720,7 +775,7 @@ const ReviewCountdownPage = () => {
             <div className="flex items-center space-x-2.5">
               <Clock className="w-5 h-5 text-[#ffd700]" />
               <h3 className="font-cinzel font-black text-base sm:text-xl text-white tracking-wider">
-                HACKATHON REVIEW SCHEDULE & STAGES
+                HACKATHON TASK & REVIEW SCHEDULE
               </h3>
             </div>
             <span className="text-[11px] font-mono text-gray-400">
@@ -753,7 +808,7 @@ const ReviewCountdownPage = () => {
                       <span className="font-mono text-xs font-bold text-[#00e5ff] tracking-wider">
                         STAGE {String(rev.roundNumber).padStart(2, '0')}
                       </span>
-                      {getStatusBadge(rev.status, isSelected, rev.startTime, rev.endTime)}
+                      {getStatusBadge(rev.status, isSelected, rev.startTime, rev.endTime, rev.reviewEndTime)}
                     </div>
 
                     <h4 className="font-pirate text-lg sm:text-xl text-white mb-2 leading-snug">
@@ -763,8 +818,14 @@ const ReviewCountdownPage = () => {
                     <div className="space-y-1.5 text-xs font-cinzel text-gray-300 mb-3">
                       <div className="flex items-center space-x-2 text-[#ffd700]">
                         <Clock className="w-3.5 h-3.5" />
-                        <span className="font-bold">{formatTimeSlot(rev.startTime, rev.endTime)}</span>
+                        <span className="font-bold">Task: {formatTimeSlot(rev.startTime, rev.endTime)}</span>
                       </div>
+                      {rev.reviewEndTime && (
+                        <div className="flex items-center space-x-2 text-purple-300">
+                          <Award className="w-3.5 h-3.5 text-purple-400" />
+                          <span>Evaluation: {formatTimeSlot(rev.endTime, rev.reviewEndTime)}</span>
+                        </div>
+                      )}
                       {rev.venue && (
                         <div className="flex items-center space-x-2 text-gray-400">
                           <MapPin className="w-3.5 h-3.5 text-gray-400" />

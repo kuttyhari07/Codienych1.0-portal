@@ -2,72 +2,92 @@ const ReviewSchedule = require('../models/ReviewSchedule');
 
 // Official ESEC Department of Information Technology CODIENYCH 1.0 Agenda Timings (8.10.2026):
 const getDefaultReviewSeeds = () => {
-  // Review - 1: Today 03:30 PM to 04:30 PM IST (8 Oct 2026)
-  const r1Start = new Date('2026-10-08T15:30:00+05:30');
-  const r1End = new Date('2026-10-08T16:30:00+05:30');
+  // Round 1: Task 1 Coding Sprint: Today 01:30 PM to 03:30 PM IST (8 Oct 2026) -> Students coding window
+  // Review - 1 Evaluation follows: 03:30 PM to 04:30 PM IST
+  const r1Start = new Date('2026-10-08T13:30:00+05:30');
+  const r1End = new Date('2026-10-08T15:30:00+05:30');
+  const r1RevStart = new Date('2026-10-08T15:30:00+05:30');
+  const r1RevEnd = new Date('2026-10-08T16:30:00+05:30');
 
-  // Review - 2: Today 09:30 PM to 10:30 PM IST (8 Oct 2026)
-  const r2Start = new Date('2026-10-08T21:30:00+05:30');
-  const r2End = new Date('2026-10-08T22:30:00+05:30');
+  // Round 2: Task 2 Coding Sprint: Today 04:30 PM to 09:30 PM IST (8 Oct 2026) -> Students coding window (Dinner: 7:30 - 8:30 PM)
+  // Review - 2 Evaluation follows: 09:30 PM to 10:30 PM IST
+  const r2Start = new Date('2026-10-08T16:30:00+05:30');
+  const r2End = new Date('2026-10-08T21:30:00+05:30');
+  const r2RevStart = new Date('2026-10-08T21:30:00+05:30');
+  const r2RevEnd = new Date('2026-10-08T22:30:00+05:30');
 
-  // Review - 3: Tonight / Midnight 12:30 AM to 01:30 AM IST (9 Oct 2026)
-  const r3Start = new Date('2026-10-09T00:30:00+05:30');
-  const r3End = new Date('2026-10-09T01:30:00+05:30');
+  // Round 3: Task 3 Midnight Coding Sprint: Tonight 10:30 PM to 12:30 AM IST (8-9 Oct 2026) -> Midnight coding window (Snacks: 11:30 PM)
+  // Review - 3 Evaluation follows: 12:30 AM to 01:30 AM IST
+  const r3Start = new Date('2026-10-08T22:30:00+05:30');
+  const r3End = new Date('2026-10-09T00:30:00+05:30');
+  const r3RevStart = new Date('2026-10-09T00:30:00+05:30');
+  const r3RevEnd = new Date('2026-10-09T01:30:00+05:30');
 
-  // Review - 4: Tomorrow 09:30 AM to 11:30 AM IST (9 Oct 2026)
-  const r4Start = new Date('2026-10-09T09:30:00+05:30');
-  const r4End = new Date('2026-10-09T11:30:00+05:30');
+  // Round 4: Task 4 Final Sprint to Code Freeze: Tomorrow 01:30 AM to 09:30 AM IST (9 Oct 2026) -> Overnight sprint (Breakfast: 8:00 - 9:00 AM)
+  // Review - 4 Final Jury Evaluation follows: 09:30 AM to 11:30 AM IST
+  const r4Start = new Date('2026-10-09T01:30:00+05:30');
+  const r4End = new Date('2026-10-09T09:30:00+05:30');
+  const r4RevStart = new Date('2026-10-09T09:30:00+05:30');
+  const r4RevEnd = new Date('2026-10-09T11:30:00+05:30');
 
   return [
     {
-      title: 'Review - 1',
+      title: 'Task 1: Ideation & Architecture (Review - 1)',
       roundNumber: 1,
       order: 1,
       startTime: r1Start,
       endTime: r1End,
+      reviewStartTime: r1RevStart,
+      reviewEndTime: r1RevEnd,
       status: 'UPCOMING',
       isCurrent: true,
       venue: 'Respective Team Bays / Software Labs',
-      description: 'Official Review 1 (03:30 PM - 04:30 PM). Evaluation criteria: Clarity of problem statement, architecture flow diagram, tech stack feasibility, and UI/UX wireframe prototypes. 5 mins presentation + 3 mins Q&A.',
-      announcement: 'Review - 1 is scheduled from 03:30 PM to 04:30 PM! Prepare your architecture diagrams and slides.',
+      description: 'Task 1 Coding Window: 01:30 PM to 03:30 PM (2 Hours). Review - 1 Jury Evaluation follows at 03:30 PM to 04:30 PM. Criteria: Problem Statement clarity, Architecture diagram, and UI/UX wireframe prototypes.',
+      announcement: 'Task 1 begins at 01:30 PM! Coding sprint runs until 03:30 PM followed immediately by Review - 1.',
       extendedMinutes: 0,
     },
     {
-      title: 'Review - 2',
+      title: 'Task 2: Core Prototype & APIs (Review - 2)',
       roundNumber: 2,
       order: 2,
       startTime: r2Start,
       endTime: r2End,
+      reviewStartTime: r2RevStart,
+      reviewEndTime: r2RevEnd,
       status: 'UPCOMING',
       isCurrent: false,
       venue: 'Respective Team Bays / Software Labs',
-      description: 'Official Review 2 (09:30 PM - 10:30 PM). Evaluation criteria: Working prototype, database schema setup, backend API integration, and key feature implementation progress.',
+      description: 'Task 2 Coding Window: 04:30 PM to 09:30 PM (5 Hours, Dinner: 07:30 PM - 08:30 PM). Review - 2 Jury Evaluation follows at 09:30 PM to 10:30 PM. Criteria: Working prototype, database schema setup, backend API integration, and key feature progress.',
       announcement: '',
       extendedMinutes: 0,
     },
     {
-      title: 'Review - 3',
+      title: 'Task 3: Midnight Sprint & Hardening (Review - 3)',
       roundNumber: 3,
       order: 3,
       startTime: r3Start,
       endTime: r3End,
+      reviewStartTime: r3RevStart,
+      reviewEndTime: r3RevEnd,
       status: 'UPCOMING',
       isCurrent: false,
       venue: 'Respective Team Bays / Software Labs',
-      description: 'Official Review 3 (12:30 AM - 01:30 AM). Evaluation criteria: Midnight coding scrutiny, edge cases, cloud deployment readiness, and code quality inspection.',
+      description: 'Task 3 Midnight Coding Window: 10:30 PM to 12:30 AM (2 Hours, Refreshment-3 at 11:30 PM). Review - 3 Jury Evaluation follows at 12:30 AM to 01:30 AM. Criteria: Midnight code audit, edge cases, cloud deployment readiness, and code quality.',
       announcement: '',
       extendedMinutes: 0,
     },
     {
-      title: 'Review - 4',
+      title: 'Task 4: Final Sprint & Code Freeze (Review - 4)',
       roundNumber: 4,
       order: 4,
       startTime: r4Start,
       endTime: r4End,
+      reviewStartTime: r4RevStart,
+      reviewEndTime: r4RevEnd,
       status: 'UPCOMING',
       isCurrent: false,
       venue: 'Main Fleet Stage / Auditorium',
-      description: 'Official Final Review 4 (09:30 AM - 11:30 AM). Grand evaluation before industry jury panel. Live project demonstration, business viability, and final code freeze.',
+      description: 'Task 4 Overnight Coding Window: 01:30 AM to 09:30 AM (8 Hours, Breakfast: 08:00 AM - 09:00 AM). Review - 4 Final Jury Evaluation follows at 09:30 AM to 11:30 AM. Final code freeze, pitch deck presentation before jury, and live demo.',
       announcement: '',
       extendedMinutes: 0,
     },
@@ -92,6 +112,8 @@ const seedDefaultReviewsIfEmpty = async () => {
               title: seed.title,
               startTime: seed.startTime,
               endTime: seed.endTime,
+              reviewStartTime: seed.reviewStartTime,
+              reviewEndTime: seed.reviewEndTime,
               venue: seed.venue,
               description: seed.description,
             },
@@ -132,7 +154,7 @@ const getActiveReview = async (req, res) => {
     // 1. Strict time-based status reconciliation for EVERY review:
     for (const r of allReviews) {
       const s = new Date(r.startTime);
-      const e = new Date(r.endTime);
+      const revEnd = new Date(r.reviewEndTime || r.endTime);
 
       if (now < s) {
         // Has NOT started yet! Must be UPCOMING (Standby). Cannot be ACTIVE.
@@ -140,14 +162,14 @@ const getActiveReview = async (req, res) => {
           r.status = 'UPCOMING';
           await r.save();
         }
-      } else if (now >= s && now < e) {
-        // Current real time falls strictly within this review window! Must be ACTIVE
+      } else if (now >= s && now < revEnd) {
+        // Current real time falls strictly within this round's window! Must be ACTIVE
         if (r.status !== 'ACTIVE' && r.status !== 'PAUSED') {
           r.status = 'ACTIVE';
           await r.save();
         }
-      } else if (now >= e) {
-        // Review window has closed! Must be COMPLETED
+      } else if (now >= revEnd) {
+        // Round window has closed! Must be COMPLETED
         if (r.status !== 'COMPLETED') {
           r.status = 'COMPLETED';
           await r.save();
@@ -156,16 +178,16 @@ const getActiveReview = async (req, res) => {
     }
 
     // 2. Select the single active review to feature:
-    // First priority: A review whose window is currently live (now >= s && now < e)
+    // First priority: A review whose window is currently live (now >= s && now < revEnd)
     let activeReview = allReviews.find((r) => {
       const s = new Date(r.startTime);
-      const e = new Date(r.endTime);
-      return now >= s && now < e && r.status !== 'COMPLETED';
+      const revEnd = new Date(r.reviewEndTime || r.endTime);
+      return now >= s && now < revEnd && r.status !== 'COMPLETED';
     });
 
-    // If none is currently live (e.g. before Review 1, or during break gaps), pick the next upcoming review
+    // If none is currently live (e.g. before Task 1, or during break gaps), pick the next upcoming review
     if (!activeReview) {
-      activeReview = allReviews.find((r) => new Date(r.endTime) > now && r.status !== 'COMPLETED');
+      activeReview = allReviews.find((r) => new Date(r.reviewEndTime || r.endTime) > now && r.status !== 'COMPLETED');
     }
 
     // Fallback: If all reviews have ended, pick the last review
@@ -242,6 +264,8 @@ const createReview = async (req, res) => {
       roundNumber,
       startTime,
       endTime,
+      reviewStartTime,
+      reviewEndTime,
       venue,
       description,
       announcement,
@@ -284,6 +308,8 @@ const createReview = async (req, res) => {
       roundNumber: roundNumber ? parseInt(roundNumber, 10) : 1,
       startTime: start,
       endTime: end,
+      reviewStartTime: reviewStartTime ? new Date(reviewStartTime) : end,
+      reviewEndTime: reviewEndTime ? new Date(reviewEndTime) : end,
       venue: venue?.trim() || 'Main Hackathon Bay / Labs',
       description: description?.trim() || '',
       announcement: announcement?.trim() || '',
@@ -320,6 +346,8 @@ const updateReview = async (req, res) => {
       roundNumber,
       startTime,
       endTime,
+      reviewStartTime,
+      reviewEndTime,
       venue,
       description,
       announcement,
@@ -352,6 +380,14 @@ const updateReview = async (req, res) => {
     if (endTime) {
       const parsedEnd = new Date(endTime);
       if (!isNaN(parsedEnd.getTime())) review.endTime = parsedEnd;
+    }
+
+    if (reviewStartTime !== undefined) {
+      review.reviewStartTime = reviewStartTime ? new Date(reviewStartTime) : review.endTime;
+    }
+
+    if (reviewEndTime !== undefined) {
+      review.reviewEndTime = reviewEndTime ? new Date(reviewEndTime) : review.endTime;
     }
 
     if (review.endTime <= review.startTime) {
