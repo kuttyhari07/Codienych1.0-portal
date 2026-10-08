@@ -36,6 +36,17 @@ const ReviewCountdownPage = () => {
     progressPercent: 0,
   });
 
+  // Global 24-hour Hackathon Clock (Today 11:30 AM -> Tomorrow 11:30 AM)
+  const [hackathon24h, setHackathon24h] = useState({
+    hours: 24,
+    minutes: 0,
+    seconds: 0,
+    progress: 0,
+    isLive: false,
+    isUpcoming: false,
+    isConcluded: false,
+  });
+
   const timerRef = useRef(null);
   const playedWarningsRef = useRef({ tenMin: false, fiveMin: false, oneMin: false, ended: false });
 
@@ -77,9 +88,52 @@ const ReviewCountdownPage = () => {
   // Real-time 1-second countdown clock calculation
   useEffect(() => {
     const calculateCountdown = () => {
+      const now = Date.now() + serverOffset;
+
+      // Calculate Global 24-Hour Hackathon Mission Clock (Today 11:30 AM -> Tomorrow 11:30 AM)
+      const hStartMs = new Date('2026-10-08T11:30:00+05:30').getTime();
+      const hEndMs = new Date('2026-10-09T11:30:00+05:30').getTime();
+
+      if (now < hStartMs) {
+        const diffSec = Math.max(0, Math.floor((hStartMs - now) / 1000));
+        setHackathon24h({
+          hours: Math.floor(diffSec / 3600),
+          minutes: Math.floor((diffSec % 3600) / 60),
+          seconds: diffSec % 60,
+          progress: 0,
+          isLive: false,
+          isUpcoming: true,
+          isConcluded: false,
+        });
+      } else if (now >= hStartMs && now <= hEndMs) {
+        const diffSec = Math.max(0, Math.floor((hEndMs - now) / 1000));
+        const totalSec = Math.floor((hEndMs - hStartMs) / 1000);
+        const elapsedSec = totalSec - diffSec;
+        const progress = Math.min(100, Math.max(0, (elapsedSec / totalSec) * 100));
+
+        setHackathon24h({
+          hours: Math.floor(diffSec / 3600),
+          minutes: Math.floor((diffSec % 3600) / 60),
+          seconds: diffSec % 60,
+          progress,
+          isLive: true,
+          isUpcoming: false,
+          isConcluded: false,
+        });
+      } else {
+        setHackathon24h({
+          hours: 0,
+          minutes: 0,
+          seconds: 0,
+          progress: 100,
+          isLive: false,
+          isUpcoming: false,
+          isConcluded: true,
+        });
+      }
+
       if (!activeReview) return;
 
-      const now = Date.now() + serverOffset;
       const startMs = new Date(activeReview.startTime).getTime();
       const endMs = new Date(activeReview.endTime).getTime();
 
@@ -362,6 +416,67 @@ const ReviewCountdownPage = () => {
             </div>
           </div>
         )}
+
+        {/* Global 24-Hour Hackathon Mission Clock Banner */}
+        <div className="bg-[#061019]/90 border border-[#ffd700]/50 rounded-2xl p-4 sm:p-5 mb-6 shadow-xl backdrop-blur-md">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div className="flex items-center space-x-3.5">
+              <div className="w-10 h-10 rounded-xl bg-[#ffd700]/15 border border-[#ffd700]/50 flex items-center justify-center flex-shrink-0">
+                <Anchor className="w-5 h-5 text-[#ffd700] animate-bounce" />
+              </div>
+              <div>
+                <div className="flex items-center space-x-2">
+                  {hackathon24h.isLive ? (
+                    <span className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-red-500/20 text-red-400 border border-red-500/40 text-[10px] font-mono font-bold animate-pulse">
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping" />
+                      <span>24-HR EXPEDITION LIVE</span>
+                    </span>
+                  ) : hackathon24h.isUpcoming ? (
+                    <span className="px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-[10px] font-mono font-bold">
+                      STARTS TODAY 11:30 AM
+                    </span>
+                  ) : (
+                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-mono font-bold">
+                      24-HR FINALE REACHED
+                    </span>
+                  )}
+                  <span className="text-xs sm:text-sm font-cinzel font-black text-white uppercase tracking-wider">
+                    24-HOUR MASTER EXPEDITION CLOCK
+                  </span>
+                </div>
+                <p className="text-[11px] font-cinzel text-gray-400 mt-0.5">
+                  Continuous High Seas Sprint: <strong className="text-[#ffd700]">Today 11:30 AM</strong> → <strong className="text-[#ffd700]">Tomorrow 11:30 AM IST (October 8 – 9, 2026)</strong>
+                </p>
+              </div>
+            </div>
+
+            {/* Countdown Clock Pill */}
+            <div className="flex items-center space-x-2.5 bg-[#03070c] px-4 py-2 rounded-xl border border-[#ffd700]/40 shadow-inner flex-shrink-0">
+              <Clock className="w-4 h-4 text-[#00e5ff]" />
+              <div className="font-mono text-base sm:text-lg font-black text-[#ffd700] tracking-wider">
+                {String(hackathon24h.hours).padStart(2, '0')}h : {String(hackathon24h.minutes).padStart(2, '0')}m : {String(hackathon24h.seconds).padStart(2, '0')}s
+              </div>
+              <span className="text-[10px] font-cinzel text-gray-400 font-bold uppercase">
+                {hackathon24h.isLive ? 'REMAINING' : hackathon24h.isUpcoming ? 'TO KICK-OFF' : 'FINISHED'}
+              </span>
+            </div>
+          </div>
+
+          {/* Overall 24-Hour Progress Bar */}
+          <div className="mt-3">
+            <div className="flex justify-between items-center text-[10px] font-mono text-gray-400 mb-1">
+              <span>OCT 8, 11:30 AM</span>
+              <span className="text-[#ffd700] font-bold">{Math.round(hackathon24h.progress)}% COMPLETED</span>
+              <span>OCT 9, 11:30 AM (CODE FREEZE)</span>
+            </div>
+            <div className="h-2 w-full bg-[#03070b] border border-[#ffd700]/25 rounded-full overflow-hidden p-0.5 shadow-inner">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-[#00e5ff] via-[#ffd700] to-[#ff4500] transition-all duration-1000"
+                style={{ width: `${hackathon24h.progress}%` }}
+              />
+            </div>
+          </div>
+        </div>
 
         {/* Hero Active Review Card */}
         {activeReview ? (

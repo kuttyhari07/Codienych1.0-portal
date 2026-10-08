@@ -24,8 +24,8 @@ module.exports = {
     return envDeadline;
   })(),
   FORCE_REGISTRATION_CLOSED: true,
-  EXTRA_SLOTS: parseInt(process.env.EXTRA_SLOTS || '1', 10),
-  HACKATHON_START_DATE: process.env.HACKATHON_START_DATE || '2026-10-08T09:00:00',
+  HACKATHON_START_DATE: process.env.HACKATHON_START_DATE || '2026-10-08T11:30:00+05:30',
+  HACKATHON_END_DATE: process.env.HACKATHON_END_DATE || '2026-10-09T11:30:00+05:30',
   // Registration fee per participant is strictly 500 (3 members: 1500, 4 members: 2000, 5 members: 2500, 6 members: 3000).
   REGISTRATION_FEE: (() => {
     const parsed = parseInt(process.env.REGISTRATION_FEE, 10);
