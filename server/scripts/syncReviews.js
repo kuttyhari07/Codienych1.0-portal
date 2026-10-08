@@ -40,11 +40,11 @@ async function run() {
       }
     );
 
-    // Round 2: Coding Sprint: 05:30 PM (17:30) to 10:00 PM (22:00), Review 2: 10:00 PM to 11:00 PM (23:00)
+    // Round 2: Coding Sprint: 05:30 PM (17:30) to 11:00 PM (23:00), Review 2: 11:00 PM to 12:00 AM (00:00)
     const r2Start = new Date('2026-10-08T17:30:00+05:30');
-    const r2End = new Date('2026-10-08T22:00:00+05:30');
-    const r2RevStart = new Date('2026-10-08T22:00:00+05:30');
-    const r2RevEnd = new Date('2026-10-08T23:00:00+05:30');
+    const r2End = new Date('2026-10-08T23:00:00+05:30');
+    const r2RevStart = new Date('2026-10-08T23:00:00+05:30');
+    const r2RevEnd = new Date('2026-10-09T00:00:00+05:30');
 
     const r2Status = now < r2Start ? 'UPCOMING' : now < r2RevEnd ? 'ACTIVE' : 'COMPLETED';
     const r2IsCurrent = now >= r1RevEnd && now < r2RevEnd;
@@ -60,17 +60,17 @@ async function run() {
           reviewEndTime: r2RevEnd,
           status: r2Status,
           isCurrent: r2IsCurrent,
-          description: 'Task 2 Coding Window: 05:30 PM to 10:00 PM (4.5 Hours, Dinner: 07:30 PM - 08:30 PM). Review - 2 Jury Evaluation follows at 10:00 PM to 11:00 PM (Round 2 concludes at 11:00 PM / 23:00). Criteria: Working prototype, database schema setup, backend API integration, and key feature progress.',
-          announcement: 'Round 2 commences at 05:30 PM! Coding sprint runs until 10:00 PM followed by Review - 2 evaluation until 11:00 PM.',
+          description: 'Task 2 Coding Window: 05:30 PM to 11:00 PM (5.5 Hours, Dinner: 07:30 PM - 08:30 PM). Review - 2 Jury Evaluation follows at 11:00 PM to 12:00 AM (Review 2 starts at 11:00 PM sharp). Criteria: Working prototype, database schema setup, backend API integration, and key feature progress.',
+          announcement: 'Task 2 coding sprint in progress until 11:00 PM! Review - 2 evaluation commences sharp at 11:00 PM.',
         },
       }
     );
 
-    // Round 3: Midnight Coding Sprint: 11:00 PM (23:00) to 12:30 AM (00:30), Review 3: 12:30 AM to 01:30 AM
-    const r3Start = new Date('2026-10-08T23:00:00+05:30');
-    const r3End = new Date('2026-10-09T00:30:00+05:30');
-    const r3RevStart = new Date('2026-10-09T00:30:00+05:30');
-    const r3RevEnd = new Date('2026-10-09T01:30:00+05:30');
+    // Round 3: Midnight Coding Sprint: 12:00 AM (00:00) to 01:30 AM, Review 3: 01:30 AM to 02:30 AM
+    const r3Start = new Date('2026-10-09T00:00:00+05:30');
+    const r3End = new Date('2026-10-09T01:30:00+05:30');
+    const r3RevStart = new Date('2026-10-09T01:30:00+05:30');
+    const r3RevEnd = new Date('2026-10-09T02:30:00+05:30');
 
     await ReviewSchedule.updateOne(
       { roundNumber: 3 },
@@ -83,7 +83,7 @@ async function run() {
           reviewEndTime: r3RevEnd,
           status: 'UPCOMING',
           isCurrent: false,
-          description: 'Task 3 Midnight Coding Window: 11:00 PM to 12:30 AM (1.5 Hours, Refreshment-3 at 11:30 PM). Review - 3 Jury Evaluation follows at 12:30 AM to 01:30 AM. Criteria: Midnight code audit, edge cases, cloud deployment readiness, and code quality.',
+          description: 'Task 3 Midnight Coding Window: 12:00 AM to 01:30 AM (1.5 Hours). Review - 3 Jury Evaluation follows at 01:30 AM to 02:30 AM. Criteria: Midnight code audit, edge cases, cloud deployment readiness, and code quality.',
         },
       }
     );
