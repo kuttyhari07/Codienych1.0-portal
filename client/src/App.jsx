@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { BgmProvider } from './context/BgmContext';
 
 // Dynamic code-split lazy routes for ultra-fast initial page loads
@@ -14,7 +14,6 @@ const AdminTeamDetailPage = lazy(() => import('./pages/admin/AdminTeamDetailPage
 const AdminPaymentsPage = lazy(() => import('./pages/admin/AdminPaymentsPage'));
 const AdminParticipantsPage = lazy(() => import('./pages/admin/AdminParticipantsPage'));
 const AdminReviewsPage = lazy(() => import('./pages/admin/AdminReviewsPage'));
-const ReviewCountdownPage = lazy(() => import('./pages/ReviewCountdownPage'));
 
 // Sleek lightweight loading fallback
 const PageLoader = () => (
@@ -40,9 +39,6 @@ function App() {
             <Route path="/event" element={<EventPortalPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/status" element={<StatusPage />} />
-            <Route path="/review" element={<ReviewCountdownPage />} />
-            <Route path="/reviews" element={<ReviewCountdownPage />} />
-            <Route path="/countdown" element={<ReviewCountdownPage />} />
             <Route path="/admin/login" element={<AdminLoginPage />} />
             <Route path="/admin" element={<AdminDashboardPage />} />
             <Route path="/admin/registrations" element={<AdminRegistrationsPage />} />
@@ -50,6 +46,7 @@ function App() {
             <Route path="/admin/payments" element={<AdminPaymentsPage />} />
             <Route path="/admin/participants" element={<AdminParticipantsPage />} />
             <Route path="/admin/reviews" element={<AdminReviewsPage />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>
       </Router>

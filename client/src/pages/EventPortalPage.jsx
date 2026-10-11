@@ -23,7 +23,7 @@ import { SmoothScrollProvider } from '../components/SmoothScrollProvider';
 import { ScrollReveal } from '../components/ScrollReveal';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Clock, Swords } from 'lucide-react';
+import { Swords } from 'lucide-react';
 import { EVENT_CONFIG } from '../utils/config';
 import useRegistrationStatus from '../utils/useRegistrationStatus';
 
@@ -160,36 +160,6 @@ const EventPortalPage = () => {
             </button>
           </div>
 
-          {/* Live Review Chronometer Stage Banner */}
-          <div className="max-w-6xl mx-auto px-4 mt-6 mb-2">
-            <Link
-              to="/review"
-              className="w-full text-left bg-gradient-to-r from-[#120505] via-[#240d0d] to-[#120505] hover:from-[#1c0808] hover:to-[#1c0808] border-2 border-[#ffd700] rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-[0_0_25px_rgba(255,215,0,0.25)] transition-all group block"
-            >
-              <div className="flex items-center space-x-3.5">
-                <div className="w-10 h-10 rounded-xl bg-[#ffd700]/20 border border-[#ffd700] flex items-center justify-center flex-shrink-0">
-                  <Clock className="w-5 h-5 text-[#ffd700] animate-spin" style={{ animationDuration: '6s' }} />
-                </div>
-                <div>
-                  <div className="flex items-center space-x-2">
-                    <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
-                    <span className="font-cinzel text-xs font-black text-[#ffd700] tracking-widest uppercase">
-                      LIVE REVIEW ROUNDS & COUNTDOWN CHRONOMETER
-                    </span>
-                  </div>
-                  <h3 className="font-pirate text-lg sm:text-xl text-white mt-0.5">
-                    Live Evaluation Stage Window • Jury Deadlines & Projector View
-                  </h3>
-                </div>
-              </div>
-
-              <div className="flex items-center space-x-2 flex-shrink-0">
-                <span className="px-4 py-2 rounded-xl bg-[#ffd700] text-black font-cinzel font-black text-xs group-hover:bg-[#ffe066] transition-colors shadow-md">
-                  OPEN LIVE COUNTDOWN →
-                </span>
-              </div>
-            </Link>
-          </div>
 
           {/* 1. About Section */}
           <ScrollReveal variant="fade-up">

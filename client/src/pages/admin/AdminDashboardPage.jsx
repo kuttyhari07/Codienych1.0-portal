@@ -256,14 +256,6 @@ const AdminDashboardPage = () => {
 
             <div className="flex items-center gap-2.5 flex-shrink-0">
               <Link
-                to="/review"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-3.5 py-2 rounded-xl bg-[#081a29] hover:bg-[#122e47] border border-[#00e5ff]/50 text-[#00e5ff] font-cinzel font-bold text-xs flex items-center space-x-1.5 transition-all"
-              >
-                <span>PROJECTOR ↗</span>
-              </Link>
-              <Link
                 to="/admin/reviews"
                 className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#ffd700] to-[#f39c12] text-black font-cinzel font-bold text-xs flex items-center space-x-1.5 hover:brightness-110 shadow-md transition-all"
               >

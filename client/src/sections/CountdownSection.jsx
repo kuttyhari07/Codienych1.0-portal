@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Compass, Sparkles, Zap, Anchor, Clock, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Compass, Sparkles, Zap, Anchor, ShieldCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
 import { EVENT_CONFIG } from '../utils/config';
 import CyberEnergyMatrixCanvas from '../components/CyberEnergyMatrixCanvas';
 
@@ -204,17 +203,6 @@ const CountdownSection = () => {
               </div>
             )}
 
-            {/* Quick Action Link to Review Chronometer */}
-            <div className="flex flex-wrap items-center justify-center gap-3">
-              <Link
-                to="/review"
-                className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#ffd700] via-[#f39c12] to-[#b8860b] hover:from-[#ffe043] hover:to-[#d4af37] text-black font-cinzel font-black text-xs shadow-[0_0_20px_rgba(255,215,0,0.35)] transition-all cursor-pointer uppercase tracking-wider"
-              >
-                <Clock className="w-4 h-4 text-black" />
-                <span>OPEN LIVE REVIEW CHRONOMETER SCREEN</span>
-                <ArrowRight className="w-3.5 h-3.5 text-black" />
-              </Link>
-            </div>
           </div>
         )}
 

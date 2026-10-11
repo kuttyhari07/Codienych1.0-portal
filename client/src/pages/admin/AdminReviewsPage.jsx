@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   Clock, Plus, Edit2, Trash2, Play, Pause, CheckCircle2, 
-  ExternalLink, Sparkles, AlertCircle, ArrowLeft, RotateCcw, 
+  Sparkles, AlertCircle, ArrowLeft, RotateCcw, 
   Radio, MapPin, Send, FastForward, ShieldAlert, Check, X, Loader2 
 } from 'lucide-react';
 import api from '../../services/api';
@@ -289,16 +289,6 @@ const AdminReviewsPage = () => {
           </div>
 
           <div className="flex flex-wrap items-center gap-2.5">
-            <Link
-              to="/review"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center space-x-2 px-3.5 py-2.5 bg-[#0c1e2d] hover:bg-[#152e46] border border-[#00e5ff]/50 text-[#00e5ff] font-cinzel font-bold text-xs rounded-xl shadow-md transition-all cursor-pointer uppercase tracking-wider"
-              title="Open public projector screen in new tab"
-            >
-              <ExternalLink className="w-4 h-4" />
-              <span>PROJECTOR COUNTDOWN SCREEN</span>
-            </Link>
 
             <button
               onClick={handleOpenCreateModal}
