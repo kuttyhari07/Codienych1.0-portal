@@ -474,6 +474,8 @@ const exportReport = async (req, res) => {
       const transactionId = payment?.transactionId ? payment.transactionId.trim() : 'N/A';
       const fees = payment?.expectedAmount != null ? `₹${payment.expectedAmount}` : 'N/A';
 
+      const currentTeamSize = Number(reg.teamSize) || participants.length || 0;
+
       rows.push({
         sNo: sNo++,
         registrationId: reg.registrationId || 'N/A',
@@ -486,6 +488,7 @@ const exportReport = async (req, res) => {
         college,
         transactionId,
         fees,
+        teamSize: currentTeamSize,
       });
     }
 
