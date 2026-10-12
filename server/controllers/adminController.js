@@ -436,31 +436,22 @@ const exportReport = async (req, res) => {
       const payment = await Payment.findOne({ registration: reg._id });
 
       const leader = participants.find((p) => p.role === 'LEADER') || participants[0];
-      const members = participants.filter((p) => p.role !== 'LEADER');
+      const members = leader
+        ? participants.filter((p) => p._id.toString() !== leader._id.toString())
+        : [];
       
-      const memberNamesWithPhones = members.length > 0
-        ? members.map((m) => `${m.fullName}${m.phone ? ` (${m.phone})` : ''}`).join(', ')
-        : 'None';
-
-      const memberPhonesOnly = members.length > 0
-        ? members.map((m) => m.phone || 'N/A').filter(Boolean).join(', ')
+      const memberNames = members.length > 0
+        ? members.map((m) => m.fullName.trim()).filter(Boolean).join(', ')
         : 'None';
 
       const memberHtml = members.length > 0
         ? members
-            .map(
-              (m) =>
-                `<div style="margin-bottom: 2px;"><strong>${m.fullName}</strong>${
-                  m.phone ? ` <span style="color: #0369a1; font-weight: 700;">(${m.phone})</span>` : ''
-                }</div>`
-            )
+            .map((m) => `<div style="margin-bottom: 2px;">${m.fullName.trim()}</div>`)
             .join('')
         : '<span style="color: #94a3b8;">None</span>';
 
       const paymentDateRaw = payment?.submittedAt || payment?.createdAt || reg.registrationDate || reg.createdAt;
       let dateFormatted = 'N/A';
-      let timeFormatted = '';
-      let fullDateTimeText = 'N/A';
 
       if (paymentDateRaw) {
         const d = new Date(paymentDateRaw);
@@ -471,36 +462,30 @@ const exportReport = async (req, res) => {
             month: 'short',
             year: 'numeric',
           });
-          timeFormatted = d.toLocaleTimeString('en-IN', {
-            timeZone: 'Asia/Kolkata',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true,
-          });
-          fullDateTimeText = `${dateFormatted}, ${timeFormatted}`;
         }
       }
 
+      const leaderPhone = leader?.phone ? leader.phone.trim() : 'N/A';
+      const college = leader?.college
+        ? leader.college.trim()
+        : participants[0]?.college
+        ? participants[0].college.trim()
+        : 'N/A';
+      const transactionId = payment?.transactionId ? payment.transactionId.trim() : 'N/A';
+      const fees = payment?.expectedAmount != null ? `₹${payment.expectedAmount}` : 'N/A';
+
       rows.push({
         sNo: sNo++,
-        registrationId: reg.registrationId,
-        teamName: reg.teamName,
-        domain: reg.domain || 'Not Specified',
-        teamSize: reg.teamSize,
-        teamLeader: leader ? leader.fullName : 'N/A',
-        leaderEmail: leader ? leader.email : 'N/A',
-        leaderPhone: leader ? leader.phone : 'N/A',
-        college: leader ? leader.college : 'N/A',
-        memberNames: memberNamesWithPhones,
-        memberPhones: memberPhonesOnly,
-        memberHtml: memberHtml,
-        transactionId: payment ? payment.transactionId : 'N/A',
-        amount: payment ? `₹${payment.expectedAmount}` : 'N/A',
-        paymentStatus: payment ? payment.status : 'N/A',
-        registrationStatus: reg.status,
+        registrationId: reg.registrationId || 'N/A',
+        teamName: reg.teamName || 'N/A',
+        teamLeader: leader ? leader.fullName.trim() : 'N/A',
+        memberNames,
+        memberHtml,
         dateFormatted,
-        timeFormatted,
-        registeredAt: fullDateTimeText,
+        leaderPhone,
+        college,
+        transactionId,
+        fees,
       });
     }
 
@@ -508,38 +493,40 @@ const exportReport = async (req, res) => {
     if (req.query.format === 'csv') {
       const headers = [
         'S.No',
-        'Registration ID',
+        'RegId',
         'Team Name',
-        'Domain / Track',
-        'Team Size',
         'Leader Name',
-        'Leader Phone',
-        'College',
-        'Team Members (Name & Phone)',
-        'Signature',
+        'Members Name',
+        'Date',
+        'Phone Number',
+        'College Name',
+        'UTR / Tx ID',
+        'Fees',
       ];
+
+      const safeCsv = (val) => `"${String(val ?? '').replace(/"/g, '""')}"`;
 
       const csvRows = [
         headers.join(','),
         ...rows.map((r) =>
           [
             r.sNo,
-            `"${r.registrationId}"`,
-            `"${r.teamName.replace(/"/g, '""')}"`,
-            `"${r.domain.replace(/"/g, '""')}"`,
-            r.teamSize,
-            `"${r.teamLeader.replace(/"/g, '""')}"`,
-            `"${r.leaderPhone.replace(/"/g, '""')}"`,
-            `"${r.college.replace(/"/g, '""')}"`,
-            `"${r.memberNames.replace(/"/g, '""')}"`,
-            '""',
+            safeCsv(r.registrationId),
+            safeCsv(r.teamName),
+            safeCsv(r.teamLeader),
+            safeCsv(r.memberNames),
+            safeCsv(r.dateFormatted),
+            safeCsv(r.leaderPhone),
+            safeCsv(r.college),
+            safeCsv(r.transactionId),
+            safeCsv(r.fees),
           ].join(',')
         ),
       ];
 
       res.setHeader('Content-Type', 'text/csv; charset=utf-8');
-      res.setHeader('Content-Disposition', `attachment; filename="CODIENYCH_1.0_Attendance_Sheet_${Date.now()}.csv"`);
-      return res.status(200).send(csvRows.join('\n'));
+      res.setHeader('Content-Disposition', `attachment; filename="CODIENYCH_1.0_Registrations_${Date.now()}.csv"`);
+      return res.status(200).send('\uFEFF' + csvRows.join('\r\n'));
     }
 
     const totalTeams = rows.length;
@@ -725,15 +712,15 @@ const exportReport = async (req, res) => {
     <thead>
       <tr>
         <th class="text-center" style="width: 35px;">#</th>
-        <th class="nowrap" style="width: 140px;">Reg ID</th>
+        <th class="nowrap" style="width: 100px;">RegId</th>
         <th>Team Name</th>
-        <th class="nowrap">Domain / Track</th>
-        <th class="text-center" style="width: 45px;">Size</th>
-        <th>Leader</th>
-        <th class="nowrap">Phone</th>
-        <th>College</th>
-        <th>Members (Name &amp; Phone)</th>
-        <th class="text-center nowrap" style="width: 140px; min-width: 120px;">Signature</th>
+        <th>Leader Name</th>
+        <th>Members Name</th>
+        <th class="nowrap" style="width: 95px;">Date</th>
+        <th class="nowrap" style="width: 110px;">Phone Number</th>
+        <th>College Name</th>
+        <th class="nowrap" style="width: 130px;">UTR / Tx ID</th>
+        <th class="text-right nowrap" style="width: 75px;">Fees</th>
       </tr>
     </thead>
     <tbody>
@@ -747,13 +734,13 @@ const exportReport = async (req, res) => {
           <td class="text-center">${r.sNo}</td>
           <td class="nowrap"><strong>${r.registrationId}</strong></td>
           <td><strong>${r.teamName}</strong></td>
-          <td class="nowrap"><span class="domain-tag">${r.domain}</span></td>
-          <td class="text-center"><strong>${r.teamSize}</strong></td>
           <td>${r.teamLeader}</td>
+          <td>${r.memberHtml}</td>
+          <td class="nowrap">${r.dateFormatted}</td>
           <td class="nowrap">${r.leaderPhone}</td>
           <td>${r.college}</td>
-          <td>${r.memberHtml}</td>
-          <td class="text-center" style="min-width: 120px; height: 36px;"></td>
+          <td class="nowrap"><code>${r.transactionId}</code></td>
+          <td class="text-right nowrap"><strong>${r.fees}</strong></td>
         </tr>`
               )
               .join('')
@@ -764,7 +751,7 @@ const exportReport = async (req, res) => {
 </html>`;
 
     res.setHeader('Content-Type', 'text/html');
-    res.setHeader('Content-Disposition', `attachment; filename="CODIENYCH_1.0_Teams_${Date.now()}.html"`);
+    res.setHeader('Content-Disposition', `attachment; filename="CODIENYCH_1.0_Registrations_${Date.now()}.html"`);
     return res.status(200).send(htmlContent);
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
