@@ -8,7 +8,7 @@ const { Resend } = require('resend');
 const https = require('https');
 const config = require('../config/env');
 
-const resendApiKey = (process.env.RESEND_API_KEY || config.RESEND_API_KEY || 're_TBxxbbbu_Jngpv56yDyzcXr9PDo6pwoYM').trim();
+const resendApiKey = (process.env.RESEND_API_KEY || config.RESEND_API_KEY || '').trim();
 let resendClient = null;
 if (resendApiKey) {
   try {
@@ -18,7 +18,7 @@ if (resendApiKey) {
   }
 }
 
-const BREVO_API_KEY = (process.env.BREVO_API_KEY || config.BREVO_API_KEY || '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').trim();
+const BREVO_API_KEY = (process.env.BREVO_API_KEY || config.BREVO_API_KEY || '').trim();
 
 const sendViaResend = async ({ to, subject, html, text, replyTo, fromName }) => {
   if (!resendClient) return false;

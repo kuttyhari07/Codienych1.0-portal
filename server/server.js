@@ -102,9 +102,9 @@ app.get('/api/test-email-status', async (req, res) => {
   const nodemailer = require('nodemailer');
   const { Resend } = require('resend');
 
-  const smtpUser = (process.env.SMTP_USER || config.SMTP_USER || 'codienych@gmail.com').trim();
-  const smtpPass = (process.env.SMTP_PASS || config.SMTP_PASS || 'subfywhhtpobafgy').replace(/\s+/g, '').trim();
-  const resendApiKey = (process.env.RESEND_API_KEY || config.RESEND_API_KEY || 're_fEHF4sA9_2HFGQmY7kMhXKg42KLjnTdMo').trim();
+  const smtpUser = (process.env.SMTP_USER || config.SMTP_USER || '').trim();
+  const smtpPass = (process.env.SMTP_PASS || config.SMTP_PASS || '').replace(/\s+/g, '').trim();
+  const resendApiKey = (process.env.RESEND_API_KEY || config.RESEND_API_KEY || '').trim();
   const targetEmail = req.query.email || 'codienych@gmail.com';
 
   const logs = [];
